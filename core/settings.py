@@ -1,5 +1,6 @@
 from pathlib import Path
 from decouple import config
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -73,3 +74,10 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+if os.environ.get('RUN_MAIN') == 'true':  # prevents running twice with autoreload
+    try:
+        from create_superuser_if_not_exists import run as create_superuser
+        create_superuser()
+    except Exception as e:
+        print(f"Error creating superuser: {e}")
