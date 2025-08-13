@@ -1,15 +1,22 @@
-from django.contrib.auth import get_user_model
-from django.conf import settings
 import os
+import django
 
-def run():
-    User = get_user_model()
-    username = os.getenv("DJANGO_SUPERUSER_USERNAME", "harshpatel.adl@gmail.com")
-    email = os.getenv("DJANGO_SUPERUSER_EMAIL", "harshpatel.adl@gmail.com")
-    password = os.getenv("DJANGO_SUPERUSER_PASSWORD", "Harsh@7104")
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
+django.setup()
 
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+username = os.environ.get("DJANGO_SUPERUSER_USERNAME")
+email = os.environ.get("DJANGO_SUPERUSER_EMAIL")
+password = os.environ.get("DJANGO_SUPERUSER_PASSWORD")
+
+if username and email and password:
     if not User.objects.filter(username=username).exists():
-        print(f"Creating default superuser: {username}")
+        print(f"Creating superuser {username}...")
         User.objects.create_superuser(username=username, email=email, password=password)
     else:
-        print(f"Superuser {username} already exists")
+        print(f"Superuser {username} already exists.")
+else:
+    print("Missing environment variables for superuser.")
