@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login</title>
+<style>
+    :root {
+        --brand: #2148C0;
+        --white: #fff;
+        --muted: rgba(255,255,255,0.8);
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: 'Segoe UI', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 100svh;
+        background: var(--brand);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .vector {
+        position: absolute;
+        inset: 0;
+        background: url('top-wave.svg') no-repeat top right / cover;
+        opacity: 1;
+        z-index: 0;
+    }
+
+    .ellipse1, .ellipse2, .ellipse3 {
+        position: absolute;
+        border-radius: 50%;
+        z-index: 0;
+    }
+    .ellipse1 { width: 438px; height: 438px; left: -219px; top: 501px; background: #274FC7; }
+    .ellipse2 { width: 572px; height: 572px; left: -286px; top: 434px; background: #244BC5; }
+    .ellipse3 { width: 724px; height: 724px; left: -362px; top: 358px; background: #264ECA; }
+
+    .login-container {
+        width: 100%;
+        max-width: 420px;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+        margin-top: 60px;
+    }
+
+    h2 {
+        color: var(--white);
+        font-family: 'Times New Roman', serif;
+        font-size: clamp(28px, 4.5vw, 36px);
+        font-weight: bold;
+        margin-bottom: 35px;
+    }
+
+    .input-wrapper {
+        position: relative;
+        width: 100%;
+    }
+
+    input {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid rgba(255,255,255,0.5);
+        border-radius: 5px;
+        outline: none;
+        font-size: 14px;
+        background: transparent;
+        color: var(--white);
+    }
+    input::placeholder {
+        color: var(--muted);
+    }
+
+    .toggle-text {
+        position: absolute;
+        right: 10px;
+        top: 50%;
+        transform: translateY(-50%);
+        font-size: 12px;
+        color: var(--white);
+        cursor: pointer;
+        user-select: none;
+    }
+
+    button {
+        background: var(--white);
+        color: var(--brand);
+        font-weight: bold;
+        border: none;
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-transform: uppercase;
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+    }
+    button:hover {
+        background: #f2f2f2;
+    }
+
+    .link {
+        display: block;
+        margin-top: 15px;
+        color: var(--white);
+        text-decoration: none;
+        font-size: 14px;
+        text-align: right;
+    }
+    .link:hover {
+        text-decoration: underline;
+    }
+
+    .divider {
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: var(--white);
+        margin: 20px 0;
+    }
+    .divider::before, .divider::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid var(--white);
+    }
+    .divider:not(:empty)::before { margin-right: 0.75em; }
+    .divider:not(:empty)::after { margin-left: 0.75em; }
+
+    .button-secondary {
+        background: var(--white);
+        color: var(--brand);
+        font-weight: bold;
+        border: none;
+        padding: 12px;
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        text-transform: uppercase;
+        display: block;
+        margin: 0 auto;
+        width: 100%;
+        text-align: center;
+        text-decoration: none;
+    }
+    .button-secondary:hover {
+        background: #f2f2f2;
+    }
+
+    /* Mobile adjustments */
+    @media (max-width: 480px) {
+        .login-container {
+            max-width: 100%;
+            padding: 16px;
+            margin-top: 40px;
+        }
+        input, button, .button-secondary {
+            width: 100%;
+        }
+    }
+</style>
+</head>
+<body>
+    <div class="vector"></div>
+    <div class="ellipse3"></div>
+    <div class="ellipse2"></div>
+    <div class="ellipse1"></div>
+
+    <div class="login-container">
+        <h2>Sign In</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="email" name="email" placeholder="EMAIL" required>
+
+            <div class="input-wrapper">
+                <input type="password" name="password" placeholder="PASSWORD" id="password" required>
+                <span class="toggle-text" style="padding-bottom:12px;"onclick="togglePassword('password', this)">SHOW</span>
+            </div>
+
+            <button style="margin-top:30px;" type="submit">Login</button>
+        </form>
+
+        <a href="#" class="link">Forgot password?</a>
+
+        <div class="divider">
+            <span>OR</span>
+        </div>
+
+        <a href="{% url 'signup' %}" class="button-secondary">Create Account</a>
+    </div>
+
+    <script>
+        function togglePassword(id, el) {
+            const input = document.getElementById(id);
+            if (input.type === "password") {
+                input.type = "text";
+                el.textContent = "HIDE";
+            } else {
+                input.type = "password";
+                el.textContent = "SHOW";
+            }
+        }
+    </script>
+</body>
+</html>
