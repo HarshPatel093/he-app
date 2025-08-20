@@ -4,9 +4,9 @@
 $DB_NAME = "he-app"
 $DB_USER = "HolidayExplorers"
 $DB_PASSWORD = "1212"
-$SUPERUSER_NAME = "harshpatel.adl@gmail.com"
-$SUPERUSER_EMAIL = "harshpatel.adl@gmail.com"
-$SUPERUSER_PASSWORD = "Harsh@7104"
+$SUPERUSER_NAME = "melaniedancer@holidayexolorers.com.au"
+$SUPERUSER_EMAIL = "melaniedancer@holidayexolorers.com.au"
+$SUPERUSER_PASSWORD = "Crows2017!"
 
 Write-Host "=== Activating virtual environment ==="
 .\venv\Scripts\activate

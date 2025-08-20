@@ -325,8 +325,8 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
-1	pbkdf2_sha256$1000000$165yGzOWl3nk3pV51JRkIz$e75ZyxscVvj/fnEmF/OWnAOlVpLR/M4Ho/pnuXtRCC4=	2025-08-13 11:07:53.501749+09:30	t	harshpatel.adl@gmail.com			harshpatel.adl@gmail.com	t	t	2025-08-13 11:07:15.482727+09:30
 \.
+
 
 
 --
