@@ -46,12 +46,30 @@ def login_view(request):
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('dashboard')  # later we make dashboard
+            return redirect('dashboard_redirect')
         else:
             messages.error(request, "Invalid credentials")
 
     return render(request, 'login.html')
 
 @login_required
-def dashboard(request):
-    return render(request, 'dashboard.html')
+def dashboard_redirect(request):
+    profile = request.user.userprofile
+    if profile.role == 'admin':
+        return redirect('admin_dashboard')
+    elif profile.role == 'staff':
+        return redirect('staff_dashboard')
+    else:
+        return redirect('client_dashboard')
+
+@login_required
+def admin_dashboard(request):
+    return render(request, 'users/admin_dashboard.html')
+
+@login_required
+def staff_dashboard(request):
+    return render(request, 'users/staff_dashboard.html')
+
+@login_required
+def client_dashboard(request):
+    return render(request, 'users/client_dashboard.html')
