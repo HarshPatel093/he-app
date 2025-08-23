@@ -3,7 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
 from .models import UserProfile
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .forms import CreateUser
 
 def signup(request):
     if request.method == "POST":
@@ -73,3 +74,32 @@ def staff_dashboard(request):
 @login_required
 def client_dashboard(request):
     return render(request, 'users/client_dashboard.html')
+
+@user_passes_test(lambda u: u.is_superuser)
+def create_user(request):
+    if request.method == 'POST':
+        form = CreateUser(request.POST)
+        if form.is_valid():
+            email = form.cleaned_data['email']
+            password = form.cleaned_data['password']
+
+            # Use email as username
+            user = User.objects.create_user(
+                username=email, 
+                email=email,
+                password=password,
+            )
+
+            UserProfile.objects.create(
+                user=user,
+                date_of_birth=form.cleaned_data['date_of_birth'],
+                gender=form.cleaned_data['gender'],
+                role=form.cleaned_data['role']
+            )
+
+            return redirect('dashboard_redirect')
+        
+    else:
+        form = CreateUser()
+
+    return render(request, 'users/create_user.html', {'form': form})
