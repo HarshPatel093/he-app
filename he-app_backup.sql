@@ -387,9 +387,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
-2	pbkdf2_sha256$1000000$3iCr8nymXcw1fQ3NExDbF4$vu3K53lw59SMs2FOwjijtpVWVTz/ZdqiuofFVUY+Wko=	2025-08-21 15:03:31.936067+09:30	t	melaniedancer@holidayexolorers.com.au			melaniedancer@holidayexolorers.com.au	t	t	2025-08-20 21:09:04+09:30
-11	pbkdf2_sha256$1000000$2CNbNcr9YbmPEVuVhfRklr$q2pvJwKzSx/m21VG3d81ZpdPE/6dDDIyRcqD6extifA=	2025-08-21 15:03:48.914882+09:30	f	client1@gmail.com			client1@gmail.com	f	t	2025-08-21 14:49:33+09:30
-10	pbkdf2_sha256$1000000$jsUwzxbEayOnjlYSHWqFw8$HFtRsMrGCZEth92tmd26KFrC3NQTp2iTWnBJuLXtjS0=	2025-08-21 15:04:03.161626+09:30	f	staff1@gmail.com			staff1@gmail.com	f	t	2025-08-21 14:49:32+09:30
+2	pbkdf2_sha256$1000000$3iCr8nymXcw1fQ3NExDbF4$vu3K53lw59SMs2FOwjijtpVWVTz/ZdqiuofFVUY+Wko=	2025-08-23 15:44:51.155649+09:30	t	melaniedancer@holidayexolorers.com.au			melaniedancer@holidayexolorers.com.au	t	t	2025-08-20 21:09:04+09:30
+18	pbkdf2_sha256$1000000$uaLrReyXSTMnAJwmcrGeh4$BgiiPK5yVMy9XrkiBxbn+FHJ77+mcqIC7tYeRC1xbGo=	2025-08-23 15:45:32.252727+09:30	f	testuser1@gmail.com			testuser1@gmail.com	f	t	2025-08-23 15:45:16.603045+09:30
+10	pbkdf2_sha256$1000000$jsUwzxbEayOnjlYSHWqFw8$HFtRsMrGCZEth92tmd26KFrC3NQTp2iTWnBJuLXtjS0=	2025-08-23 13:27:49.472654+09:30	f	staff1@gmail.com			staff1@gmail.com	f	t	2025-08-21 14:49:32+09:30
+11	pbkdf2_sha256$1000000$2CNbNcr9YbmPEVuVhfRklr$q2pvJwKzSx/m21VG3d81ZpdPE/6dDDIyRcqD6extifA=	2025-08-23 14:30:00.133705+09:30	f	client1@gmail.com			client1@gmail.com	f	t	2025-08-21 14:49:33+09:30
 \.
 
 
@@ -424,6 +425,14 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 8	2025-08-21 14:50:51.533781+09:30	11	client1@gmail.com	2	[{"changed": {"fields": ["Username", "Email address"]}}]	4	2
 9	2025-08-21 14:50:56.953804+09:30	10	staff1@gmail.com	2	[{"changed": {"fields": ["Email address"]}}]	4	2
 10	2025-08-21 14:56:10.393174+09:30	2	melaniedancer@holidayexolorers.com.au	2	[]	4	2
+11	2025-08-23 15:13:49.802814+09:30	9	testuser1@gmail.com	3		7	2
+12	2025-08-23 15:14:37.042617+09:30	12	testuser1@gmail.com	3		4	2
+13	2025-08-23 15:33:00.613305+09:30	11	testuser2@gmail.com	3		7	2
+14	2025-08-23 15:33:00.61343+09:30	10	testuser1@gmail.com	3		7	2
+15	2025-08-23 15:33:11.15453+09:30	14	testuser1@gmail.com	3		4	2
+16	2025-08-23 15:33:11.154574+09:30	15	testuser2@gmail.com	3		4	2
+17	2025-08-23 15:40:57.024061+09:30	16	testuser1@gmail.com	3		4	2
+18	2025-08-23 15:42:17.18414+09:30	17	testuser1@gmail.com	3		4	2
 \.
 
 
@@ -476,7 +485,8 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 fwk9752zl00rycawm1a6lnbst03xow3o	.eJxVjDsOgzAQRO_iOrK8BrzrlOk5g7X-EJNEtoShinL3gESRaLp5b-YtHG9rdltLi5ujuAoQl9_Oc3imcoD44HKvMtSyLrOXhyJP2uRYY3rdTvfvIHPL-1rroJRBstF3dg9oRURMSNEa30-TIejDYC0bhARoYeBOAWJCDclH8fkCpGw2cA:1um0R7:m4wy04M2R7MjgnR8bHGKbzv1Duf39XEpmqFhmCG24R8	2025-08-27 11:07:53.503933+09:30
-qk93nwlsik0i31bf86y9fh0okr1ee6z1	.eJxVjMEOgjAQRP-lZ9MstJWuR-9-Q7PsdgU1JaFwMv67kHDQZA6TeTPzNonWZUhrzXMaxVxMA-b0G_bEz1x2Ig8q98nyVJZ57O1esQet9jZJfl2P7t_BQHXY1orKsUMn4F30AfoWSSIjEwTHgQA2Yec6ajaboT1LVCVQVswe1Xy-_AM4Kw:1uoxw3:-YaU8WqOWfod_1mtYWAXwzhFijnCu20Vg6caGFSmQu4	2025-09-04 15:04:03.170435+09:30
+zh5ffxb60rs8iqtmdyuerj155esux4cj	.eJxVjMsOwiAURP-FtSHAvTzq0r3fQHhcpGpoUtqV8d-VpAvdTeacmRfzYd-q3zutfs7szBQ7_XYxpAe1AfI9tNvC09K2dY58KPygnV-XTM_L4f4d1NDrWE-kCjgBQCjRoI2YQUlphXUFHSotJ0poYklGatAODJWIEly23yjY-wOy3DaO:1uphWd:gO8KSUwDq6nkUB8JaKvbIQs8mu0TLJkZD56etXpj0co	2025-09-06 15:44:51.162493+09:30
+t5tycth968ay39ydfsj28v5s7bbe3z0f	.eJxVjEEOwiAQRe_C2hChwFCX7nsGMsOAVA0kpV0Z765NutDtf-_9lwi4rSVsPS1hZnERyovT70gYH6nuhO9Yb03GVtdlJrkr8qBdTo3T83q4fwcFe_nWicjBoBF8jvnsmJJSFowGcOB8JG2VHpKxFr1XbEbtbeYRgNC6DJnF-wMCJDfK:1uphXI:nAVGInCvuCuxk6z5QyTdmIiKo2SqqpRzN5hr87cG5eY	2025-09-06 15:45:32.258888+09:30
 \.
 
 
@@ -488,6 +498,7 @@ COPY public.users_userprofile (id, date_of_birth, gender, user_id, role) FROM st
 6	1995-05-05	male	10	staff
 7	2000-08-10	male	11	client
 8	2000-01-01	female	2	admin
+14	2025-07-31	female	18	admin
 \.
 
 
@@ -523,7 +534,7 @@ SELECT pg_catalog.setval('public.auth_user_groups_id_seq', 1, false);
 -- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: HolidayExplorers
 --
 
-SELECT pg_catalog.setval('public.auth_user_id_seq', 11, true);
+SELECT pg_catalog.setval('public.auth_user_id_seq', 18, true);
 
 
 --
@@ -537,7 +548,7 @@ SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 1, false);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: HolidayExplorers
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 10, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 18, true);
 
 
 --
@@ -558,7 +569,7 @@ SELECT pg_catalog.setval('public.django_migrations_id_seq', 20, true);
 -- Name: users_userprofile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: HolidayExplorers
 --
 
-SELECT pg_catalog.setval('public.users_userprofile_id_seq', 8, true);
+SELECT pg_catalog.setval('public.users_userprofile_id_seq', 14, true);
 
 
 --
