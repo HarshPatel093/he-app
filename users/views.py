@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -97,9 +97,77 @@ def create_user(request):
                 role=form.cleaned_data['role']
             )
 
-            return redirect('dashboard_redirect')
+            return redirect('manage_users')
         
     else:
         form = CreateUser()
 
     return render(request, 'users/create_user.html', {'form': form})
+
+@user_passes_test(lambda u: u.is_superuser)
+def manage_users(request):
+    query = request.GET.get("q")
+    users = User.objects.all().select_related('userprofile')
+
+    if query:
+        users = users.filter(username__icontains=query) | users.filter(email__icontains=query)
+
+    return render(request, "users/manage_users.html", {"users": users, "query": query})
+
+@user_passes_test(lambda u: u.is_superuser)
+def delete_user(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        user.delete()
+        messages.success(request, f"User {user.username} deleted successfully.")
+    except User.DoesNotExist:
+        messages.error(request, "User not found.")
+    
+    return redirect('manage_users')
+
+@user_passes_test(lambda u: u.is_superuser)
+def edit_user(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    profile = user.userprofile
+
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+        date_of_birth = request.POST.get("date_of_birth")
+        gender = request.POST.get("gender")
+        role = request.POST.get("role")
+
+        user.username = email
+        user.email = email
+
+        if password:
+            if password != confirm_password:
+                messages.error(request, "Passwords do not match.")
+                return redirect("edit_user", user_id=user.id)
+            user.set_password(password)
+
+        user.save()
+        if date_of_birth:
+            profile.date_of_birth = date_of_birth
+        profile.gender = gender
+        profile.role = role
+        profile.save()
+
+        messages.success(request, f"User {user.email} updated successfully.")
+        return redirect("manage_users")
+
+    initial_data = {
+        "email": user.email,
+        "date_of_birth": profile.date_of_birth,
+        "gender": profile.gender,
+        "role": profile.role,
+    }
+
+    return render(request, "users/edit_user.html", {
+    "user_obj": user,
+    "email": user.email,
+    "date_of_birth": profile.date_of_birth,
+    "gender": profile.gender,
+    "role": profile.role,
+    })

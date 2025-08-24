@@ -78,7 +78,7 @@
         <a href="#">Staff</a>
         <a href="#">Clients</a>
         {% if user.is_superuser %}
-            <a href="{% url 'create_user' %}">Manage User</a>
+            <a href="{% url 'manage_users' %}">Manage User</a>
         {% endif %}
         <a href="#" class="profile-link">
         <img src="{% static 'images/profile.svg' %}" alt="Profile" class="profile-icon"></a>
