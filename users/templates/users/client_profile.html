@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="'en">
+<head>
+<meta name ="viewport" content="width=device-width, initial-scale=1">
+<title>Client profile</title>
+ <style>
+    :root {
+        --brand: #2148C0;
+        --white: #fff;
+        --muted: rgba(255,255,255,0.8);
+        --black: #000000;
+    }
+    * {
+        box-sizing: border-box;
+    }
+    .profile-containter{
+        min-height:100%;
+        display:flex;
+        align-items:flex-start;
+        justify-content: center;
+        padding: 2.5rem .75rem;
+        
+    }
+    .content{
+        background: var(--muted);
+        width: 100%;
+        max-width:420px;
+        border-radius:10px;
+        padding:1.5rem 1.25rem 2rem;
+        /*box-shadow: 0 4px 10px rgba(0,0,0.15);*/
+        
+
+    }
+    h1{
+        color:var(--black);
+        font-family:'Times New Roman', serif;
+        font-size:clamp(28x,4.5vw, 36px);
+        font-weight:bold;
+        margin-bottom:35px;
+        text-align: center;
+        
+    }
+    .subheading{
+        font-weight:bold;
+        text-decoration: underline;
+        text-underline-offset: .18em;
+        text-decoration-thickness: .12em;
+        font-size:1.125rem;
+        margin: .5rem 0 1.25rem;
+    }
+    .button{
+        display:inline-block;
+        border: 2px solid #d8dce7;
+        background:#fff;
+        color:var(--brand);
+        font-weight:bold;
+        text-transform:uppercase;
+        padding: .6rem .9rem;
+        border-radius: .6rem;
+        box-shadow: 0 3px 6px rgba(0,0,0,.1);
+    }
+    .button:hover{
+        background: #16348a;
+    }
+    .button2{
+        width:100%;
+        text-align: center;
+        padding:.9rem 1rem;
+        margin-top:1.25rem;
+        border-radius:.7rem;
+        color:var(--brand);
+        background:#fff;
+        border: 2px solid #d8dce7;
+        font-weight:bold;
+
+        
+
+
+    }
+    .button2:hover{
+        background: #16348a;
+    }
+
+ 
+
+
+ </style> 
+
+</head>
+<body>
+    <div class="profile-containter">
+    <main class="content">
+        <h1>Profile</h1>
+        <h2 class="subheading">YOUR DETAILS</h2>
+        <div class="details">
+            <p>Name:</p>
+            <p>Date of Birth:</p>
+            <p>Gender:</p>
+            <p>Email:</p>
+            <a herf="{% url 'client_dashboard'}" class = "button">GO BACK</a>
+        </div>
+        <form>
+            <button class = "button2">SIGN OUT</button>
+        </form>
+    </main>
+
+
+
+        
+
+        
+
+
+   
+
+
+</body>
+
+</html>

@@ -73,3 +73,6 @@ def staff_dashboard(request):
 @login_required
 def client_dashboard(request):
     return render(request, 'users/client_dashboard.html')
+
+
+
