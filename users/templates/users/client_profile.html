@@ -93,13 +93,14 @@
         <h1>Profile</h1>
         <h2 class="subheading">YOUR DETAILS</h2>
         <div class="details">
-            <p>Name:</p>
-            <p>Date of Birth:</p>
-            <p>Gender:</p>
-            <p>Email:</p>
+            <p>Name: {{user_obj.get_full_name|default:user_obj.username}}</p>
+            <p>Date of Birth: {{profile.date_of_birth|default:"-"}}</p>
+            <p>Gender:{{profile.gender|default:"-"}}</p>
+            <p>Email:{{user_obj.email}}</p>
             <a herf="{% url 'client_dashboard'}" class = "button">GO BACK</a>
         </div>
-        <form>
+        <form action = "{% url 'logout' %}">
+            {% csrf-token %}
             <button class = "button2">SIGN OUT</button>
         </form>
     </main>

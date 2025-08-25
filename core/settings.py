@@ -74,6 +74,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 LOGIN_REDIRECT_URL = 'dashboard_redirect'
+LOGOUT_REDIRECT_URL ='login'
 
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'

@@ -74,5 +74,13 @@ def staff_dashboard(request):
 def client_dashboard(request):
     return render(request, 'users/client_dashboard.html')
 
+@login_required
+def client_profile(request):
+    profile = request.user.userprofile
+    return render(request, 'users/client_profile.html',{
+        'user.obj':request.user,
+        'profile':profile
+
+    })
 
 
