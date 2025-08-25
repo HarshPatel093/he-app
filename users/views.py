@@ -78,9 +78,10 @@ def client_dashboard(request):
 def client_profile(request):
     profile = request.user.userprofile
     return render(request, 'users/client_profile.html',{
-        'user.obj':request.user,
+        'user_obj':request.user,
         'profile':profile
 
     })
+
 
 

@@ -13,7 +13,7 @@
     * {
         box-sizing: border-box;
     }
-    .profile-containter{
+    .profile-container{
         min-height:100%;
         display:flex;
         align-items:flex-start;
@@ -34,7 +34,7 @@
     h1{
         color:var(--black);
         font-family:'Times New Roman', serif;
-        font-size:clamp(28x,4.5vw, 36px);
+        font-size:clamp(28px,4.5vw, 36px);
         font-weight:bold;
         margin-bottom:35px;
         text-align: center;
@@ -88,7 +88,7 @@
 
 </head>
 <body>
-    <div class="profile-containter">
+    <div class="profile-container">
     <main class="content">
         <h1>Profile</h1>
         <h2 class="subheading">YOUR DETAILS</h2>
@@ -97,10 +97,10 @@
             <p>Date of Birth: {{profile.date_of_birth|default:"-"}}</p>
             <p>Gender:{{profile.gender|default:"-"}}</p>
             <p>Email:{{user_obj.email}}</p>
-            <a herf="{% url 'client_dashboard'}" class = "button">GO BACK</a>
+            <a href="{% url 'client_dashboard'%}" class = "button">GO BACK</a>
         </div>
-        <form action = "{% url 'logout' %}">
-            {% csrf-token %}
+        <form method= "post" action = "{% url 'logout' %}">
+            {% csrf_token %}
             <button class = "button2">SIGN OUT</button>
         </form>
     </main>
