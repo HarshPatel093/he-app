@@ -104,3 +104,35 @@
 
 
  </style> 
+ </head>
+<body>
+    <div class="profile-container">
+    <main class="content">
+        <h1>Profile</h1>
+        <h2 class="subheading">YOUR DETAILS</h2>
+        <div class="details">
+            <p>Name: {{user_obj.get_full_name|default:user_obj.username}}</p>
+            <p>Date of Birth: {{profile.date_of_birth|date:"d/m/Y"}}</p>
+            <p>Gender: {{profile.get_gender_display}}</p>
+            <p>Email: {{user_obj.email}}</p>
+            <a href="{% url 'client_dashboard'%}" class = "button">GO BACK</a>
+        </div>
+        <form method= "post" action = "{% url 'logout' %}">
+            {% csrf_token %}
+            <button class = "button2" type="submit">SIGN OUT</button>
+        </form>
+    </main>
+
+
+
+        
+
+        
+
+
+   
+
+
+</body>
+
+</html>
