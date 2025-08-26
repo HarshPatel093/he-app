@@ -76,6 +76,20 @@ def staff_dashboard(request):
 def client_dashboard(request):
     return render(request, 'users/client_dashboard.html')
 
+@login_required
+def client_profile(request):
+    profile=request.user.userprofile
+    return render(request, 'users/client_profile.html',{
+        'user_obj':request.user,
+        'profile':profile
+
+    })
+
+
+
+
+
+
 @user_passes_test(lambda u: u.is_superuser)
 def create_user(request):
     if request.method == 'POST':
@@ -179,3 +193,7 @@ def edit_user(request, user_id):
     "gender": profile.gender,
     "role": profile.role,
     })
+
+
+
+

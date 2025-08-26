@@ -12,4 +12,5 @@ urlpatterns = [
     path("manage-users/", views.manage_users, name="manage_users"),
     path("delete-user/<int:user_id>/", views.delete_user, name="delete_user"),
     path("edit-user/<int:user_id>/", views.edit_user, name="edit_user"),
+    path('dashboard/client/profile' view)
 ]
