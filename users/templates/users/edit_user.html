@@ -116,9 +116,11 @@
     <div class="ellipse1"></div>
 
     <div class="editUser-container">
-        <h2>Edit User - {{ user_obj.email }}</h2>
+        <h2>Edit User - {{ name  }}</h2>
         <form method="POST">
             {% csrf_token %}
+            <input type="text" name="name" value="{{ name }}" placeholder="ENTER FULL NAME"required>
+            
             <input type="email" name="email" value="{{ email }}" placeholder="ENTER EMAIL" required>
 
             <div class="input-wrapper">

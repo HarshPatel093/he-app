@@ -310,7 +310,8 @@ CREATE TABLE public.users_userprofile (
     date_of_birth date NOT NULL,
     gender character varying(10) NOT NULL,
     user_id integer NOT NULL,
-    role character varying(10) NOT NULL
+    role character varying(10) NOT NULL,
+    name character varying(100) NOT NULL
 );
 
 
@@ -387,10 +388,9 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 --
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
-2	pbkdf2_sha256$1000000$3iCr8nymXcw1fQ3NExDbF4$vu3K53lw59SMs2FOwjijtpVWVTz/ZdqiuofFVUY+Wko=	2025-08-23 15:44:51.155649+09:30	t	melaniedancer@holidayexolorers.com.au			melaniedancer@holidayexolorers.com.au	t	t	2025-08-20 21:09:04+09:30
-18	pbkdf2_sha256$1000000$uaLrReyXSTMnAJwmcrGeh4$BgiiPK5yVMy9XrkiBxbn+FHJ77+mcqIC7tYeRC1xbGo=	2025-08-23 15:45:32.252727+09:30	f	testuser1@gmail.com			testuser1@gmail.com	f	t	2025-08-23 15:45:16.603045+09:30
-10	pbkdf2_sha256$1000000$jsUwzxbEayOnjlYSHWqFw8$HFtRsMrGCZEth92tmd26KFrC3NQTp2iTWnBJuLXtjS0=	2025-08-23 13:27:49.472654+09:30	f	staff1@gmail.com			staff1@gmail.com	f	t	2025-08-21 14:49:32+09:30
-11	pbkdf2_sha256$1000000$2CNbNcr9YbmPEVuVhfRklr$q2pvJwKzSx/m21VG3d81ZpdPE/6dDDIyRcqD6extifA=	2025-08-23 14:30:00.133705+09:30	f	client1@gmail.com			client1@gmail.com	f	t	2025-08-21 14:49:33+09:30
+2	pbkdf2_sha256$1000000$3iCr8nymXcw1fQ3NExDbF4$vu3K53lw59SMs2FOwjijtpVWVTz/ZdqiuofFVUY+Wko=	2025-08-26 20:58:23.297202+09:30	t	melaniedancer@holidayexolorers.com.au			melaniedancer@holidayexolorers.com.au	t	t	2025-08-20 21:09:04+09:30
+26	pbkdf2_sha256$1000000$HBJS8T9lccfoqrMW7mYz9K$NetRyGWEViu2TRRJPF2p4d4QyQX4ig5zD2pMFy3omhE=	2025-08-26 20:52:30.253385+09:30	f	client1@gmail.com			client1@gmail.com	f	t	2025-08-26 20:37:25.0139+09:30
+28	pbkdf2_sha256$1000000$sNeEP7OO3Dnd43QrSvpKNn$8vwoKNenlerdpXgCMQggrHvAaJAgxCUtRX4L+ycV26M=	2025-08-26 20:54:26.946006+09:30	f	staff1@gmail.com			staff1@gmail.com	f	t	2025-08-26 20:54:21.834141+09:30
 \.
 
 
@@ -433,6 +433,13 @@ COPY public.django_admin_log (id, action_time, object_id, object_repr, action_fl
 16	2025-08-23 15:33:11.154574+09:30	15	testuser2@gmail.com	3		4	2
 17	2025-08-23 15:40:57.024061+09:30	16	testuser1@gmail.com	3		4	2
 18	2025-08-23 15:42:17.18414+09:30	17	testuser1@gmail.com	3		4	2
+19	2025-08-23 18:42:26.722751+09:30	18	testuser1@gmail.com	3		4	2
+20	2025-08-23 18:44:43.178885+09:30	19	testuser1@gmail.com	3		4	2
+21	2025-08-26 20:08:13.319593+09:30	11	client2@gmail.com	3		4	2
+22	2025-08-26 20:08:13.319939+09:30	23	om@gmail.com	3		4	2
+23	2025-08-26 20:11:06.30156+09:30	24	client1@gmail.com	3		4	2
+24	2025-08-26 20:37:14.007374+09:30	25	client1@gmail.com	3		4	2
+25	2025-08-26 20:58:06.776976+09:30	8	melaniedancer@holidayexolorers.com.au	2	[{"changed": {"fields": ["Name"]}}]	7	2
 \.
 
 
@@ -476,6 +483,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 18	sessions	0001_initial	2025-08-13 11:06:29.804032+09:30
 19	users	0001_initial	2025-08-20 21:09:00.194407+09:30
 20	users	0002_userprofile_role	2025-08-21 14:37:44.994264+09:30
+21	users	0003_userprofile_name	2025-08-26 20:24:28.560392+09:30
 \.
 
 
@@ -485,8 +493,10 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 fwk9752zl00rycawm1a6lnbst03xow3o	.eJxVjDsOgzAQRO_iOrK8BrzrlOk5g7X-EJNEtoShinL3gESRaLp5b-YtHG9rdltLi5ujuAoQl9_Oc3imcoD44HKvMtSyLrOXhyJP2uRYY3rdTvfvIHPL-1rroJRBstF3dg9oRURMSNEa30-TIejDYC0bhARoYeBOAWJCDclH8fkCpGw2cA:1um0R7:m4wy04M2R7MjgnR8bHGKbzv1Duf39XEpmqFhmCG24R8	2025-08-27 11:07:53.503933+09:30
-zh5ffxb60rs8iqtmdyuerj155esux4cj	.eJxVjMsOwiAURP-FtSHAvTzq0r3fQHhcpGpoUtqV8d-VpAvdTeacmRfzYd-q3zutfs7szBQ7_XYxpAe1AfI9tNvC09K2dY58KPygnV-XTM_L4f4d1NDrWE-kCjgBQCjRoI2YQUlphXUFHSotJ0poYklGatAODJWIEly23yjY-wOy3DaO:1uphWd:gO8KSUwDq6nkUB8JaKvbIQs8mu0TLJkZD56etXpj0co	2025-09-06 15:44:51.162493+09:30
-t5tycth968ay39ydfsj28v5s7bbe3z0f	.eJxVjEEOwiAQRe_C2hChwFCX7nsGMsOAVA0kpV0Z765NutDtf-_9lwi4rSVsPS1hZnERyovT70gYH6nuhO9Yb03GVtdlJrkr8qBdTo3T83q4fwcFe_nWicjBoBF8jvnsmJJSFowGcOB8JG2VHpKxFr1XbEbtbeYRgNC6DJnF-wMCJDfK:1uphXI:nAVGInCvuCuxk6z5QyTdmIiKo2SqqpRzN5hr87cG5eY	2025-09-06 15:45:32.258888+09:30
+gpvnuig261owp0hu6uz8vt3ld31factl	.eJxVjMsOwiAURP-FtSHAvTzq0r3fQHhcpGpoUtqV8d-VpAvdTeacmRfzYd-q3zutfs7szBQ7_XYxpAe1AfI9tNvC09K2dY58KPygnV-XTM_L4f4d1NDrWE-kCjgBQCjRoI2YQUlphXUFHSotJ0poYklGatAODJWIEly23yjY-wOy3DaO:1uqrqh:mrNKzhtLMZ3WH8snRkpK_SfNO8HV0au0ylg3-W3_0Ts	2025-09-09 20:58:23.300611+09:30
+xh3a7zf2i8fbk67jcm7meercq0mphju2	.eJxVjEsOwjAMBe-SNYrcJo0dluw5Q-XEDi2gRupnhbg7VOoCtm9m3sv0vK1Dvy0696OYs2k7c_odE-eHTjuRO0-3anOd1nlMdlfsQRd7raLPy-H-HQy8DN-aCQsCeWqI2QUAoVTaUGJxHDIKBuYcffENSCyKkKIqakfohDKDeX8ADLw4gg:1uqr8k:Np-jp352wqsLVk4QYpBS_U0AMuo3b9syzsvFV2cYFCU	2025-09-09 20:12:58.772356+09:30
+97k2xzg77xewwm26eimwcwj4kx8niq5c	.eJxVjEsOwjAMBe-SNYrcJo0dluw5Q-XEDi2gRupnhbg7VOoCtm9m3sv0vK1Dvy0696OYs2k7c_odE-eHTjuRO0-3anOd1nlMdlfsQRd7raLPy-H-HQy8DN-aCQsCeWqI2QUAoVTaUGJxHDIKBuYcffENSCyKkKIqakfohDKDeX8ADLw4gg:1uqr9h:K4vg2TTVCh63VWOjmS7U-QF1n7O7Dg-MG8WbFjpZR48	2025-09-09 20:13:57.620667+09:30
+k8pqjrfy2zqqvlfor7z19xjy23wtkv1r	.eJxVjMsOwiAURP-FtSHAvTzq0r3fQHhcpGpoUtqV8d-VpAvdTeacmRfzYd-q3zutfs7szBQ7_XYxpAe1AfI9tNvC09K2dY58KPygnV-XTM_L4f4d1NDrWE-kCjgBQCjRoI2YQUlphXUFHSotJ0poYklGatAODJWIEly23yjY-wOy3DaO:1uqrZP:ol_DxjdZKV16vUWYHjL1RGMZ4HJ_ig1jW4jD_LhDlzs	2025-09-09 20:40:31.633182+09:30
 \.
 
 
@@ -494,11 +504,10 @@ t5tycth968ay39ydfsj28v5s7bbe3z0f	.eJxVjEEOwiAQRe_C2hChwFCX7nsGMsOAVA0kpV0Z765Nut
 -- Data for Name: users_userprofile; Type: TABLE DATA; Schema: public; Owner: HolidayExplorers
 --
 
-COPY public.users_userprofile (id, date_of_birth, gender, user_id, role) FROM stdin;
-6	1995-05-05	male	10	staff
-7	2000-08-10	male	11	client
-8	2000-01-01	female	2	admin
-14	2025-07-31	female	18	admin
+COPY public.users_userprofile (id, date_of_birth, gender, user_id, role, name) FROM stdin;
+22	2025-08-20	male	26	client	client1
+24	2025-08-01	female	28	client	staff1
+8	2000-01-01	female	2	admin	Melanie
 \.
 
 
@@ -534,7 +543,7 @@ SELECT pg_catalog.setval('public.auth_user_groups_id_seq', 1, false);
 -- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: HolidayExplorers
 --
 
-SELECT pg_catalog.setval('public.auth_user_id_seq', 18, true);
+SELECT pg_catalog.setval('public.auth_user_id_seq', 28, true);
 
 
 --
@@ -548,7 +557,7 @@ SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 1, false);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: HolidayExplorers
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 18, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 25, true);
 
 
 --
@@ -562,14 +571,14 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 7, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: HolidayExplorers
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 20, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 21, true);
 
 
 --
 -- Name: users_userprofile_id_seq; Type: SEQUENCE SET; Schema: public; Owner: HolidayExplorers
 --
 
-SELECT pg_catalog.setval('public.users_userprofile_id_seq', 14, true);
+SELECT pg_catalog.setval('public.users_userprofile_id_seq', 24, true);
 
 
 --

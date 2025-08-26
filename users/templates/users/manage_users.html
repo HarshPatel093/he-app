@@ -82,14 +82,15 @@
     <h2>List Of Users</h2>
     
     <div class="top-bar">
-        <input type="text" id="searchInput" class="search-box" placeholder="Search by email or role...">
+        <input type="text" id="searchInput" class="search-box" placeholder="Search by name, email or role...">
         <a href="{% url 'create_user' %}" class="create-btn">Create User</a>
     </div>
 
     <table id="userTable">
         <thead>
             <tr>
-                <th>Username</th>
+                <th>Name</th>
+                <th>Email</th>
                 <th>Date Joined</th>
                 <th>Role</th>
                 <th>Gender</th>
@@ -100,6 +101,7 @@
         <tbody>
             {% for user in users %}
             <tr>
+                <td>{{ user.userprofile.name }}</td>
                 <td>{{ user.email }}</td>
                 <td>{{ user.date_joined|date:"Y-m-d H:i" }}</td>
                 <td>{{ user.userprofile.role }}</td>
@@ -128,9 +130,10 @@
         let rows = document.querySelectorAll("#userTable tbody tr");
 
         rows.forEach(row => {
-            let email = row.querySelector("td:nth-child(1)")?.textContent.toLowerCase() || "";
-            let role = row.querySelector("td:nth-child(3)")?.textContent.toLowerCase() || "";
-            if (email.includes(filter) || role.includes(filter)) {
+            let name = row.querySelector("td:nth-child(1)")?.textContent.toLowerCase() || "";
+            let email = row.querySelector("td:nth-child(2)")?.textContent.toLowerCase() || "";
+            let role = row.querySelector("td:nth-child(4)")?.textContent.toLowerCase() || "";
+            if (name.includes(filter) || email.includes(filter) || role.includes(filter)) {
                 row.style.display = "";
             } else {
                 row.style.display = "none";

@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from .models import UserProfile
 
 class CreateUser(forms.ModelForm):
+    name = forms.CharField(required=True, max_length=100)
     email = forms.EmailField(required=True)
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput, label="Re-enter Password")
@@ -12,7 +13,7 @@ class CreateUser(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ['email', 'password']
+        fields = ['email', 'password', 'name']
 
     def clean(self):
         cleaned_data = super().clean()

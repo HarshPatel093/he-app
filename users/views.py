@@ -8,6 +8,7 @@ from .forms import CreateUser
 
 def signup(request):
     if request.method == "POST":
+        name = request.POST.get('name')
         email = request.POST.get('email')
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
@@ -27,15 +28,15 @@ def signup(request):
         user.save()
 
         # Create profile
-        profile = UserProfile(user=user, date_of_birth=date_of_birth, gender=gender)
+        profile = UserProfile(user=user, name=name, date_of_birth=date_of_birth, gender=gender)
         profile.save()
 
         # Auto-login
         user = authenticate(request, username=email, password=password)
         if user is not None:
             login(request, user)
-            return redirect('dashboard')  # This will be your dashboard page
-
+            return redirect('dashboard_redirect') 
+        
     return render(request, 'signup.html')
 
 
@@ -82,6 +83,7 @@ def create_user(request):
         if form.is_valid():
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
+            name = form.cleaned_data['name']
 
             # Use email as username
             user = User.objects.create_user(
@@ -92,6 +94,7 @@ def create_user(request):
 
             UserProfile.objects.create(
                 user=user,
+                name=name,
                 date_of_birth=form.cleaned_data['date_of_birth'],
                 gender=form.cleaned_data['gender'],
                 role=form.cleaned_data['role']
@@ -131,6 +134,7 @@ def edit_user(request, user_id):
     profile = user.userprofile
 
     if request.method == "POST":
+        name = request.POST.get("name")
         email = request.POST.get("email")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
@@ -148,6 +152,8 @@ def edit_user(request, user_id):
             user.set_password(password)
 
         user.save()
+
+        profile.name = name 
         if date_of_birth:
             profile.date_of_birth = date_of_birth
         profile.gender = gender
@@ -158,6 +164,7 @@ def edit_user(request, user_id):
         return redirect("manage_users")
 
     initial_data = {
+        "name": profile.name,
         "email": user.email,
         "date_of_birth": profile.date_of_birth,
         "gender": profile.gender,
@@ -166,6 +173,7 @@ def edit_user(request, user_id):
 
     return render(request, "users/edit_user.html", {
     "user_obj": user,
+    "name": profile.name,
     "email": user.email,
     "date_of_birth": profile.date_of_birth,
     "gender": profile.gender,

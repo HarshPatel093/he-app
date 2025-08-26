@@ -136,6 +136,7 @@
         <h2 style="padding-top: 0px;">Sign Up</h2>
         <form method="POST" >
             {% csrf_token %}
+            <input type="text" name="name" placeholder="ENTER YOUR NAME" required>
             <input type="email" name="email" placeholder="ENTER YOUR EMAIL" required>
 
             <div class="input-wrapper">

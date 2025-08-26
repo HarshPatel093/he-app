@@ -137,6 +137,7 @@
         <h2>Create User</h2>
         <form method="POST">
             {% csrf_token %}
+            <input type="text" name="name" placeholder="ENTER FULL NAME" required>  
             
             <input type="email" name="email" placeholder="ENTER EMAIL" required>
 
