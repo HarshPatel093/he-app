@@ -85,11 +85,6 @@ def client_profile(request):
 
     })
 
-
-
-
-
-
 @user_passes_test(lambda u: u.is_superuser)
 def create_user(request):
     if request.method == 'POST':
@@ -193,7 +188,3 @@ def edit_user(request, user_id):
     "gender": profile.gender,
     "role": profile.role,
     })
-
-
-
-

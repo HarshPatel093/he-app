@@ -83,7 +83,9 @@
 
 <div class="bottom-nav">
     <img src="{% static 'images/feedback.png' %}" alt="Feedback">
-    <img src="{% static 'images/profile.svg' %}" alt="Profile">
+    <a href="{% url 'client_profile' %}" aria-label="Profile">
+        <img src="{% static 'images/profile.svg' %}" alt="Profile">
+    </a>
 </div>
 
 </body>
