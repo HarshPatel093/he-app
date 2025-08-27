@@ -4,135 +4,200 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@700&display=swap" rel="stylesheet">
   <title>Client Feedback</title>
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #eef2ff;
+      font-family: 'Nunito Sans', sans-serif;
+      background-color: #f5f7ff;
     }
+
     .container {
-      max-width: 400px;
-      margin: 40px auto;
-      padding: 24px;
+      max-width: 420px;
+      margin: 5vh auto;
+      padding: 4vw;
       border-radius: 10px;
       text-align: center;
+      background: #f5f7ff;
     }
+
     h1 {
-      font-size: 22px;
+      font-size: clamp(18px, 2.5vw, 24px);
+      font-family: 'Nunito Sans', Arial, sans-serif;
       font-weight: bold;
       margin-bottom: 20px;
-    }
-    .faces {
-      display: flex;
-      justify-content: space-between;
-      margin: 20px 0;
-    }
-    .face {
-      cursor: pointer;
-    }
-    .face input {
-      display: none;
-    }
-    textarea {
-      width: 100%;
-      height: 120px;
-      margin-top: 15px;
-      padding: 12px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      resize: vertical;
-      font-size: 14px;
-    }
-    textarea::placeholder {
-      color: #888;
-      text-transform: uppercase;
-      font-size: 12px;
-    }
-    .btn {
-      display: block;
-      width: 100%;
-      margin-top: 16px;
-      padding: 12px;
-      border: none;
-      border-radius: 8px;
-      background-color: white;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      cursor: pointer;
-      font-weight: bold;
-      font-size: 13px;
-      text-transform: uppercase;
-    }
-    .btn-primary {
-      color: #264AE5;
-    }
-    .btn-submit {
-      background-color: #fff;
-      color: #000;
+      color: #111;
+      margin-top: -10px; 
     }
 
     .faces {
-    display: flex;
-    justify-content: space-between;
-    gap: 12px;
-    margin: 20px auto;
-    max-width: 320px;
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+      margin: 2vh auto;
+      max-width: fit-content;
     }
 
     .face img {
-    width: 48px;      
-    height: 48px;     
-    object-fit: contain;
-    cursor: pointer;
-    transition: transform 0.2s;
+      width: clamp(36px, 9vw, 48px);
+      height: auto;
+      object-fit: contain;
+      cursor: pointer;
+      transition: transform 0.2s;
+      filter: grayscale(100%);
     }
 
     .face input {
-    display: none; 
+      display: none;
     }
 
     .face input:checked + img {
-    transform: scale(1.15); 
+      transform: scale(1.2);
+      filter: none;
+    }
+
+    textarea {
+      width: 80%;
+      height: clamp(120px, 50vh, 200px);
+      margin-top: 2vh;
+      padding: 1em;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      resize: none;
+      font-size: clamp(12px, 2vw, 16px);
+      background: #fff;
+    }
+
+    textarea::placeholder {
+      color: #888;
+      text-transform: uppercase;
+      font-size: clamp(11px, 1.5vw, 13px);
+    }
+
+    .btn {
+      display: block;
+      width: 88%;
+      margin-top: 2vh;
+      padding: 1em;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: clamp(12px, 2vw, 14px);
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      box-sizing: border-box;
+      margin-left: auto;      
+      margin-right: auto;
+    }
+
+    .btn-primary {
+      background: #fff;
+      color: #264AE5;
+    }
+
+    .btn-submit {
+      background: #fff;
+      color: #000;
+    }
+
+    /* Phones */
+    @media (max-width: 600px) {
+      h1 {
+        font-size: 27px;
+      }
+      .face img {
+        width: 36px;
+      }
+      textarea {
+        font-size: 12px;
+        height: 120px;
+      }
+      .btn {
+        font-size: 12px;
+        padding: 15px;
+      }
+    }
+
+    /* Tablets */
+    @media (min-width: 601px) and (max-width: 1024px) {
+      h1 {
+        font-size: 24px;
+      }
+      .face img {
+        width: 48px;
+      }
+      textarea {
+        font-size: 14px;
+        height: 160px;
+      }
+      .btn {
+        font-size: 14px;
+        padding: 18px;
+      }
+    }
+
+    /* Desktops */
+    @media (min-width: 1025px) {
+      h1 {
+        font-size: 28px;
+      }
+      .face img {
+        width: 60px;
+      }
+      textarea {
+        font-size: 16px;
+        height: 140px;
+      }
+      .btn {
+        font-size: 16px;
+        padding: 14px;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Please tell us how you feel</h1>
+<div class="container">
+  
+  <div id="feedback-form">
+    <h1>Please tell us how <br> you feel </h1>
 
-{% load static %}
+    <div class="faces">
+      <label class="face">
+        <input type="radio" name="mood" value="1">
+        <img src="{% static 'images/angry(1).png' %}" alt="angry">
+      </label>
+      <label class="face">
+        <input type="radio" name="mood" value="2">
+        <img src="{% static 'images/frown(2).png' %}" alt="frown">
+      </label>
+      <label class="face">
+        <input type="radio" name="mood" value="3">
+        <img src="{% static 'images/meh(3).png' %}" alt="meh">
+      </label>
+      <label class="face">
+        <input type="radio" name="mood" value="4">
+        <img src="{% static 'images/beam(4).png' %}" alt="smile">
+      </label>
+      <label class="face">
+        <input type="radio" name="mood" value="5">
+        <img src="{% static 'images/grin(5).png' %}" alt="grin">
+      </label>
+    </div>
 
-<div class="faces">
-  <label class="face">
-    <input type="radio" name="mood" value="1">
-    <img src="{% static 'images/angry(1).png' %}" alt="angry">
-  </label>
-
-  <label class="face">
-    <input type="radio" name="mood" value="2">
-    <img src="{% static 'images/frown(2).png' %}" alt="frown">
-  </label>
-
-  <label class="face">
-    <input type="radio" name="mood" value="3">
-    <img src="{% static 'images/meh(3).png' %}" alt="meh">
-  </label>
-
-  <label class="face">
-    <input type="radio" name="mood" value="4">
-    <img src="{% static 'images/beam(4).png' %}" alt="smile">
-  </label>
-
-  <label class="face">
-    <input type="radio" name="mood" value="5">
-    <img src="{% static 'images/grin(5).png' %}" alt="grin">
-  </label>
-</div>
-   
-    <textarea placeholder="TELL US HOW YOU FEEL (OPTIONAL)"></textarea>
-
+    <textarea placeholder="Tell us how you feel (optional)"></textarea>
     <button class="btn btn-primary">Show us how you feel (optional)</button>
-    <button class="btn btn-submit">Submit</button>
+    <button type="button" class="btn btn-submit" onclick="submitFeedback()">Submit</button>
   </div>
+</div>
+
+  <script>
+    function submitFeedback() {
+      document.getElementById("feedback-form").style.display = "none";
+        window.location.href = "{% url 'client_dashboard' %}";
+      
+    }
+  </script>
 </body>
 </html>
