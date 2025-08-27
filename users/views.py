@@ -188,3 +188,7 @@ def edit_user(request, user_id):
     "gender": profile.gender,
     "role": profile.role,
     })
+
+@login_required
+def client_feedback(request):
+    return render(request, 'users/client_feedback.html')
