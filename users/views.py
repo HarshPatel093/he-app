@@ -5,6 +5,7 @@ from django.contrib.auth import authenticate, login
 from .models import UserProfile
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import CreateUser
+from .models import Feedback
 
 def signup(request):
     if request.method == "POST":
@@ -191,4 +192,16 @@ def edit_user(request, user_id):
 
 @login_required
 def client_feedback(request):
+    if request.method == "POST":
+        mood = request.POST.get("mood")
+        comment = request.POST.get("comment")
+        photo = request.FILES.get("photo")
+
+        Feedback.objects.create(
+            user=request.user,
+            mood=mood,
+            comment=comment,
+            photo=photo
+        )
+        return redirect("client_dashboard")
     return render(request, 'users/client_feedback.html')

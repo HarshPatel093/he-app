@@ -102,6 +102,30 @@
       color: #000;
     }
 
+    #preview {
+      max-width: 200px;
+      display: none;
+      margin: 10px auto 0; 
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 4px;
+      background: #fff;
+    }
+
+    #photo-actions {
+      display: flex;
+      justify-content: center;
+      gap: 10px; /* space between buttons */
+    }
+
+    .btn-small {
+      width: auto;
+      padding: 6px 12px;
+      font-size: 12px;
+      margin: 0;
+    }
+
+
     /* Phones */
     @media (max-width: 600px) {
       h1 {
@@ -158,8 +182,9 @@
   </style>
 </head>
 <body>
+<form id="feedbackForm" method="POST" enctype="multipart/form-data" action="{% url 'client_feedback' %}">
+  {% csrf_token %}
 <div class="container">
-  
   <div id="feedback-form">
     <h1>Please tell us how <br> you feel </h1>
 
@@ -185,19 +210,60 @@
         <img src="{% static 'images/grin(5).png' %}" alt="grin">
       </label>
     </div>
-
-    <textarea placeholder="Tell us how you feel (optional)"></textarea>
-    <button class="btn btn-primary">Show us how you feel (optional)</button>
-    <button type="button" class="btn btn-submit" onclick="submitFeedback()">Submit</button>
+    <div id="mood-error" style="color:red; font-size:14px; display:none; margin-top:8px;">
+      Please select how you feel.
+    </div>
+    <input type="file" id="photoInput" name="photo" accept="image/*" capture="environment" style="display:none;">
+    <textarea name="comment" placeholder="Tell us how you feel (optional)"></textarea>
+    <button type="button" class="btn btn-primary" onclick="openCamera()">Show us how you feel (optional)</button>
+    <button type="submit" class="btn btn-submit">Submit</button>
+    <img id="preview" style="max-width:200px; display:none; margin-top:10px;"/>
+    <div id="photo-actions" style="display:none; margin-top:8px;">
+      <button type="button" class="btn btn-primary" onclick="retakePhoto()">Retake</button>
+      <button type="button" class="btn btn-submit" onclick="deletePhoto()">Delete</button>
+    </div>
   </div>
 </div>
+</form>
 
   <script>
-    function submitFeedback() {
-      document.getElementById("feedback-form").style.display = "none";
-        window.location.href = "{% url 'client_dashboard' %}";
-      
+    function openCamera() {
+    document.getElementById("photoInput").click();
+  }
+
+    document.getElementById("photoInput").addEventListener("change", function(event) {
+    if (event.target.files && event.target.files[0]) {
+      let reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById("preview").src = e.target.result;
+        document.getElementById("preview").style.display = "block";
+        document.getElementById("photo-actions").style.display = "block"; 
+      };
+      reader.readAsDataURL(event.target.files[0]);
     }
+  });
+
+    document.getElementById("feedbackForm").addEventListener("submit", function(e) {
+    let moodSelected = document.querySelector('input[name="mood"]:checked');
+
+    if (!moodSelected) {
+      e.preventDefault();
+      document.getElementById("mood-error").style.display = "block";
+    } else {
+      document.getElementById("mood-error").style.display = "none";
+    }
+  });
+
+    function retakePhoto() {
+    document.getElementById("photoInput").click();
+  }
+
+    function deletePhoto() {
+      document.getElementById("photoInput").value = "";
+      document.getElementById("preview").src = "";
+      document.getElementById("preview").style.display = "none";
+      document.getElementById("photo-actions").style.display = "none";
+}
   </script>
 </body>
 </html>

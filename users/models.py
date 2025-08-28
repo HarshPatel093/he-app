@@ -21,3 +21,10 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.user.email
+
+class Feedback(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    mood = models.IntegerField(null=True, blank=True)
+    comment = models.TextField(blank=True, null=True)
+    photo = models.ImageField(upload_to="feedback_photos/", blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
