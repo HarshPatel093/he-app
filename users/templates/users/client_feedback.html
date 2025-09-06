@@ -182,49 +182,54 @@
   </style>
 </head>
 <body>
-<form id="feedbackForm" method="POST" enctype="multipart/form-data" action="{% url 'client_feedback' %}">
-  {% csrf_token %}
-<div class="container">
-  <div id="feedback-form">
-    <h1>Please tell us how <br> you feel </h1>
+  <main>
+    <form id="feedbackForm" method="POST" enctype="multipart/form-data" action="{% url 'client_feedback' %}">
+      {% csrf_token %}
+      <div class="container">
+        <div id="feedback-form">
+          <h1>Please tell us how <br> you feel </h1>
 
-    <div class="faces">
-      <label class="face">
-        <input type="radio" name="mood" value="1">
-        <img src="{% static 'images/angry(1).png' %}" alt="angry">
-      </label>
-      <label class="face">
-        <input type="radio" name="mood" value="2">
-        <img src="{% static 'images/frown(2).png' %}" alt="frown">
-      </label>
-      <label class="face">
-        <input type="radio" name="mood" value="3">
-        <img src="{% static 'images/meh(3).png' %}" alt="meh">
-      </label>
-      <label class="face">
-        <input type="radio" name="mood" value="4">
-        <img src="{% static 'images/beam(4).png' %}" alt="smile">
-      </label>
-      <label class="face">
-        <input type="radio" name="mood" value="5">
-        <img src="{% static 'images/grin(5).png' %}" alt="grin">
-      </label>
-    </div>
-    <div id="mood-error" style="color:red; font-size:14px; display:none; margin-top:8px;">
-      Please select how you feel.
-    </div>
-    <input type="file" id="photoInput" name="photo" accept="image/*" capture="environment" style="display:none;">
-    <textarea name="comment" placeholder="Tell us how you feel (optional)"></textarea>
-    <button type="button" class="btn btn-primary" onclick="openCamera()">Show us how you feel (optional)</button>
-    <button type="submit" class="btn btn-submit">Submit</button>
-    <img id="preview" style="max-width:200px; display:none; margin-top:10px;"/>
-    <div id="photo-actions" style="display:none; margin-top:8px;">
-      <button type="button" class="btn btn-primary" onclick="retakePhoto()">Retake</button>
-      <button type="button" class="btn btn-submit" onclick="deletePhoto()">Delete</button>
-    </div>
-  </div>
-</div>
-</form>
+          <fieldset>
+            <legend class="sr-only">Select how you feel</legend>
+            <div class="faces">
+              <label class="face">
+                <input type="radio" name="mood" value="1">
+                <img src="{% static 'images/angry(1).png' %}" alt="angry">
+              </label>
+              <label class="face">
+                <input type="radio" name="mood" value="2">
+                <img src="{% static 'images/frown(2).png' %}" alt="frown">
+              </label>
+              <label class="face">
+                <input type="radio" name="mood" value="3">
+                <img src="{% static 'images/meh(3).png' %}" alt="meh">
+              </label>
+              <label class="face">
+                <input type="radio" name="mood" value="4">
+                <img src="{% static 'images/beam(4).png' %}" alt="smile">
+              </label>
+              <label class="face">
+                <input type="radio" name="mood" value="5">
+                <img src="{% static 'images/grin(5).png' %}" alt="grin">
+              </label>
+            </div>
+          </fieldset>
+          <div id="mood-error" style="color:red; font-size:14px; display:none; margin-top:8px;">
+            Please select how you feel.
+          </div>
+          <input type="file" aria-label="Image" id="photoInput" name="photo" accept="image/*" capture="environment" style="display:none;">
+          <textarea name="comment" aria-label="Optional_Comment" placeholder="Tell us how you feel (optional)"></textarea>
+          <button type="button" class="btn btn-primary" onclick="openCamera()">Show us how you feel (optional)</button>
+          <button type="submit" class="btn btn-submit">Submit</button>
+          <img id="preview" alt="Preview of uploaded photo" style="max-width:200px; display:none; margin-top:10px;"/>
+          <div id="photo-actions" style="display:none; margin-top:8px;">
+            <button type="button" class="btn btn-primary" onclick="retakePhoto()">Retake</button>
+            <button type="button" class="btn btn-submit" onclick="deletePhoto()">Delete</button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </main>
 
   <script>
     function openCamera() {
