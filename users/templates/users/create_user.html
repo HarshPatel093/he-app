@@ -61,7 +61,7 @@
         margin-top: 40px; 
     }
 
-    h2 {
+    h1 {
         color: white;
         font-family: 'Times New Roman', serif;
         font-size: 34px;
@@ -104,9 +104,18 @@
         color: white;
         cursor: pointer;
         user-select: none;
+        border: none;
+        padding: none;
+        -webkit-tap-highlight-color: transparent;
+        background-color: transparent;
     }
 
-    button {
+    .toggle-text:focus{
+        outline: none;
+        text-decoration: underline;
+    }
+
+    button.form-btn {
         background: white;
         color: #2148C0;
         font-weight: bold;
@@ -122,55 +131,55 @@
         transition: 0.3s;
     }
 
-    button:hover {
+    button.form-btn:hover {
         background: #f2f2f2;
     }
 </style>
 </head>
 <body>
-    <div class="vector"></div>
     <div class="ellipse3"></div>
     <div class="ellipse2"></div>
     <div class="ellipse1"></div>
+    <main>
+        <div class="createUser-container">
+            <h1>Create User</h1>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="text" name="name" aria-label="Name" placeholder="ENTER FULL NAME" required>  
+                
+                <input type="email" name="email" aria-label="Email" placeholder="ENTER EMAIL" required>
 
-    <div class="createUser-container">
-        <h2>Create User</h2>
-        <form method="POST">
-            {% csrf_token %}
-            <input type="text" name="name" placeholder="ENTER FULL NAME" required>  
-            
-            <input type="email" name="email" placeholder="ENTER EMAIL" required>
+                <div class="input-wrapper">
+                    <input type="password" name="password" aria-label="Password" placeholder="ENTER PASSWORD" id="password" required>
+                    <button type="button" class="toggle-text" onclick="togglePassword('password', this)">SHOW</button>
+                </div>
 
-            <div class="input-wrapper">
-                <input type="password" name="password" placeholder="ENTER PASSWORD" id="password" required>
-                <span class="toggle-text" onclick="togglePassword('password', this)">SHOW</span>
-            </div>
+                <div class="input-wrapper">
+                    <input type="password" name="confirm_password" aria-label="Confirm_Password" placeholder="RE-ENTER PASSWORD" id="confirm_password" required>
+                    <button type="button" class="toggle-text" onclick="togglePassword('confirm_password', this)">SHOW</button>
+                </div>
 
-            <div class="input-wrapper">
-                <input type="password" name="confirm_password" placeholder="RE-ENTER PASSWORD" id="confirm_password" required>
-                <span class="toggle-text" onclick="togglePassword('confirm_password', this)">SHOW</span>
-            </div>
+                <input type="text" name="date_of_birth" placeholder="DATE OF BIRTH"
+                    onfocus="(this.type='date')" aria-label="Date_Of_Birth"
+                    onblur="if(this.value==''){this.type='text'}" required>
 
-            <input type="text" name="date_of_birth" placeholder="DATE OF BIRTH"
-                   onfocus="(this.type='date')" 
-                   onblur="if(this.value==''){this.type='text'}" required>
+                <select name="gender" aria-label="Gender" required>
+                    <option value="" disabled selected>SELECT GENDER</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
 
-            <select name="gender" required>
-                <option value="" disabled selected>SELECT GENDER</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-            </select>
+                <select name="role" aria-label="Role" required>
+                    <option value="" disabled selected>SELECT ROLE</option>
+                    <option value="admin">Admin</option>
+                    <option value="staff">Staff</option>
+                    <option value="client">Client</option>
+                </select>
 
-            <select name="role" required>
-                <option value="" disabled selected>SELECT ROLE</option>
-                <option value="admin">Admin</option>
-                <option value="staff">Staff</option>
-                <option value="client">Client</option>
-            </select>
-
-            <button type="submit">Create Account</button>
-        </form>
-    </div>
+                <button class="form-btn" type="submit">Create Account</button>
+            </form>
+        </div>
+    </main>
 
     <script>
         function togglePassword(id, el) {
