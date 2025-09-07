@@ -12,41 +12,39 @@
         --muted: rgba(255,255,255,0.8);
         --black: #000000;
 
-    } * {
-        box-sizing: border-box;
-    }
+    } 
     .adminProlieContainer{
         display: flex;
         justify-content: center;
     }
-    .heading{
+    nav{
         display: flex;
         align-items: center;
         justify-content: flex-start;
         background-color: #FFFFFF;
         height: 80px;
         padding: 0 10px;
-        box-shadow: 0 20px 5px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 20px 5px rgba(0,0,0,0.1);
         padding-left: 5px ;
 
     }
-    .logo{
+    nav img{
         height: 80px;
         margin-right:27px;
         margin-left: 0;
         padding-left: 0;
 
     }
-    nav{
+    nav a{
         margin:0 15px;
         text-decoration:none;
-        color:#000000;
+        color:black;
         font-weight: 700;
         font-size: 24px;
         line-height: 100px;
 
     }
-    .links-hover{
+    nav a:hover{
         color:#007BFF;
     }
     .content{
@@ -58,15 +56,20 @@
         display:flex;
         align-items: center;
     }
-    .icon{
+    nav .icon{
         height: 40px;
         width: 40px;
         cursor: pointer;
         transition: transform 0.2s ease;
 
     }
-    .icon-hover{
+    .icon:hover{
         transform: scale(1.1);
+    }
+    body{
+        margin:0;
+        font-family:'Nunito', 'sans-serif';
+        background-color: #F0F4FF; 
     }
 </style>
 </head>
@@ -77,7 +80,7 @@
         <a href="#">Staff</a>
         <a href="#">Clients</a>
         <a href="#" class="profile">
-            <img src="{% static 'images/profile.svg' %}" alt="Profile" class="icon-hover">
+            <img src="{% static 'images/profile.svg' %}" alt="Profile" class="icon">
         </a>
     </nav>
 </body>
