@@ -239,3 +239,12 @@ def client_feedback(request):
         )
         return redirect("client_dashboard")
     return render(request, 'users/client_feedback.html')
+
+@login_required
+def admin_profile(request):
+    profile=getattr(request.user, "userprofile", None)
+    return render(request, "users/admin_profile.html",{
+        "user_obj": request.user,
+        "profile":profile,
+
+    })
