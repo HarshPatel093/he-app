@@ -71,6 +71,52 @@
         font-family:'Nunito', 'sans-serif';
         background-color: #F0F4FF; 
     }
+    .profile-wrap{
+        padding: 32px;
+    }
+    .profile-title{
+        margin: 0 0 24px 0;
+        text-align:center;
+        font-family: ui-serif, Georgia, 'Times New Roman', serif;
+        font-weight: bold;
+        font-size:48px;
+        color:#111;
+        text-transform: uppercase;
+    }
+
+
+    .profile-subhead{
+        margin: 8px 0 28px 0;
+        font-family: ui-serif, Georgia, 'Times New Roman', serif;
+        font-weight: bold;
+        font-size: 22px;
+        text-decoration:underline;
+        text-underline-offset: .18em;
+        text-decoration-thickness: .12em;
+        color:#111;
+
+    }
+
+    .profile-background{
+        background: #eef2ff;
+        border-radius: 6px;
+        box-shadow: 0 4px 12px rgba(0,0,0,.08)
+
+    }
+    .profile-details p{
+        margin:0 0 18px 0;
+        font-family: ui-serif, Georgia, 'Times New Roman',  serif;
+        font-size:24px;
+        line-height: 1.5;
+        font-weight: 800;
+    }
+
+
+
+
+
+
+
 </style>
 </head>
 <body>
@@ -83,5 +129,12 @@
             <img src="{% static 'images/profile.svg' %}" alt="Profile" class="icon">
         </a>
     </nav>
+    <div class="profile-wrap">
+        <main class="profile-background" role="main" aria-labelledby="page-title">
+            <h1 id="page-title" class="profile-title">Profile</h1>
+
+        </main>
+    </div>
+
 </body>
 </html>
