@@ -179,12 +179,15 @@
             <h1 id="page-title" class="profile-title">Profile</h1>
             <h2 class="profile-subhead">your details</h2>
             <div class="profile-details">
-                <p>Name:</p>
-                <p>Date of Birth:</p>
-                <p>Gender:</p>
-                <p>Email:</p>
+                {% if has_profile %}
+                <p>Name:{{user_obj.get_full_name|default:profile.name|default:user_obj.username}} </p>
+                <p>Date of Birth:{{profile.date_of_birth|date:"d/m/Y"}}</p>
+                <p>Gender:{{profile.get_gender_display}}</p>
+                <p>Email:{{user_obj.email}}</p>
+                {% endif %}
                 <a href="#" class="go-back">go back</a>
                 <form method="post">
+
                     <button type="submit" class="signout">sign out</button>
                 </form>
             </div>

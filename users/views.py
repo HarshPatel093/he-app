@@ -246,5 +246,6 @@ def admin_profile(request):
     return render(request, "users/admin_profile.html",{
         "user_obj": request.user,
         "profile":profile,
+        "has_profile":bool(profile),
 
     })
