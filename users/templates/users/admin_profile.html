@@ -36,7 +36,7 @@
         padding-left: 0;
 
     }
-    .heading-links{
+    nav{
         margin:0 15px;
         text-decoration:none;
         color:#000000;
@@ -48,7 +48,36 @@
     .links-hover{
         color:#007BFF;
     }
+    .content{
+        padding:40px;
+    }
+    .profile{
+        margin-left: auto;
+        margin-right: 0px;
+        display:flex;
+        align-items: center;
+    }
+    .icon{
+        height: 40px;
+        width: 40px;
+        cursor: pointer;
+        transition: transform 0.2s ease;
 
+    }
+    .icon-hover{
+        transform: scale(1.1);
+    }
 </style>
 </head>
+<body>
+    <nav>
+        <img src = "images/logo.jpg" alt="Holiday_Explorers_Logo"> 
+        <a herf="#">Home</a>
+        <a herf="#">Staff</a>
+        <a herf="#">Clients</a>
+        <a herf="#" class="profile">
+            <img src="{'images/profile.svg'}" alt="Profile" class="icon-hover">
+        </a>
+    </nav>
+</body>
 </html>
