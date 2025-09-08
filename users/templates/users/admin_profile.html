@@ -89,12 +89,13 @@
         margin: 8px 0 28px 0;
         font-family: ui-serif, Georgia, 'Times New Roman', serif;
         font-weight: bold;
-        font-size: 22px;
+        font-size: 26px;
         text-decoration:underline;
         text-underline-offset: .18em;
         text-decoration-thickness: .12em;
         color:#111;
         text-transform: uppercase;
+        margin-left: 20px;
 
     }
 
@@ -105,17 +106,20 @@
 
     }
     .profile-details p{
-        margin:0 0 18px 0;
+        margin:0 0 25px 0;
         font-family: ui-serif, Georgia, 'Times New Roman',  serif;
         font-size:24px;
         line-height: 1.5;
-        font-weight: 800;
+        font-weight: 400;
+        margin-left:20px;
     }
     .signout{
         margin-top: 18px;
         display: inline-block;
-        width:116px;
-        height:32px;
+        width:180px;
+        height:40px;
+        line-height: 32px;
+        text-align: center;
         border-radius:6px;
         border:1.5px solid #d8dce7;
         background:#fff;
@@ -126,6 +130,8 @@
         letter-spacing: .02em;
         box-shadow: 0 2px 6px rgba(0,0,0,.1);
         cursor:pointer;
+        margin-bottom: 10px;
+        margin-left:20px;
     }
     .signout:hover{
         background:#16348a;
@@ -133,9 +139,9 @@
     }
     .go-back{
         display:inline-block;
-        width:116px;
-        height:32px;
-        line-height:30px;
+        width:175px;
+        height:35px;
+        line-height:40px;
         text-align: center;
         border-radius: 6px;
         border:1.5px solid #d8dce7;
@@ -148,6 +154,9 @@
         box-shadow: 0 2px 6px rgba(0,0,0,.1);
         text-decoration: none;
         margin-bottom: 10px;
+        margin-top: 20px;
+        margin-left:20px;
+        
 
     }
     .go-back:hover{
@@ -180,10 +189,10 @@
             <h2 class="profile-subhead">your details</h2>
             <div class="profile-details">
                 {% if has_profile %}
-                <p>Name:{{user_obj.get_full_name|default:profile.name|default:user_obj.username}} </p>
-                <p>Date of Birth:{{profile.date_of_birth|date:"d/m/Y"}}</p>
-                <p>Gender:{{profile.get_gender_display}}</p>
-                <p>Email:{{user_obj.email}}</p>
+                <p>Name: {{user_obj.get_full_name|default:profile.name|default:user_obj.username}} </p>
+                <p>Date of Birth: {{profile.date_of_birth|date:"d/m/Y"}}</p>
+                <p>Gender: {{profile.get_gender_display}}</p>
+                <p>Email: {{user_obj.email}}</p>
                 {% endif %}
                 <a href="{% url 'admin_dashboard'%}" class="go-back">go back</a>
                 <form method="post" action="{% url 'logout' %}">
