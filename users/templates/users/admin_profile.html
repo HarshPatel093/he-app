@@ -88,7 +88,7 @@
     .profile-subhead{
         margin: 8px 0 28px 0;
         font-family: ui-serif, Georgia, 'Times New Roman', serif;
-        font-weight: bold;
+        font-weight: 400;
         font-size: 26px;
         text-decoration:underline;
         text-underline-offset: .18em;
@@ -110,13 +110,13 @@
         font-family: ui-serif, Georgia, 'Times New Roman',  serif;
         font-size:24px;
         line-height: 1.5;
-        font-weight: 400;
+        font-weight: 200;
         margin-left:20px;
     }
     .signout{
-        margin-top: 18px;
+        margin-top: 40px;
         display: inline-block;
-        width:200px;
+        width:300px;
         height:40px;
         line-height: 32px;
         text-align: center;
@@ -153,6 +153,7 @@
         <a href="#">Home</a>
         <a href="#">Staff</a>
         <a href="#">Clients</a>
+        <a href="{% url 'manage_users' %}">Manage User</a>
         <a href="#" class="profile">
             <img src="{% static 'images/profile.svg' %}" alt="Profile" class="icon">
         </a>
