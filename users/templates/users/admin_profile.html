@@ -49,7 +49,7 @@
 
 
     }
-    .profile-details p {
+    .profile-details h3 {
         margin: 0 0 25px 0;
         font-family: ui-serif, Georgia, 'Times New Roman', serif;
         font-size: 24px;
@@ -94,10 +94,10 @@
         <h2 class="profile-subhead">your details</h2>
         <div class="profile-details">
             {% if has_profile %}
-            <p>Name: {{user_obj.get_full_name|default:profile.name|default:user_obj.username}} </p>
-            <p>Date of Birth: {{profile.date_of_birth|date:"d/m/Y"}}</p>
-            <p>Gender: {{profile.get_gender_display}}</p>
-            <p>Email: {{user_obj.email}}</p>
+            <h3>Name: {{user_obj.get_full_name|default:profile.name|default:user_obj.username}} </h3>
+            <h3>Date of Birth: {{profile.date_of_birth|date:"d/m/Y"}}</h3>
+            <h3>Gender: {{profile.get_gender_display}}</h3>
+            <h3>Email: {{user_obj.email}}</h3>
             {% endif %}
 
             <form method="post" action="{% url 'logout' %}">
