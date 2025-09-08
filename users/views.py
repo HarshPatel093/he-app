@@ -6,6 +6,7 @@ from .models import UserProfile
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import CreateUser
 from .models import Feedback
+from django.db.models import Q
 
 def signup(request):
     if request.method == "POST":
@@ -67,14 +68,20 @@ def dashboard_redirect(request):
 
 @login_required
 def admin_dashboard(request):
+    if request.user.userprofile.role != "admin":
+        return redirect("dashboard_redirect")
     return render(request, 'users/admin_dashboard.html')
 
 @login_required
 def staff_dashboard(request):
+    if request.user.userprofile.role != "staff":
+        return redirect("dashboard_redirect")
     return render(request, 'users/staff_dashboard.html')
 
 @login_required
 def client_dashboard(request):
+    if request.user.userprofile.role != "client":
+        return redirect("dashboard_redirect")
     return render(request, 'users/client_dashboard.html')
 
 @login_required
@@ -120,10 +127,10 @@ def create_user(request):
 @user_passes_test(lambda u: u.is_superuser)
 def manage_users(request):
     query = request.GET.get("q")
-    users = User.objects.all().select_related('userprofile')
+    users = User.objects.all().select_related('userprofile').order_by("userprofile__name") 
 
     if query:
-        users = users.filter(username__icontains=query) | users.filter(email__icontains=query)
+        users = users.filter(Q(username__icontains=query) | Q(email__icontains=query) | Q(userprofile__name__icontains=query))
 
     return render(request, "users/manage_users.html", {"users": users, "query": query})
 
@@ -189,6 +196,13 @@ def edit_user(request, user_id):
     "gender": profile.gender,
     "role": profile.role,
     })
+
+@login_required
+def clients_list(request):
+    if request.user.userprofile.role != "admin":
+        return redirect("dashboard_redirect")
+    clients = UserProfile.objects.filter(role="client").order_by("name")
+    return render(request, "users/clients_list.html", {"clients": clients})
 
 @login_required
 def client_feedback(request):

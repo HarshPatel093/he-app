@@ -1,21 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Manage Users</title>
-    <style>
-        body { 
-            font-family: Arial, sans-serif; 
-            background: #F0F4FF; 
-            margin: 0; 
-            padding: 20px; 
-        }
+{% extends "base.html" %}
+{% block title %}Manage Users{% endblock %}
+{% block content %}
 
+    <style>
+        main{
+            font-family: Arial, sans-serif;
+        }
+        
         .container {
             background: white; 
             padding: 20px; 
             border-radius: 10px; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin: -20px;
         }
 
         h1 { margin-top: 0; text-align: center; }
@@ -76,8 +73,6 @@
             text-decoration: none; 
         }
     </style>
-</head>
-<body>
     <main>
         <div class="container">
         <h1>List Of Users</h1>
@@ -143,5 +138,4 @@
         });
     });
 </script>
-</body>
-</html>
+{% endblock %}

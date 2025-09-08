@@ -15,5 +15,6 @@ urlpatterns = [
     path("edit-user/<int:user_id>/", views.edit_user, name="edit_user"),
     path('dashboard/client/profile' , views.client_profile, name='client_profile'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
-    path('dashboard/client/feedback', views.client_feedback, name = 'client_feedback')
+    path('dashboard/client/feedback', views.client_feedback, name = 'client_feedback'),
+    path("clients-list/", views.clients_list, name="clients_list"),
 ]

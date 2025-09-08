@@ -1,95 +1,10 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Admin Dashboard</title>
-    <!-- Import Nunito Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Nunito', sans-serif;
-            background-color: #F0F4FF; /* Dashboard background */
-        }
-        nav {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            background-color: #FFFFFF;
-            height: 80px;
-            padding: 0 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding-left: 5px;
-        }
-        nav img {
-            height: 80px;
-            margin-right: 27px;
-            margin-left: 0;     
-            padding-left: 0;    
-        }
-        nav a {
-            margin: 0 15px;
-            text-decoration: none;
-            color: black;
-            font-weight: 700;
-            font-size: 24px;
-            line-height: 100px;
-        }
-        nav a:hover {
-            color: #007BFF;
-        }
-        nav .profile-icon {
-            margin-left: auto;
-            font-size: 32px;
-            cursor: pointer;
-        }
-        .content {
-            padding: 40px;
-        }
-        .card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            max-width: 600px;
-        }
-        .profile-link {
-            margin-left:auto;
-            margin-right: 0px;
-            display: flex;
-            align-items: center;
-        }
-        .profile-icon {
-            height: 40px;
-            width: 40px;
-            cursor: pointer;
-            transition: transform 0.2s ease;
-        }
-        .profile-icon:hover {
-            transform: scale(1.1);
-        }
-    </style>
-</head>
-<body>
-    <nav>
-        <img src="{% static 'images/logo.jpg' %}" alt="Holiday_Explorers_Logo">
-        <a href="#">Home</a>
-        <a href="#">Staff</a>
-        <a href="#">Clients</a>
-        {% if user.is_superuser %}
-            <a href="{% url 'manage_users' %}">Manage User</a>
-        {% endif %}
-        <a href="#" class="profile-link">
-        <img src="{% static 'images/profile.svg' %}" alt="Profile" class="profile-icon"></a>
-    </nav>
+{% extends "base.html" %}
 
-    <div class="content">
-        <div class="card">
-            <h1>Welcome Admin</h1>
-            <p>You can manage users here.</p>
-        </div>
-    </div>
-</body>
-</html>
+{% block title %}Admin Dashboard{% endblock %}
 
+{% block content %}
+<div class="card">
+    <h1>Welcome Admin</h1>
+    <p>You can manage users here.</p>
+</div>
+{% endblock %}
