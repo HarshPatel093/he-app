@@ -16,55 +16,7 @@
         display: flex;
         justify-content: center;
     }
-    nav{
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        background-color: #FFFFFF;
-        height: 80px;
-        padding: 0 10px;
-        box-shadow: 0 5px 3px rgba(0,0,0,.05);
-        padding-left: 5px ;
-
-    }
-    nav img{
-        height: 80px;
-        margin-right:27px;
-        margin-left: 0;
-        padding-left: 0;
-
-    }
-    nav a{
-        margin:0 15px;
-        text-decoration:none;
-        color:black;
-        font-weight: 700;
-        font-size: 24px;
-        line-height: 100px;
-
-    }
-    nav a:hover{
-        color:#007BFF;
-    }
-    .content{
-        padding:40px;
-    }
-    .profile{
-        margin-left: auto;
-        margin-right: 0px;
-        display:flex;
-        align-items: center;
-    }
-    nav .icon{
-        height: 40px;
-        width: 40px;
-        cursor: pointer;
-        transition: transform 0.2s ease;
-
-    }
-    .icon:hover{
-        transform: scale(1.1);
-    }
+    
     body{
         margin:0;
         font-family:'Nunito', 'sans-serif';
@@ -149,16 +101,7 @@
 {% endblock %}
 
     
-    <nav>
-        <img src = "{% static 'images/logo.jpg' %}" alt="Holiday_Explorers_Logo"> 
-        <a href="#">Home</a>
-        <a href="#">Staff</a>
-        <a href="#">Clients</a>
-        <a href="{% url 'manage_users' %}">Manage User</a>
-        <a href="#" class="profile">
-            <img src="{% static 'images/profile.svg' %}" alt="Profile" class="icon">
-        </a>
-    </nav>
+    
     {% block content %}
     <div class="profile-wrap">
         <main class="profile-background" role="main" aria-labelledby="page-title">
