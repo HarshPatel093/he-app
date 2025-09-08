@@ -423,8 +423,8 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
 33	pbkdf2_sha256$1000000$qngSW3SEr5YPxCUjRBPlUW$F5wb8jDW3Zqw0U4bun1GAV6r6aWUIMx1qBFu59kZlhA=	2025-09-08 14:08:46.421008+09:30	f	client1@gmail.com			client1@gmail.com	f	t	2025-09-01 16:11:01.215062+09:30
-2	pbkdf2_sha256$1000000$3iCr8nymXcw1fQ3NExDbF4$vu3K53lw59SMs2FOwjijtpVWVTz/ZdqiuofFVUY+Wko=	2025-09-08 14:25:24.671803+09:30	t	melaniedancer@holidayexolorers.com.au			melaniedancer@holidayexolorers.com.au	t	t	2025-08-20 21:09:04+09:30
 35	pbkdf2_sha256$1000000$97VQYOjfXDL0lNfMIx07hw$jxbRaX8LmwHxl+L3WAXJjUuOlQlD6yR0bJZZ3WG4A0E=	\N	f	client2@gmail.com			client2@gmail.com	f	t	2025-09-07 16:33:12.257219+09:30
+2	pbkdf2_sha256$1000000$3iCr8nymXcw1fQ3NExDbF4$vu3K53lw59SMs2FOwjijtpVWVTz/ZdqiuofFVUY+Wko=	2025-09-08 19:05:24.731139+09:30	t	melaniedancer@holidayexplorers.com.au			melaniedancer@holidayexplorers.com.au	t	t	2025-08-20 21:09:04+09:30
 31	pbkdf2_sha256$1000000$NBkmkXlWwgtwTEkY9sHO8e$9xIwhz53srpNeQt+1LFJ1SIStKRcdmc4lnxP7eAnEaY=	2025-09-01 16:12:29.756504+09:30	f	staff1@gmail.com			staff1@gmail.com	f	t	2025-09-01 16:02:35.896706+09:30
 42	pbkdf2_sha256$1000000$WGmOSdIqRDvCM3uGQpOK18$yPAw09RefcUHBZMTkAaL7t0V6wX5FrzK7OZQP17s11U=	2025-09-07 22:58:05.961968+09:30	f	client4@gmail.com			client4@gmail.com	f	t	2025-09-07 22:58:03.249255+09:30
 43	pbkdf2_sha256$1000000$kQ9CGDBKRoFPqgihiNQFA0$2XEK4WZjIf1TEjiUQZUCTQ7XRXuXR8obXKcTD7tQ6kQ=	2025-09-07 22:58:33.545236+09:30	f	client5@gmail.com			client5@gmail.com	f	t	2025-09-07 22:58:31.247076+09:30
@@ -542,7 +542,7 @@ iztmbqv6bdk3p0ue4b5o6adczgtf39vl	.eJxVjEEOgjAQRe_StWmgHVrGpXvP0ExnBosaSCisjHdXEh
 ql53jjn0atcxqpghp87gc80f89fol4yh	.eJxVjDsOwjAQBe_iGlnGn3iXkj5niNbeNQ4gR8qnQtwdIqWA9s3Me6mBtrUO2yLzMLK6KOfU6XdMlB_SdsJ3ardJ56mt85j0ruiDLrqfWJ7Xw_07qLTUb23QQrDn4qInRPYGkNEF6KyhEqEkcliyBOnAiE8gmQtBEJaIXrCo9wfu8Ths:1uumEd:nddatt64WOsQ4SThYl7CEu_uvghsn1uph2WtZBr-00Y	2025-09-20 15:47:15.786737+09:30
 u9f4obcom6tiddvmx8mcjvrtc36qvfla	.eJxVjMsOwiAURP-FtSHAvTzq0r3fQHhcpGpoUtqV8d-VpAvdTeacmRfzYd-q3zutfs7szBQ7_XYxpAe1AfI9tNvC09K2dY58KPygnV-XTM_L4f4d1NDrWE-kCjgBQCjRoI2YQUlphXUFHSotJ0poYklGatAODJWIEly23yjY-wOy3DaO:1uunUT:g2VFfPenKR-6ICdsQjWGVbOpNgv29Qd6Bbbfysuj3FI	2025-09-20 17:07:41.969142+09:30
 dqhhws3m4tv27oboozjmkpskdsevh9kp	.eJxVjEEOgjAQRe_StWmgHVrGpXvP0ExnBosaSCisjHdXEha6_e-9_zKJtrWkreqSRjFn44I5_Y6Z-KHTTuRO0222PE_rMma7K_ag1V5n0eflcP8OCtXyrTsfomdtoBkQQhtElIAjRCWJ5HOnfXSInpwwZybEFnpgRR1yBhTz_gAPMjjd:1urDjv:k1woi5_uWwiTvYR8BFJ7uUNQ6Rgz-aXvSnuRpr_AuNQ	2025-09-10 20:20:51.055107+09:30
-3nahy493athsh1oleip0z3hvqmbhvci6	.eJxVjMsOwiAURP-FtSHAvTzq0r3fQHhcpGpoUtqV8d-VpAvdTeacmRfzYd-q3zutfs7szBQ7_XYxpAe1AfI9tNvC09K2dY58KPygnV-XTM_L4f4d1NDrWE-kCjgBQCjRoI2YQUlphXUFHSotJ0poYklGatAODJWIEly23yjY-wOy3DaO:1uvTuW:L5aYLALOd2aqO2dYcxUMsgerjsWctsdgjOrOYdWFZ70	2025-09-22 14:25:24.681676+09:30
+3nahy493athsh1oleip0z3hvqmbhvci6	.eJxVjMsOwiAURP-FtSHAvTzq0r3fQHhcpGpoUtqV8d-VpAvdTeacmRfzYd-q3zutfs7szBQ7_XYxpAe1AfI9tNvC09K2dY58KPygnV-XTM_L4f4d1NDrWE-kCjgBQCjRoI2YQUlphXUFHSotJ0poYklGatAODJWIEly23yjY-wOy3DaO:1uvYHU:uCY5rv6o18OPZpBrtn8BIeCe8vARWLry0W0oAoacpds	2025-09-22 19:05:24.737394+09:30
 1z76qchybw7zu1re0ek1dzfw1j4yk7pr	.eJxVjEEOgjAQRe_StWmgHVrGpXvP0ExnBosaSCisjHdXEha6_e-9_zKJtrWkreqSRjFn44I5_Y6Z-KHTTuRO0222PE_rMma7K_ag1V5n0eflcP8OCtXyrTsfomdtoBkQQhtElIAjRCWJ5HOnfXSInpwwZybEFnpgRR1yBhTz_gAPMjjd:1urXoV:Z-Tw89ZbH3zC6kwFMzh24ynZAHiwSFPC59ZDKHvlDhU	2025-09-11 17:46:55.818124+09:30
 covpzn01jx8lqsuwpap35ts56gpprkyu	.eJxVjMsOwiAQRf-FtSFMoTxcuvcbyDAMtmogKe3K-O_apAvd3nPOfYmI2zrFrfMS5yzOYvDi9DsmpAfXneQ71luT1Oq6zEnuijxol9eW-Xk53L-DCfv0rQHYOAwh58JIaLVCOwxMVrEZtfEmYSlJjRp9IqfIevIEBCmAd2BAvD8kgzhZ:1urXq7:FjoQPSYGAdWG_goa05lNeawT9RSDxeC0wbzUPTUtoIU	2025-09-11 17:48:35.632984+09:30
 0zsqq0z5nyqe7ct5a47hah5epxi6nd51	.eJxVjEEOgjAQRe_StWmgHVrGpXvP0ExnBosaSCisjHdXEha6_e-9_zKJtrWkreqSRjFn44I5_Y6Z-KHTTuRO0222PE_rMma7K_ag1V5n0eflcP8OCtXyrTsfomdtoBkQQhtElIAjRCWJ5HOnfXSInpwwZybEFnpgRR1yBhTz_gAPMjjd:1usyIV:xkvUj5-NpSJckivqS83xKNBmhC2eCuKIu3vZbW2TSC0	2025-09-15 16:15:47.629205+09:30
@@ -566,13 +566,13 @@ COPY public.users_feedback (id, mood, comment, photo, created_at, user_id) FROM 
 
 COPY public.users_userprofile (id, date_of_birth, gender, user_id, role, name) FROM stdin;
 27	2019-06-06	male	31	staff	staff1
-8	2000-01-01	female	2	admin	Melanie
 31	2025-09-10	male	35	client	client2
 37	\N	female	42	client	client4
 38	\N	male	43	client	client5
 36	2025-09-24	male	41	client	client3
 39	\N	male	44	client	client6
 29	2025-09-18	female	33	client	client1
+8	2000-01-01	female	2	admin	Melanie
 \.
 
 
