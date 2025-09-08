@@ -24,7 +24,7 @@
         background-color: #FFFFFF;
         height: 80px;
         padding: 0 10px;
-        box-shadow: 0 20px 5px rgba(0,0,0,0.1);
+        box-shadow: 0 5px 3px rgba(0,0,0,.05);
         padding-left: 5px ;
 
     }
@@ -101,7 +101,7 @@
     .profile-background{
         background: #eef2ff;
         border-radius: 6px;
-        box-shadow: 0 4px 12px rgba(0,0,0,.08)
+        
 
     }
     .profile-details p{
@@ -185,9 +185,9 @@
                 <p>Gender:{{profile.get_gender_display}}</p>
                 <p>Email:{{user_obj.email}}</p>
                 {% endif %}
-                <a href="#" class="go-back">go back</a>
-                <form method="post">
-
+                <a href="{% url 'admin_dashboard'%}" class="go-back">go back</a>
+                <form method="post" action="{% url 'logout' %}">
+                    {% csrf_token %}
                     <button type="submit" class="signout">sign out</button>
                 </form>
             </div>
