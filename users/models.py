@@ -28,3 +28,11 @@ class Feedback(models.Model):
     comment = models.TextField(blank=True, null=True)
     photo = models.ImageField(upload_to="feedback_photos/", blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+class Goal(models.Model): 
+    client = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="goals")
+    name = models.CharField(max_length=50)   
+    progress = models.IntegerField(default=0) 
+
+    def __str__(self):
+        return f"{self.client.name} - {self.name}"

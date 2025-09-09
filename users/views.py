@@ -7,6 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import CreateUser
 from .models import Feedback
 from django.db.models import Q
+from .models import Goal
 
 def signup(request):
     if request.method == "POST":
@@ -203,6 +204,25 @@ def clients_list(request):
         return redirect("dashboard_redirect")
     clients = UserProfile.objects.filter(role="client").order_by("name")
     return render(request, "users/clients_list.html", {"clients": clients})
+
+@login_required
+def client_detail(request, client_id):
+    if request.user.userprofile.role != "admin":
+        return redirect("dashboard_redirect")
+
+    client = get_object_or_404(UserProfile, id=client_id, role="client")
+
+    if not client.goals.exists():
+        Goal.objects.create(client=client, name="Goal 1", progress=0)
+        Goal.objects.create(client=client, name="Goal 2", progress=0)
+        Goal.objects.create(client=client, name="Goal 3", progress=0)
+
+    goals = client.goals.all()
+
+    return render(request, "users/client_detail.html", {
+        "client": client,
+        "goals": goals,
+    })
 
 @login_required
 def client_feedback(request):

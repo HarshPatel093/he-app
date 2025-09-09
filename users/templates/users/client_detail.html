@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="client-detail-container">
+    <div class="client-info-section">
+        <h1 class="section-heading">CLIENT INFO</h1>
+        <div class="client-info">
+            <p><strong>Name:</strong> {{ client.name }}</p>
+            <p><strong>Date of Birth:</strong> {{ client.date_of_birth|default:"None" }}</p>
+            <p><strong>Gender:</strong> {{ client.gender }}</p>
+            <p><strong>Email:</strong> {{ client.user.email }}</p>
+        </div>
+    </div>
+
+    <div class="client-chart">
+        <canvas id="goalsChart"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+<script>
+    const ctx = document.getElementById('goalsChart').getContext('2d');
+    const goalsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for g in goals %}'{{ g.name }}',{% endfor %}],
+            datasets: [{
+                data: [{% for g in goals %}{{ g.progress }},{% endfor %}],
+                backgroundColor: '#FFD700',
+                borderRadius: 4,
+                barThickness: 60,
+                categoryPercentage: 0.6
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false },
+                datalabels: {
+                    color: 'black',
+                    font: { weight: 'bold', size: 14 },
+                    formatter: (value) => value + '%'
+                }
+            },
+            scales: {
+                x: {
+                    grid: { display: false },
+                    ticks: { font: { weight: 'bold', size: 14 } }
+                },
+                y: {
+                    beginAtZero: true,
+                    max: 100,
+                    ticks: { stepSize: 20 },
+                    grid: { color: '#ddd' }
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    });
+</script>
+
+<style>
+    .client-detail-container {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        align-items: start;
+        justify-content: center;
+        gap: 80px;
+        margin: 30px auto;
+        max-width: 1100px;
+    }
+
+    .section-heading {
+        text-align: center;
+        margin-bottom: 50px;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .client-info {
+        background: #f5f7ff;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 18px;
+        font-weight: 600;
+        text-transform: uppercase;
+    }
+
+    .client-info p {
+        margin: 12px 0;
+    }
+
+    .client-chart {
+        width: 550px;
+        height: 350px;
+        margin-top: 10px;
+        margin-left: 60px;
+    }
+</style>
+{% endblock %}

@@ -3,11 +3,11 @@
 <h1 class="sr-only">Client List</h1>
 <div class="client-grid">
     {% for client in clients %}
-        <div class="client-card">
+        <a href="{% url 'client_detail' client.id %}" class="client-card">
             <p><strong>Name: {{ client.name }}</strong></p>
             <p><strong>Date of Birth: {{ client.date_of_birth }}</strong></p>
             <p><strong>Gender: {{ client.gender }}</strong></p>
-        </div>
+        </a>
     {% endfor %}
 </div>
 <style>
@@ -16,7 +16,7 @@
         grid-template-columns: repeat(4, 290px);
         gap: 30px;            
         margin-top: 20px;
-        justify-content: center;
+        justify-content: center; 
     }
     .client-card {
         background: #e1e6f0;
@@ -27,6 +27,9 @@
         font-family: 'Montserrat', sans-serif;
         font-weight: 600;
         text-transform: uppercase;
+        color: black;              
+        text-decoration: none;     
+        display: block;  
     }
     .client-card p {
         margin: 6px 0;
