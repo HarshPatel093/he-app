@@ -95,22 +95,19 @@
         function filter(){
             const q = (input.value || '').trim().toLowerCase()
             let visibleCount = 0;
-            
+            cards.forEach(card => {
+                const name = card.dataset.name || '';
+                const show = !q || name.includes(q);
+                card.style.display = show ? '' : 'none';
+                if (show) visibleCount++;
+            });
+            noResults.style.display = visibleCount ? 'none' : 'block'
 
         }
-    })
-    document.getElementsById("searchInput").addEventListener("keyup", function(){
-        let filter = this.value.toLowerCase();
-        let cards = document.querySelectorAll("#clientDrid .client-card");
-        cards.forEach(card => {
-            let name = card.querySelector("p strong").textContent.toLocaleLowerCase() || "";
-            if (name.includes(filter)){
-                card.style.display="";
+        input.addEventListener('input', filter)
+        filter();
 
-            }else{
-                card.style.display = "none"
-            }
-        });
-    });
+    }) ();
+    
 </script>
 {% endblock %}
