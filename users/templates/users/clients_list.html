@@ -6,7 +6,10 @@
     id="searchInput"
     aria-label="SearchBox"
     class="searchbox"
-    placeholder="Search by name">
+    placeholder="Search by name"
+    name="q"
+    value="{{ query }}"
+    >
 
 </div>
 
@@ -83,7 +86,17 @@
 {% endblock %}
 <script>
     document.getElementsById("searchInput").addEventListener("keyup", function(){
-        let filter=this.value.toLowerCase();
-    })
+        let filter = this.value.toLowerCase();
+        let cards = document.querySelectorAll("#clientDrid .client-card");
+        cards.forEach(card => {
+            let name = card.querySelector("p strong").textContent.toLocaleLowerCase() || "";
+            if (name.includes(filter)){
+                card.style.display="";
+
+            }else{
+                card.style.display = "none"
+            }
+        });
+    });
 </script>
 {% endblock %}
