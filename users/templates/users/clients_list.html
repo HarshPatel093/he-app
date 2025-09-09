@@ -12,14 +12,18 @@
     >
 
 </div>
-<div id="noResults" style="display: none;" text-align=center; margin-top:12px;>
+<div id="noResults" style="display: none; text-align:center; margin-top:12px;">
     No clients found.
 </div>
 
 
 <div class="client-grid">
     {% for client in clients %}
+
         <a href="{% url 'client_detail' client.id %}" class="client-card">
+
+        <div class="client-card" data-name = "{{ client.name|lower }}">
+
             <p><strong>Name: {{ client.name }}</strong></p>
             <p><strong>Date of Birth: {{ client.date_of_birth }}</strong></p>
             <p><strong>Gender: {{ client.gender }}</strong></p>
@@ -89,8 +93,8 @@
 {% endblock %}
 <script>
     (function(){
-        const input = document.getElementsById("searchInput");
-        const cards = document.querySelectorAll(".client-card");
+        const input = document.getElementById("searchInput");
+        const cards = Array.from(document.querySelectorAll(".client-card"));
         const noResults = document.getElementById('noResults')
         function filter(){
             const q = (input.value || '').trim().toLowerCase()
