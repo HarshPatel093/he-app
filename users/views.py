@@ -202,8 +202,11 @@ def edit_user(request, user_id):
 def clients_list(request):
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
+    query = request.GET.get("q", "")
     clients = UserProfile.objects.filter(role="client").order_by("name")
-    return render(request, "users/clients_list.html", {"clients": clients})
+    if query:
+        clients=clients.filter(name__icontains=query)
+    return render(request, "users/clients_list.html" ,{"clients": clients, "query": query})
 
 @login_required
 def client_detail(request, client_id):
