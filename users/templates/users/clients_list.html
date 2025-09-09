@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 {% block content %}
 <h1 class="sr-only">Client List</h1>
+<div class="top-bar">
+    <input type="text"
+    id="searchInput"
+    aria-label="SearchBox"
+    class="searchbox"
+    placeholder="Search by name">
+
+</div>
+
+
 <div class="client-grid">
     {% for client in clients %}
         <a href="{% url 'client_detail' client.id %}" class="client-card">
@@ -10,6 +20,7 @@
         </a>
     {% endfor %}
 </div>
+
 <style>
     .client-grid {
         display: grid;
@@ -68,4 +79,11 @@
         margin-bottom: 15px;
     }
 </style>
+
+{% endblock %}
+<script>
+    document.getElementsById("searchInput").addEventListener("keyup", function(){
+        let filter=this.value.toLowerCase();
+    })
+</script>
 {% endblock %}
