@@ -8,9 +8,12 @@
     class="searchbox"
     placeholder="Search by name"
     name="q"
-    value="{{ query }}"
+    value="{{ query|default:'' }}"
     >
 
+</div>
+<div id="noResults" style="display: none;" text-align=center; margin-top:12px;>
+    No clients found.
 </div>
 
 
@@ -85,6 +88,17 @@
 
 {% endblock %}
 <script>
+    (function(){
+        const input = document.getElementsById("searchInput");
+        const cards = document.querySelectorAll(".client-card");
+        const noResults = document.getElementById('noResults')
+        function filter(){
+            const q = (input.value || '').trim().toLowerCase()
+            let visibleCount = 0;
+            
+
+        }
+    })
     document.getElementsById("searchInput").addEventListener("keyup", function(){
         let filter = this.value.toLowerCase();
         let cards = document.querySelectorAll("#clientDrid .client-card");
