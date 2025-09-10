@@ -20,10 +20,7 @@
 <div class="client-grid">
     {% for client in clients %}
 
-        <a href="{% url 'client_detail' client.id %}" class="client-card">
-
-        <div class="client-card" data-name = "{{ client.name|lower }}">
-
+        <a href="{% url 'client_detail' client.id %}" class="client-card" data-name = "{{ client.name|lower }}" aria-label="View {{client.name}}">
             <p><strong>Name: {{ client.name }}</strong></p>
             <p><strong>Date of Birth: {{ client.date_of_birth }}</strong></p>
             <p><strong>Gender: {{ client.gender }}</strong></p>
@@ -90,7 +87,8 @@
     }
 </style>
 
-{% endblock %}
+
+
 <script>
     (function(){
         const input = document.getElementById("searchInput");

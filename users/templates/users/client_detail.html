@@ -28,9 +28,9 @@
     const goalsChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: [{% for g in goals %}'{{ g.name }}',{% endfor %}],
+            labels: [{% for g in goals %}'{{ g.name }}'{% if not forloop.last %}, {% endif %} {% endfor %}],
             datasets: [{
-                data: [{% for g in goals %}{{ g.progress }},{% endfor %}],
+                data: [{% for g in goals %}{{ g.progress }} {% if not forloop.last %}, {% endif %}{% endfor %}],
                 backgroundColor: '#FFD700',
                 borderRadius: 4,
                 barThickness: 60,
