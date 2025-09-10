@@ -12,7 +12,7 @@
     >
 
 </div>
-<div id="noResults" style="display: none; text-align:center; margin-top:12px;">
+<div id="noResults" class="no-results">
     No clients found.
 </div>
 
@@ -34,7 +34,8 @@
         grid-template-columns: repeat(4, 290px);
         gap: 30px;            
         margin-top: 20px;
-        justify-content: center; 
+        justify-content: start;
+        margin-left: 10px; 
     }
     .client-card {
         background: #e1e6f0;
@@ -84,6 +85,16 @@
         justify-content: space-between;
         align-items: center;
         margin-bottom: 15px;
+    }
+    .no-results{
+        display: none;
+        text-align:center;
+        margin-top:200px;
+        margin-left:-3px;
+        font-size:32px;
+        font-weight:600;
+        color:#333;
+
     }
 </style>
 
