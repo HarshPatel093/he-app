@@ -10,16 +10,13 @@ urlpatterns = [
     path('dashboard/staff/', views.staff_dashboard, name='staff_dashboard'),
     path('dashboard/client/', views.client_dashboard, name='client_dashboard'),
     path('create/', views.create_user, name='create_user'),
-    path("manage-users/", views.manage_users, name="manage_users"),
+    path("dashboard/admin/manage-users/", views.manage_users, name="manage_users"),
     path("delete-user/<int:user_id>/", views.delete_user, name="delete_user"),
     path("edit-user/<int:user_id>/", views.edit_user, name="edit_user"),
     path('dashboard/client/profile' , views.client_profile, name='client_profile'),
     path('logout/', auth_views.LogoutView.as_view(next_page='login'), name='logout'),
     path('dashboard/client/feedback', views.client_feedback, name = 'client_feedback'),
-
-
-    path("clients-list/", views.clients_list, name="clients_list"),
-
+    path("dashboard/admin/clients-list/", views.clients_list, name="clients_list"),
     path("client/<int:client_id>/", views.client_detail, name="client_detail"),
     path('dashboard/admin/profile/', views.admin_profile, name='admin_profile'),
 

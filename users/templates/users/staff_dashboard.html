@@ -7,41 +7,27 @@
 <title>Staff's Dashboard</title>
 <style>
   
-    .bottom-nav{
-        background-color: #d9d9d9;
+    .bottom-nav {
+        background-color: #D9D9D9;
         width: 100%;
         height: 65px;
-        display:flex;
-        justify-content: center;
+        display: flex;
+        justify-content: space-around;
         align-items: center;
-        position:fixed;
+        position: fixed;
         bottom: 0;
-        left:0;
-
-
+        left: 0;
     }
-    .bottom-nav img{
-        width:7vw;
-        max-width: 50px;
-        min-width: 40px;
-        height: auto;
-        cursor:pointer;
-        background: none;
-        border: none;
-        padding:0;
-        box-shadow: none;
-    }
-    .bottom-nav a{
-        background: #fff;
+
+    .bottom-nav a {
+        background: transparent; 
         width: 60px;
         height: 60px;
-        border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        
-        
     }
+
     .bottom-nav a:hover{
         transform: scale(1.05);
     }
@@ -59,14 +45,17 @@
     <h1>Clients:</h1>
     <div class="bottom-nav">
         <a href="#" aria-label="Profile">
-            <img src="{% static 'images/profile.svg' %}" alt="Profile">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="40" height="40" fill="black">
+                <path d="M463 448.2C440.9 409.8 399.4 384 
+                 352 384H288c-47.4 0-88.9 25.8-111 64.2
+                 C212.2 487.4 263.2 512 320 512
+                 s107.8-24.7 143-63.8zM64 320
+                 c0-141.4 114.6-256 256-256s256 114.6 256 256
+                 -114.6 256-256 256S64 461.4 64 320zm256 16
+                 c39.8 0 72-32.2 72-72s-32.2-72-72-72
+                 -72 32.2-72 72 32.2 72 72 72z"/>
+            </svg>
         </a>
     </div>
 </body>
-
-
-
-
-
-
 </html>
