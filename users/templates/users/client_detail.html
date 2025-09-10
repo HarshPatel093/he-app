@@ -1,6 +1,10 @@
 {% extends "base.html" %}
 {% block content %}
 
+<div class="back-btn-container">
+  <a href="{% url 'clients_list' %}" class="back-btn">← Back</a>
+</div>
+
 <div class="client-detail-container">
     <div class="client-info-section">
         <h1 class="section-heading">CLIENT INFO</h1>
@@ -100,6 +104,26 @@
         height: 350px;
         margin-top: 10px;
         margin-left: 60px;
+    }
+
+    .back-btn-container {
+        margin: 15px 0 25px 0;
+    }
+    
+    .back-btn {
+        display: inline-block;
+        font-size: 14px;           
+        padding: 5px 12px;         
+        background: #0056b3;       
+        color: #FFFFFF;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background 0.2s ease;
+    }
+
+    .back-btn:hover {
+        background: #004494;       
     }
 </style>
 {% endblock %}
