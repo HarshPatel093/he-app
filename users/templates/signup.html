@@ -10,11 +10,18 @@
         font-family: 'Segoe UI', sans-serif;
         display: flex;
         justify-content: center;
-        align-items: flex-start; /* align to top */
+        align-items: center;
         height: 100vh;
         background: #2148C0;
         position: relative;
         overflow: hidden;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    @supports not (height: 100dvh) {
+        body {
+            height: 100vh; /* fallback */
+        }
     }
 
     /* Ellipses */
@@ -51,17 +58,20 @@
         max-width: 350px;
         padding: 20px;
         text-align: center;
-        position: relative;
+        position: fixed;
         z-index: 2;
-        margin-top: 50px; /* pushes form downward */
+        margin: 0px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
     }
     h1 {
-    color: white; 
-    font-family: 'Times New Roman', serif; 
-    font-size: 36px; /* Bigger size */
-    font-weight: bold;
-    margin-bottom: 35px;
-}
+        color: white; 
+        font-family: 'Times New Roman', serif; 
+        font-size: 36px; /* Bigger size */
+        font-weight: bold;
+        margin-bottom: 35px;
+    }
 
     .input-wrapper {
         position: relative;
@@ -124,6 +134,24 @@
     button.form-btn:hover {
         background: #f2f2f2;
     }
+
+    .messages p {
+        color: #ffffff;
+        font-size: 18px;
+        margin: -5px 0 10px 0;
+        text-align: center;
+    }
+
+    .login-link {
+        margin-top: 10px;
+        font-size: 18px;
+        color: white; 
+    }
+
+    .login-link a {
+        text-decoration: underline;
+        color: white; 
+    }
 </style>
 </head>
 <body>
@@ -133,6 +161,15 @@
 
     <main class="signup-container">
         <h1 style="padding-top: 0px;">Sign Up</h1>
+
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
         <form method="POST" >
             {% csrf_token %}
             <input type="text" id="name" aria-label="Name" name="name" placeholder="ENTER YOUR NAME" required>
@@ -156,6 +193,9 @@
 
             <button href="login.html" class="form-btn" type="submit">Create Account</button>
         </form>
+        <div class="login-link">
+            Already have an account? <a href="{% url 'login' %}">Log In</a>
+        </div>
     </main>
 
     <script>

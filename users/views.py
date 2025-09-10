@@ -23,7 +23,7 @@ def signup(request):
             return redirect('signup')
 
         if User.objects.filter(username=email).exists():
-            messages.error(request, "Email already exists")
+            messages.error(request, "Email already exists!")
             return redirect('signup')
 
         # Create user
