@@ -29,7 +29,12 @@
         text-transform: uppercase;
         color: black;              
         text-decoration: none;     
-        display: block;  
+        display: block; 
+        transition: transform 0.2s ease, box-shadow 0.2s ease; 
+    }
+    .client-card:hover {
+        transform: scale(1.05);      
+        box-shadow: 0 6px 15px rgba(0,0,0,0.15);  
     }
     .client-card p {
         margin: 6px 0;
