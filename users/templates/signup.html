@@ -61,7 +61,7 @@
         position: fixed;
         z-index: 2;
         margin: 0px;
-        top: 50%;
+        top: 45%;
         left: 50%;
         transform: translate(-50%, -50%);
     }
@@ -165,7 +165,9 @@
         {% if messages %}
         <div class="messages">
             {% for message in messages %}
-                <p>{{ message }}</p>
+                {% if "signup" in message.tags %}
+                    <p style="color:white; font-weight:bold; font-size:18px;">{{ message }}</p>
+                {% endif %}
             {% endfor %}
         </div>
         {% endif %}

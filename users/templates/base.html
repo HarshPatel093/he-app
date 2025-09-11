@@ -88,7 +88,7 @@
            class="{% if request.resolver_match.url_name == 'manage_users' %}active{% endif %}">Manage User</a>
     {% endif %}
     
-    <a href="{% url 'admin_profile' %}" class="profile-link">
+    <a href="{% url 'admin_profile' %}" class="profile-link" aria-label="Profile">
 
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="40" height="40"  class="profile-icon" fill="black">
             <path d="M463 448.2C440.9 409.8 399.4 384 

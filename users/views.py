@@ -19,11 +19,11 @@ def signup(request):
         gender = request.POST.get('gender')
 
         if password != confirm_password:
-            messages.error(request, "Passwords do not match")
+            messages.error(request, "Passwords do not match", extra_tags="signup")
             return redirect('signup')
 
         if User.objects.filter(username=email).exists():
-            messages.error(request, "Email already exists!")
+            messages.error(request, "Email already exists!", extra_tags="signup")
             return redirect('signup')
 
         # Create user
@@ -53,7 +53,8 @@ def login_view(request):
             login(request, user)
             return redirect('dashboard_redirect')
         else:
-            messages.error(request, "Invalid credentials")
+            messages.error(request, "Invalid credentials!", extra_tags="login")
+            return redirect("login")
 
     return render(request, 'login.html')
 

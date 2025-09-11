@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>{% block title %}{% endblock %}</title>
+    <style>
+        :root {
+            --brand: #2148C0;
+            --white: #fff;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', sans-serif;
+            height: 100vh;
+            background: var(--brand);
+            overflow: hidden;  
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        @supports (-webkit-touch-callout: none) {
+            body { height: -webkit-fill-available; }
+        }
+
+        /* Ellipses background */
+        .ellipse1, .ellipse2, .ellipse3 {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 0;
+        }
+        .ellipse1 { width: 438px; height: 438px; left: -219px; top: 501px; background: #274FC7; }
+        .ellipse2 { width: 572px; height: 572px; left: -286px; top: 434px; background: #244BC5; }
+        .ellipse3 { width: 724px; height: 724px; left: -362px; top: 358px; background: #264ECA; }
+
+        /* Auth container */
+        .auth-container {
+            width: 90%;
+            max-width: 350px;
+            padding: 20px;
+            text-align: center;
+            position: fixed;      
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+        }
+
+        h1 {
+            color: var(--white);
+            font-family: 'Times New Roman', serif;
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 25px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255,255,255,0.5);
+            border-radius: 5px;
+            outline: none;
+            font-size: 16px;
+            background: transparent;
+            color: var(--white);
+        }
+        input::placeholder { color: #ffffff; opacity: 1; }
+
+        button.form-btn {
+            background: var(--white);
+            color: var(--brand);
+            font-weight: bold;
+            border: none;
+            padding: 12px;
+            font-size: 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            text-transform: uppercase;
+            display: block;
+            margin: 0 auto;
+            width: 100%;
+        }
+        button.form-btn:hover { background: #f2f2f2; }
+
+        a.button-secondary {
+            display: block;
+            margin-top: 20px;
+            padding: 12px;
+            background: transparent;        
+            color: var(--white);            
+            font-weight: bold;
+            border: 1px solid var(--white); 
+            border-radius: 5px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s ease-in-out;
+        }
+
+        a.link {
+            display: block;
+            margin-top: 15px;
+            color: var(--white);
+            text-decoration: underline;
+            font-size: 14px;
+            text-align: center;
+            -webkit-tap-highlight-color: transparent;
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="ellipse3"></div>
+    <div class="ellipse2"></div>
+    <div class="ellipse1"></div>
+
+    <main class="auth-container">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

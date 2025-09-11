@@ -189,6 +189,16 @@
 
     <main class="login-container">
         <h1>Sign In</h1>
+        {% if messages %}
+            {% for message in messages %}
+                {% if "login" in message.tags %}
+                <p style="color:white; font-size:18px;">
+                    {{ message }}
+                </p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+
         <form method="POST">
             {% csrf_token %}
             <input type="email" id="email" name="email" aria-label="Email" placeholder="EMAIL" required>
@@ -201,7 +211,7 @@
             <button style="margin-top:30px;" class="form-btn" type="submit">Login</button>
         </form>
 
-        <a href="#" class="link">Forgot password?</a>
+        <a href="{% url 'password_reset' %}" class="link">Forgot password?</a>
 
         <div class="divider">
             <span>OR</span>
