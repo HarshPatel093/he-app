@@ -43,15 +43,15 @@
         display: block;
         text-decoration: none;
         color: inherit;
-        background: #dcdde1
+        background: #dcdde1;
         border-radius: 18px;
         padding:22px;
         box-shadow:0 2px 6px rgba(0,0,0,.08);
-       text-decoration: none;
-       color: black;
-       font-size:15px;
-       font-weight: 600;
-       transition: transform 0.2s ease, box-shadow 0.2s ease;
+        text-decoration: none;
+        color: black;
+        font-size:15px;
+        font-weight: 600;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     .card-list{
         display: flex;
@@ -64,15 +64,41 @@
 
 
     }
+    .no-clients{
+        text-align: center;
+        margin-top:200px;
+        font-weight:600;
+        font-size:32px;
+        color:#444;
+        border-radius: 14px;
+        padding: 20px;
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+        
+
+    }
     
 </style>
 </head>
 <body>
     <h1>Clients:</h1>
     <div class="card-list">
+        {% for client in clients %}
         <a href="#" class="card" >
+            <p>Name:{{client.name}}</p>
+            <p>Date of Birth:{{client.date_of_birth|date:"d/m/Y"}}</p>
+            <p>Gender:{{client.gender}}</p>
+        </a>
+        {% empty %}
+        <div class="no-clients">
+            No Clients Assigned.
+        </div>
             
-    <!--
+        {% endfor %}
+
+
+    
     <div class="bottom-nav">
         <a href="#" aria-label="Profile">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="40" height="40" fill="black">
@@ -86,6 +112,6 @@
                  -72 32.2-72 72 32.2 72 72 72z"/>
             </svg>
         </a>
-    </div> -->
+    </div> 
 </body>
 </html>
