@@ -14,6 +14,14 @@ class UserProfile(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='client')
 
+    assigned_staff = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='assigned_clients'
+    )
+
     def __str__(self):
         return self.name if self.name else self.user.email
 

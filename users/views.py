@@ -91,12 +91,20 @@ def staff_dashboard(request):
 def client_dashboard(request):
     if request.user.userprofile.role != "client":
         return redirect("dashboard_redirect")
+
     client = request.user.userprofile
     goals = client.goals.all()
     return render(request, 'users/client_dashboard.html', {
         "client": client,
         "goals": goals,
     })
+
+    clients = UserProfile.objects.filter(
+        role = "client",
+        assigned_staff=request.user).order_by("name")
+
+    return render(request, 'users/client_dashboard.html', {"clients": clients})
+
 
 @login_required
 def client_profile(request):
