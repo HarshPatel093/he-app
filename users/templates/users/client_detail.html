@@ -18,6 +18,9 @@
 
     <div class="client-chart">
         <canvas id="goalsChart"></canvas>
+        <div class="edit-btn-container">
+            <a href="{% url 'edit_goals' client.id %}" class="edit-btn">Edit Goals</a>
+        </div>
     </div>
 </div>
 
@@ -28,7 +31,7 @@
     const goalsChart = new Chart(ctx, {
         type: 'bar',
         data: {
-            labels: [{% for g in goals %}'{{ g.name }}'{% if not forloop.last %}, {% endif %} {% endfor %}],
+            labels: [{% for g in goals %}'{{ g.goal_type.name }}'{% if not forloop.last %}, {% endif %} {% endfor %}],
             datasets: [{
                 data: [{% for g in goals %}{{ g.progress }} {% if not forloop.last %}, {% endif %}{% endfor %}],
                 backgroundColor: '#FFD700',
@@ -51,7 +54,26 @@
             scales: {
                 x: {
                     grid: { display: false },
-                    ticks: { font: { weight: 'bold', size: 14 } }
+                    ticks: { 
+                        font: { weight: 'bold', size: 12 },
+                        callback: function(value, index) {
+                            let label = this.getLabelForValue(value);
+                            const words = label.split(" ");
+                            let lines = [];
+                            let currentLine = "";
+
+                            words.forEach(word => {
+                                if ((currentLine + " " + word).trim().length <= 12) {
+                                    currentLine = (currentLine + " " + word).trim();
+                                } else {
+                                    lines.push(currentLine);
+                                    currentLine = word;
+                                }
+                            });
+                            if (currentLine) lines.push(currentLine);
+                            return lines; 
+                        }
+                    }
                 },
                 y: {
                     beginAtZero: true,
@@ -110,7 +132,8 @@
         margin: 15px 0 25px 0;
     }
     
-    .back-btn {
+    .back-btn,
+    .edit-btn {
         display: inline-block;
         font-size: 14px;           
         padding: 5px 12px;         
@@ -122,8 +145,14 @@
         transition: background 0.2s ease;
     }
 
-    .back-btn:hover {
+    .back-btn:hover,
+    .edit-btn:hover {
         background: #004494;       
+    }
+
+    .edit-btn-container {
+        margin-top: 20px;
+        text-align: center;
     }
 </style>
 {% endblock %}

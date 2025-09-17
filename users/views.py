@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import CreateUser
 from .models import Feedback
 from django.db.models import Q
-from .models import Goal
+from .models import Goal, GoalType
 
 def signup(request):
     if request.method == "POST":
@@ -84,7 +84,12 @@ def staff_dashboard(request):
 def client_dashboard(request):
     if request.user.userprofile.role != "client":
         return redirect("dashboard_redirect")
-    return render(request, 'users/client_dashboard.html')
+    client = request.user.userprofile
+    goals = client.goals.all()
+    return render(request, 'users/client_dashboard.html', {
+        "client": client,
+        "goals": goals,
+    })
 
 @login_required
 def client_profile(request):
@@ -216,12 +221,19 @@ def client_detail(request, client_id):
 
     client = get_object_or_404(UserProfile, id=client_id, role="client")
 
-    if not client.goals.exists():
-        Goal.objects.create(client=client, name="Goal 1", progress=0)
-        Goal.objects.create(client=client, name="Goal 2", progress=0)
-        Goal.objects.create(client=client, name="Goal 3", progress=0)
+    default_types = [
+        "Meet new people", "Build friendships", "Learn a new skill", "Stay active",
+        "Feel included", "Improve transport knowledge", "Improve communication skills",
+        "Learn money handling", "Gain confidence", "Connect to community",
+        "Explore independently", "Gain independence"
+    ]
 
-    goals = client.goals.all()
+    if not client.goals.exists():
+        for t in default_types[:3]: 
+            goal_type, _ = GoalType.objects.get_or_create(name=t)
+            Goal.objects.create(client=client, goal_type=goal_type, progress=0)
+
+    goals = client.goals.select_related("goal_type").all()
 
     return render(request, "users/client_detail.html", {
         "client": client,
@@ -252,4 +264,40 @@ def admin_profile(request):
         "profile":profile,
         "has_profile":bool(profile),
 
+    })
+
+@login_required
+def edit_goals(request, client_id):
+    if request.user.userprofile.role != "admin":
+        return redirect("dashboard_redirect")
+
+    client = get_object_or_404(UserProfile, id=client_id, role="client")
+
+    goals = client.goals.select_related("goal_type").all()
+
+    goal_choices = GoalType.objects.all()
+
+    if request.method == "POST":
+        for goal in goals:
+            progress_value = request.POST.get(f"goal_progress_{goal.id}")
+            if progress_value is not None:
+                try:
+                    goal.progress = int(progress_value)
+                except ValueError:
+                    pass
+
+            goal_value = request.POST.get(f"goal_name_{goal.id}")
+            if goal_value:
+                goal_type, _ = GoalType.objects.get_or_create(name=goal_value)
+                goal.goal_type = goal_type
+
+            goal.save()
+
+        messages.success(request, f"Goals for {client.name} updated successfully.")
+        return redirect("client_detail", client_id=client.id)
+
+    return render(request, "users/edit_goals.html", {
+        "client": client,
+        "goals": goals,   
+        "goal_choices": [(g.name, g.name) for g in goal_choices],
     })

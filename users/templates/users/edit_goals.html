@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="back-btn-container">
+  <a href="{% url 'client_detail' client.id %}" class="back-btn">← Back to Client</a>
+</div>
+
+<div class="edit-goals-container">
+    <h1 class="section-heading">EDIT GOALS FOR {{ client.name|upper }}</h1>
+
+    <form method="POST">
+        {% csrf_token %}
+        <div class="goals-form">
+            {% for goal in goals %}
+                <div class="goal-input">
+                    <select name="goal_name_{{ goal.id }}" id="goalDropdown_{{ goal.id }}" 
+                    onchange="enableGoalInput({{ goal.id }})" required>
+                        {% for value, label in goal_choices %}
+                            <option value="{{ value }}" {% if goal.goal_type and goal.goal_type.name == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                        <option value="new">➕ Add New Goal</option>
+                    </select>
+                    
+                    <div id="goalInputWrapper_{{ goal.id }}" style="display:none; flex:1; align-items:center; gap:5px;">
+                        <input type="text" id="goalInput_{{ goal.id }}" placeholder="Enter new goal" style="flex:1; padding:6px; border-radius:5px; border:1px solid #ccc;">
+                        <button type="button" onclick="confirmNewGoal({{ goal.id }})" style="color:green; font-weight:bold; border:none; background:none;">✔</button>
+                        <button type="button" onclick="cancelNewGoal({{ goal.id }})" style="color:red; font-weight:bold; border:none; background:none;">✖</button>
+                    </div>
+
+                    <input type="number" 
+                           name="goal_progress_{{ goal.id }}" 
+                           value="{{ goal.progress }}" 
+                        min="0" max="100" required>
+                    <span>%</span>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="save-btn">Save Changes</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .edit-goals-container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 25px;
+        background: #f5f7ff;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .section-heading {
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+    }
+
+    .goals-form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .goal-input {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-weight: 600;
+    }
+
+    .goal-input select {
+        flex: 2;
+        padding: 6px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 16px;
+    }
+
+    .goal-input input {
+        width: 80px;
+        padding: 6px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        text-align: center;
+        font-size: 16px;
+    }
+
+    .goal-input span {
+        font-weight: 700;
+    }
+
+    .form-actions {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+    .save-btn {
+        background: #0056b3;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 5px;
+        font-size: 15px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+
+    .save-btn:hover {
+        background: #004494;
+    }
+
+    .back-btn-container {
+        margin: 15px 0 25px 0;
+    }
+
+    .back-btn {
+        display: inline-block;
+        font-size: 14px;           
+        padding: 5px 12px;         
+        background: #0056b3;       
+        color: #FFFFFF;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background 0.2s ease;
+    }
+
+    .back-btn:hover {
+        background: #004494;       
+    }
+</style>
+
+<script>
+let lastSelected = {};
+
+function enableGoalInput(goalId) {
+    let dropdown = document.getElementById("goalDropdown_" + goalId);
+    let wrapper = document.getElementById("goalInputWrapper_" + goalId);
+
+    if (dropdown.value === "new") {
+        lastSelected[goalId] = dropdown.dataset.prev || "";
+        dropdown.style.display = "none";
+        wrapper.style.display = "flex";
+    } else {
+        dropdown.dataset.prev = dropdown.value;
+    }
+}
+
+function confirmNewGoal(goalId) {
+    let dropdown = document.getElementById("goalDropdown_" + goalId);
+    let input = document.getElementById("goalInput_" + goalId);
+    let wrapper = document.getElementById("goalInputWrapper_" + goalId);
+
+    if (input.value.trim() !== "") {
+        let newOption = new Option(input.value, input.value, true, true);
+        dropdown.add(newOption);
+        dropdown.value = input.value;
+
+        dropdown.dataset.prev = input.value; 
+        wrapper.style.display = "none";
+        dropdown.style.display = "inline-block";
+        input.value = "";
+    }
+}
+
+function cancelNewGoal(goalId) {
+    let dropdown = document.getElementById("goalDropdown_" + goalId);
+    let wrapper = document.getElementById("goalInputWrapper_" + goalId);
+    let input = document.getElementById("goalInput_" + goalId);
+
+    input.value = "";
+    dropdown.value = lastSelected[goalId] || dropdown.options[0].value;  
+    wrapper.style.display = "none";
+    dropdown.style.display = "inline-block";
+}
+</script>
+{% endblock %}
