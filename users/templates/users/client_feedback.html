@@ -189,8 +189,7 @@
         <div id="feedback-form">
           <h1>Please tell us how <br> you feel </h1>
 
-          <fieldset>
-            <legend class="sr-only">Select how you feel</legend>
+          <legend class="sr-only">Select how you feel</legend>
             <div class="faces">
               <label class="face">
                 <input type="radio" name="mood" value="1">
@@ -212,14 +211,13 @@
                 <input type="radio" name="mood" value="5">
                 <img src="{% static 'images/grin(5).png' %}" alt="grin">
               </label>
-            </div>
-          </fieldset>
+          </div>
           <div id="mood-error" style="color:red; font-size:14px; display:none; margin-top:8px;">
             Please select how you feel.
           </div>
           <input type="file" aria-label="Image" id="photoInput" name="photo" accept="image/*" capture="environment" style="display:none;">
           <textarea name="comment" aria-label="Optional_Comment" placeholder="Tell us how you feel (optional)"></textarea>
-          <button type="button" class="btn btn-primary" onclick="openCamera()">Show us how you feel (optional)</button>
+          <button type="button" class="btn btn-primary" onclick="openCamera()">Click here to upload a photo now! 📷 (optional)</button>
           <button type="submit" class="btn btn-submit">Submit</button>
           <img id="preview" alt="Preview of uploaded photo" style="max-width:200px; display:none; margin-top:10px;"/>
           <div id="photo-actions" style="display:none; margin-top:8px;">
