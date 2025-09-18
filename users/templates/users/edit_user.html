@@ -131,11 +131,6 @@
 
                 <input type="date" aria-label="Date_Of_Birth" name="date_of_birth" value="{{ date_of_birth|date:'Y-m-d' }}">
 
-                <select name="gender" aria-label="Gender" required>
-                    <option value="male" {% if gender == "male" %}selected{% endif %}>Male</option>
-                    <option value="female" {% if gender == "female" %}selected{% endif %}>Female</option>
-                </select>
-
                 <select name="role" aria-label="Role" required>
                     <option value="admin" {% if role == "admin" %}selected{% endif %}>Admin</option>
                     <option value="staff" {% if role == "staff" %}selected{% endif %}>Staff</option>

@@ -8,7 +8,6 @@ class CreateUser(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput)
     confirm_password = forms.CharField(widget=forms.PasswordInput, label="Re-enter Password")
     date_of_birth = forms.DateField(widget=forms.DateInput(attrs={'type': 'date'}))
-    gender = forms.ChoiceField(choices=UserProfile.GENDER_CHOICES)
     role = forms.ChoiceField(choices=UserProfile.ROLE_CHOICES)
 
     class Meta:

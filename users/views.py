@@ -16,7 +16,6 @@ def signup(request):
         password = request.POST.get('password')
         confirm_password = request.POST.get('confirm_password')
         date_of_birth = request.POST.get('date_of_birth')
-        gender = request.POST.get('gender')
 
         if password != confirm_password:
             messages.error(request, "Passwords do not match", extra_tags="signup")
@@ -31,7 +30,7 @@ def signup(request):
         user.save()
 
         # Create profile
-        profile = UserProfile(user=user, name=name, date_of_birth=date_of_birth, gender=gender)
+        profile = UserProfile(user=user, name=name, date_of_birth=date_of_birth)
         profile.save()
 
         # Auto-login
@@ -120,7 +119,6 @@ def create_user(request):
                 user=user,
                 name=name,
                 date_of_birth=form.cleaned_data['date_of_birth'],
-                gender=form.cleaned_data['gender'],
                 role=form.cleaned_data['role']
             )
 
@@ -163,7 +161,6 @@ def edit_user(request, user_id):
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
         date_of_birth = request.POST.get("date_of_birth")
-        gender = request.POST.get("gender")
         role = request.POST.get("role")
 
         user.username = email
@@ -180,7 +177,6 @@ def edit_user(request, user_id):
         profile.name = name 
         if date_of_birth:
             profile.date_of_birth = date_of_birth
-        profile.gender = gender
         profile.role = role
         profile.save()
 
@@ -191,7 +187,6 @@ def edit_user(request, user_id):
         "name": profile.name,
         "email": user.email,
         "date_of_birth": profile.date_of_birth,
-        "gender": profile.gender,
         "role": profile.role,
     }
 
@@ -200,7 +195,6 @@ def edit_user(request, user_id):
     "name": profile.name,
     "email": user.email,
     "date_of_birth": profile.date_of_birth,
-    "gender": profile.gender,
     "role": profile.role,
     })
 

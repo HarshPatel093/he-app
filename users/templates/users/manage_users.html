@@ -89,7 +89,6 @@
                         <th>Email</th>
                         <th>Date Joined</th>
                         <th>Role</th>
-                        <th>Gender</th>
                         <th>Date of Birth</th>
                         <th>Actions</th>
                     </tr>
@@ -101,7 +100,6 @@
                         <td>{{ user.email }}</td>
                         <td>{{ user.date_joined|date:"Y-m-d H:i" }}</td>
                         <td>{{ user.userprofile.role }}</td>
-                        <td>{{ user.userprofile.gender }}</td>
                         <td>{{ user.userprofile.date_of_birth }}</td>
                         <td class="actions">
                             <a href="{% url 'edit_user' user.id %}" class="edit">Edit</a>

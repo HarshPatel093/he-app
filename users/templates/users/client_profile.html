@@ -106,7 +106,6 @@
         <div class="details">
             <p>Name: {{ profile.name }}</p>
             <p>Date of Birth: {{profile.date_of_birth|date:"d/m/Y"}}</p>
-            <p>Gender: {{profile.get_gender_display}}</p>
             <p>Email: {{user_obj.email}}</p>
             <a href="{% url 'client_dashboard'%}" class = "button">GO BACK</a>
         </div>

@@ -16,8 +16,7 @@
     }
 
     .profile-wrap {
-        padding: 0;
-        padding-top:0;
+        padding: 32px;
     }
 
     .profile-title {
@@ -25,10 +24,10 @@
         text-align: center;
         font-family: ui-serif, Georgia, 'Times New Roman', serif;
         font-weight: bold;
-        font-size: 40px;
+        font-size: 48px;
         color: #111;
-        text-transform: capfirst;
-        margin-top: 0;
+        text-transform: uppercase;
+        margin-top: -45px;
     }
 
     .profile-subhead {
@@ -47,12 +46,11 @@
     .profile-background {
         background: #eef2ff;
         border-radius: 6px;
-        margin-top:-35px;
 
 
     }
     .profile-details h3 {
-        margin: 0 0 30px 0;
+        margin: 0 0 25px 0;
         font-family: ui-serif, Georgia, 'Times New Roman', serif;
         font-size: 24px;
         line-height: 1.5;
@@ -60,7 +58,7 @@
         margin-left: 20px;
     }
     .signout {
-        margin-top: 30px;
+        margin-top: 40px;
         display: inline-block;
         width: 300px;
         height: 40px;
@@ -78,7 +76,6 @@
         cursor: pointer;
         margin-bottom: 10px;
         margin-left: 20px;
-
     }
 
     .signout:hover {
@@ -87,8 +84,6 @@
     }
 </style>
 {% endblock %}
-
-
 
 {% block content %}
 <div class="profile-wrap">
@@ -99,7 +94,6 @@
             {% if has_profile %}
             <h3>Name: {{user_obj.get_full_name|default:profile.name|default:user_obj.username}} </h3>
             <h3>Date of Birth: {{profile.date_of_birth|date:"d/m/Y"}}</h3>
-            <h3>Gender: {{profile.get_gender_display}}</h3>
             <h3>Email: {{user_obj.email}}</h3>
             {% endif %}
 
@@ -108,9 +102,6 @@
                 <button type="submit" class="signout">sign out</button>
             </form>
         </div>
-
-
-
     </main>
 </div>
 {% endblock %}
