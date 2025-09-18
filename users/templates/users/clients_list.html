@@ -21,9 +21,9 @@
     {% for client in clients %}
 
         <a href="{% url 'client_detail' client.id %}" class="client-card" data-name = "{{ client.name|lower }}" aria-label="View {{client.name}}">
-            <p><strong>Name: {{ client.name }}</strong></p>
+            <p class="name"><strong>Name: {{ client.name }}</strong></p>
             <p><strong>Date of Birth: {{ client.date_of_birth }}</strong></p>
-            <p><strong>Email:</strong> {{ client.user.email }}</p>
+            <p class="email"><strong>Email: {{ client.user.email }}</strong></p>
         </a>
     {% endfor %}
 </div>
@@ -31,17 +31,17 @@
 <style>
     .client-grid {
         display: grid;
-        grid-template-columns: repeat(4, 290px);
-        gap: 30px;            
+        grid-template-columns: repeat(4, minmax(max-content, 1fr));
+        gap: 24px;            
         margin-top: 20px;
         justify-content: start;
-        
+        padding: 0 10px;
     }
     .client-card {
         background: #e1e6f0;
         padding: 10px;
         margin: 5px;
-        border-radius: 8px;
+        border-radius: 12px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.08);
         font-family: 'Montserrat', sans-serif;
         font-weight: 600;
@@ -50,6 +50,9 @@
         text-decoration: none;     
         display: block; 
         transition: transform 0.2s ease, box-shadow 0.2s ease; 
+        min-width: 0;
+        border: 1px solid #e0e0e0; 
+        margin-top: 18px;
     }
     .client-card:hover {
         transform: scale(1.05);      
@@ -57,7 +60,17 @@
     }
     .client-card p {
         margin: 6px 0;
-        font-size: 16px;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+    .client-card .name {
+        text-transform: uppercase;   
+    }   
+    .client-card .email {
+        text-transform: none;        
+        font-weight: 600;           
+        white-space: nowrap; 
+        font-size: 15px;        
     }
     h1 {
         text-align: center;
