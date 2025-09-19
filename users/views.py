@@ -8,6 +8,7 @@ from .forms import CreateUser
 from .models import Feedback
 from django.db.models import Q
 from .models import Goal, GoalType
+from django.urls import reverse
 
 def signup(request):
     if request.method == "POST":
@@ -169,6 +170,9 @@ def edit_user(request, user_id):
         if password:
             if password != confirm_password:
                 messages.error(request, "Passwords do not match.")
+                if "from_client_detail" in request.GET:
+                    url = reverse("edit_user", kwargs={"user_id": user.id}) + "?from_client_detail=1"
+                    return redirect(url)
                 return redirect("edit_user", user_id=user.id)
             user.set_password(password)
 
@@ -181,6 +185,8 @@ def edit_user(request, user_id):
         profile.save()
 
         messages.success(request, f"User {user.email} updated successfully.")
+        if "from_client_detail" in request.GET:
+            return redirect("client_detail", client_id=profile.id)
         return redirect("manage_users")
 
     initial_data = {

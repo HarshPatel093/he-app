@@ -14,8 +14,11 @@
             <p><strong>Date of Birth:</strong> {{ client.date_of_birth|default:"None" }}</p>
             <p class="email"><strong>Email: {{ client.user.email }}</strong></p>
         </div>
+    <div class="edit-client-btn-container">
+        <a href="{% url 'edit_user' client.user.id %}?from_client_detail=1" class="edit-client-btn">Edit Client Info</a>
     </div>
-
+    </div>
+    
     <div class="client-chart">
         <canvas id="goalsChart"></canvas>
         <div class="edit-btn-container">
@@ -121,7 +124,7 @@
     .download-btn {
         font-size: 14px;
         padding: 6px 14px;
-        background: #28a745;
+        background: #218838;
         color: #fff;
         border-radius: 4px;
         border: none;
@@ -202,6 +205,27 @@
     .edit-btn-container {
         margin-top: 20px;
         text-align: center;
+    }
+
+    .edit-client-btn-container {
+        margin: 15px auto 0 auto;
+        text-align: left;
+    }
+
+    .edit-client-btn {
+        display: inline-block;
+        font-size: 14px;
+        padding: 6px 14px;
+        background: #0056b3; 
+        color: #fff;
+        border-radius: 4px;
+        text-decoration: none;
+        font-weight: 600;
+        transition: background 0.2s ease;
+    }
+
+    .edit-client-btn:hover {
+        background: #004494; 
     }
 </style>
 {% endblock %}
