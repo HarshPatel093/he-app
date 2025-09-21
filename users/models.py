@@ -15,7 +15,7 @@ class UserProfile(models.Model):
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='client')
 
     def __str__(self):
-        return self.user.email
+        return self.name if self.name else self.user.email
 
 class Feedback(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -37,3 +37,25 @@ class Goal(models.Model):
 
     def __str__(self):
         return f"{self.client.name} - {self.goal_type.name if self.goal_type else 'Unknown'} ({self.progress}%)"
+
+class Shift(models.Model):
+    staff = models.ForeignKey(
+        UserProfile,
+        on_delete=models.CASCADE,
+        related_name="staff_shifts",
+        limit_choices_to={'role': 'staff'}  
+    )
+    clients = models.ManyToManyField(
+        UserProfile,
+        related_name="client_shifts",
+        limit_choices_to={'role': 'client'}
+    )
+    date = models.DateField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+
+    def __str__(self):
+        client_names = ", ".join([c.name for c in self.clients.all()[:3]])  
+        if self.clients.count() > 3:
+            client_names += "..."
+        return f"Shift: {self.staff.name} with {client_names} on {self.date}"

@@ -9,6 +9,8 @@ from .models import Feedback
 from django.db.models import Q
 from .models import Goal, GoalType
 from django.urls import reverse
+from .forms import ShiftForm
+from .models import Shift
 
 def signup(request):
     if request.method == "POST":
@@ -301,3 +303,22 @@ def edit_goals(request, client_id):
         "goals": goals,   
         "goal_choices": [(g.name, g.name) for g in goal_choices],
     })
+
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == "admin")
+def shift_list(request):
+    return render(request, "users/shift_list.html")
+
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == "admin")
+def allocate_shift(request):
+    if request.method == "POST":
+        form = ShiftForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Shift allocated successfully!", extra_tags="shift")
+            return redirect('shift_list') 
+    else:
+        form = ShiftForm()
+    
+    return render(request, 'users/allocate_shift.html', {'form': form})
