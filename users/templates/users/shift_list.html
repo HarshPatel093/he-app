@@ -1,15 +1,99 @@
 {% extends "base.html" %}
 {% block content %}
 
-<div class="staff-page-container">
-    <h1 class="section-heading">Staff</h1>
-
+<div class="staff-dashboard">
+    <div class="shift-table-container">
+      <h1 class="section-heading">Shift Log</h1>
     <div class="btn-container">
-        <a href="{% url 'allocate_shift' %}" class="btn">Allocate Shift</a>
+        <a href="{% url 'allocate_shift' %}" class="btn">Create Shift</a>
     </div>
-
-    <!-- Later we’ll add Staff Log table + Chart here -->
-
+    <table class="shift-table">
+          <thead>
+              <tr>
+                  <th>Date</th>
+                  <th>Staff</th>
+                  <th>Clients</th>
+                  <th>Start Time</th>
+                  <th>End Time</th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for shift in shifts %}
+              <tr>
+                  <td>{{ shift.date }}</td>
+                  <td>{{ shift.staff.name }}</td>
+                  <td>
+                      {% for client in shift.clients.all %}
+                          {{ client.name }}{% if not forloop.last %}, {% endif %}
+                      {% endfor %}
+                  </td>
+                  <td>{{ shift.start_time }}</td>
+                  <td>{{ shift.end_time }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                  <td colspan="5" class="no-data">No shifts allocated yet.</td>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+  </div>
 </div>
 
+<style>
+.staff-dashboard {
+    display: flex;
+    justify-content: space-between; 
+    align-items: flex-start;  
+    margin: 20px;
+}
+
+.shift-table-container {
+    flex: 0 0 50%;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.section-heading {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.shift-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.shift-table th, .shift-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+.shift-table th {
+    background: #f5f5f5;
+}
+.no-data {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+}
+.btn {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 7px 14px;
+    background: #0056b3;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+.btn:hover {
+    background: #003f8a;
+}
+</style>
 {% endblock %}

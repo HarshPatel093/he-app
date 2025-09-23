@@ -11,6 +11,7 @@ from .models import Goal, GoalType
 from django.urls import reverse
 from .forms import ShiftForm
 from .models import Shift
+from django.utils import timezone
 
 def signup(request):
     if request.method == "POST":
@@ -307,7 +308,11 @@ def edit_goals(request, client_id):
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def shift_list(request):
-    return render(request, "users/shift_list.html")
+    if request.user.userprofile.role != "admin":
+        return redirect("dashboard_redirect")
+
+    shifts = Shift.objects.select_related("staff").prefetch_related("clients").filter(date__gte=timezone.now().date()).order_by("date","date", "start_time")
+    return render(request, "users/shift_list.html", {"shifts": shifts})
 
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
@@ -317,7 +322,9 @@ def allocate_shift(request):
         if form.is_valid():
             form.save()
             messages.success(request, "Shift allocated successfully!", extra_tags="shift")
-            return redirect('shift_list') 
+            return render(request, 'users/allocate_shift.html', {
+                'form': ShiftForm() 
+            }) 
     else:
         form = ShiftForm()
     

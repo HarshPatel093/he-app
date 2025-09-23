@@ -186,5 +186,12 @@ input[type="time"] {
     opacity: 1;
 }
 </style>
+{% if messages %}
+<script>
+  setTimeout(function() {
+    window.location.href = "{% url 'shift_list' %}";
+  }, 2000);
+</script>
+{% endif %}
 
 {% endblock %}
