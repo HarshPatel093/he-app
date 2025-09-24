@@ -329,3 +329,29 @@ def allocate_shift(request):
         form = ShiftForm()
     
     return render(request, 'users/allocate_shift.html', {'form': form})
+
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == "admin")
+def edit_shift(request, shift_id):
+    shift = get_object_or_404(Shift, id=shift_id)
+    if request.method == "POST":
+        form = ShiftForm(request.POST, instance=shift)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Shift updated successfully!", extra_tags="shift")
+            return render(request, "users/edit_shift.html", {
+                "form": form,
+                "shift": shift,
+            })
+    else:
+        form = ShiftForm(instance=shift)
+    return render(request, "users/edit_shift.html", {"form": form, "shift": shift})
+
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == "admin")
+def delete_shift(request, shift_id):
+    shift = get_object_or_404(Shift, id=shift_id)
+    if request.method == "POST":
+        shift.delete()
+        messages.success(request, "Shift deleted successfully!", extra_tags="shift")
+        return redirect("shift_list")
