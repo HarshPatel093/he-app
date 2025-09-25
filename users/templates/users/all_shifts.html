@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% block content %}
+{% if request.GET.deleted %}
+  <div class="shift-alert">Shift deleted successfully!</div>
+  <script>
+    setTimeout(() => {
+      const msg = document.querySelector('.shift-alert');
+      if (msg) msg.style.display = 'none';
+    }, 2000);
+  </script>
+{% endif %}
+
+<div class="back-btn-container">
+  <a href="{% url 'shift_list' %}" class="back-btn">← Back</a>
+</div>
+
+<div class="staff-dashboard">
+    <div class="shift-table-container">
+        <h1 class="section-heading">All Shifts</h1>
+        <table class="shift-table">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Staff</th>
+                    <th>Clients</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for shift in shifts %}
+                <tr>
+                    <td>{{ shift.date }}</td>
+                    <td>{{ shift.staff.name }}</td>
+                    <td>
+                        {% for client in shift.clients.all %}
+                            {{ client.name }}{% if not forloop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>{{ shift.start_time }}</td>
+                    <td>{{ shift.end_time }}</td>
+                    <td>
+                        <a href="{% url 'edit_shift' shift.id %}?from=all" aria-label="Edit Shift" class="edit-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
+                                <path d="M402.3 344.9l32-32c5-5 13.7-1.5 13.7 5.7V464c0 
+                                26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 
+                                21.5-48 48-48h273.5c7.1 0 10.7 8.6 5.7 
+                                13.7l-32 32c-1.5 1.5-3.5 2.3-5.7 
+                                2.3H48v352h352V350.5c0-2.1.8-4.1 
+                                2.3-5.6zm156.6-201.8L296.3 405.7l-90.4 
+                                10c-26.2 2.9-48.5-19.2-45.6-45.6l10-90.4L432.9 
+                                17.1c22.9-22.9 59.9-22.9 82.7 
+                                0l43.2 43.2c22.9 22.9 22.9 60 
+                                .1 82.8zM460.1 174L402 115.9 216.2 
+                                301.8l-7.3 65.3 65.3-7.3L460.1 
+                                174zm64.8-79.7l-43.2-43.2c-4.1-4.1-10.8-4.1-14.8 
+                                0L436 82l58.1 58.1 30.9-30.9c4-4.2 
+                                4-10.8-.1-14.9z"/>
+                            </svg>
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="no-data">No shifts found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+.staff-dashboard {
+    display: flex;
+    justify-content: space-between; 
+    align-items: flex-start;  
+    margin: 20px;
+}
+.shift-table-container {
+    flex: 0 0 70%;
+    background: #fff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    margin: 0 auto; 
+}
+.section-heading {
+    text-align: center;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+.shift-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+.shift-table th, .shift-table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+.shift-table th {
+    background: #f5f5f5;
+}
+.no-data {
+    text-align: center;
+    font-style: italic;
+    color: #777;
+}
+.edit-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: #0056b3;
+    transition: fill 0.2s ease;
+}
+.edit-btn:hover svg {
+    fill: #003f8a;
+}
+.back-btn-container {
+    margin-bottom: 10px;
+}
+.back-btn {
+    display: inline-block;
+    font-size: 14px;
+    padding: 6px 14px;
+    background: #0056b3;
+    color: #FFFFFF;
+    border: none;
+    outline: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;  
+    transition: background 0.2s ease;
+    text-decoration: none;
+}
+.back-btn:hover {
+    background: #004494;
+}
+.back-btn:focus {
+    outline: none;
+}
+.shift-alert {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;         
+    padding: 8px 0;
+    margin: 10px auto;
+    font-weight: 500;
+    font-size: 14px;
+    text-align: center;
+}
+</style>
+
+{% endblock %}

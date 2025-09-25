@@ -1,13 +1,21 @@
 {% extends "base.html" %}
 {% block content %}
+{% if request.GET.deleted %}
+  <div class="alert success shift-alert">Shift deleted successfully!</div>
+  <script>
+    setTimeout(() => {
+      document.querySelector('.alert.success').style.display = 'none';
+    }, 2000);
+  </script>
+{% endif %}
 
 <div class="staff-dashboard">
     <div class="shift-table-container">
       <h1 class="section-heading">Shift Log</h1>
-    <div class="btn-container">
+      <div class="btn-container">
         <a href="{% url 'allocate_shift' %}" class="btn">Create Shift</a>
-    </div>
-    <table class="shift-table">
+      </div>
+      <table class="shift-table">
           <thead>
               <tr>
                   <th>Date</th>
@@ -30,7 +38,7 @@
                   </td>
                   <td>{{ shift.start_time }}</td>
                   <td>{{ shift.end_time }}</td>
-                  <td><a href="{% url 'edit_shift' shift.id %}" class="edit-btn">
+                  <td><a href="{% url 'edit_shift' shift.id %}?from=log" aria-label="Edit Shift" class="edit-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                         <path d="M402.3 344.9l32-32c5-5 13.7-1.5 13.7 5.7V464c0 
                         26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 
@@ -57,6 +65,10 @@
           </tbody>
       </table>
   </div>
+</div>
+
+<div class="table-footer">
+    <a href="{% url 'all_shifts' %}" class="btn view-all-btn">View All</a>
 </div>
 
 <style>
@@ -122,6 +134,27 @@
 }
 .edit-btn:hover svg {
     fill: #003f8a;
+}
+.table-footer {
+    display: flex;
+    justify-content: center; 
+    margin: 10px 20px 0 20px; 
+}
+.view-all-btn {
+    background: #0056b3;
+    color: white;
+    padding: 7px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s ease;
+    margin-right:20px;
+}
+.view-all-btn:hover {
+    background: #003f8a;
+}
+.shift-alert {
+    margin-left: 40px;   
 }
 </style>
 {% endblock %}

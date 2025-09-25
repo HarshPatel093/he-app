@@ -12,6 +12,7 @@ from django.urls import reverse
 from .forms import ShiftForm
 from .models import Shift
 from django.utils import timezone
+from django.http import HttpResponseRedirect
 
 def signup(request):
     if request.method == "POST":
@@ -311,7 +312,7 @@ def shift_list(request):
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
 
-    shifts = Shift.objects.select_related("staff").prefetch_related("clients").filter(date__gte=timezone.now().date()).order_by("date","date", "start_time")
+    shifts = Shift.objects.select_related("staff").prefetch_related("clients").filter(date__gte=timezone.now().date()).order_by("date","date", "start_time")[:6]
     return render(request, "users/shift_list.html", {"shifts": shifts})
 
 @login_required
@@ -334,15 +335,19 @@ def allocate_shift(request):
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def edit_shift(request, shift_id):
     shift = get_object_or_404(Shift, id=shift_id)
+    from_param = request.GET.get("from", "")
     if request.method == "POST":
         form = ShiftForm(request.POST, instance=shift)
         if form.is_valid():
-            form.save()
-            messages.success(request, "Shift updated successfully!", extra_tags="shift")
-            return render(request, "users/edit_shift.html", {
-                "form": form,
-                "shift": shift,
-            })
+            if form.has_changed():
+                form.save()
+                messages.success(request, "Shift updated successfully!", extra_tags="shift")
+            else:
+                messages.info(request, "No changes were made to the shift.", extra_tags="shift")
+            url = reverse("edit_shift", kwargs={"shift_id": shift.id})
+            if from_param:
+                url += f"?from={from_param}"
+            return redirect(url)
     else:
         form = ShiftForm(instance=shift)
     return render(request, "users/edit_shift.html", {"form": form, "shift": shift})
@@ -353,5 +358,28 @@ def delete_shift(request, shift_id):
     shift = get_object_or_404(Shift, id=shift_id)
     if request.method == "POST":
         shift.delete()
-        messages.success(request, "Shift deleted successfully!", extra_tags="shift")
-        return redirect("shift_list")
+        from_param = request.GET.get("from", "")
+
+        if from_param == "all":
+            target_url = reverse("all_shifts") + "?deleted=1"
+        else:
+            target_url = reverse("shift_list") + "?deleted=1"
+
+        return render(request, "users/redirect_replace.html", {"target_url": target_url})
+
+    return redirect("shift_list")
+    
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == "admin")
+def all_shifts(request):
+    if request.user.userprofile.role != "admin":
+        return redirect("dashboard_redirect")
+
+    shifts = (
+        Shift.objects
+        .select_related("staff")
+        .prefetch_related("clients")
+        .order_by("date", "start_time")
+    )
+
+    return render(request, "users/all_shifts.html", {"shifts": shifts})
