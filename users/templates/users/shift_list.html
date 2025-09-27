@@ -29,16 +29,16 @@
           <tbody>
               {% for shift in shifts %}
               <tr>
-                  <td>{{ shift.date }}</td>
-                  <td>{{ shift.staff.name }}</td>
-                  <td>
+                  <td>{{ shift.date|date:"d/m/Y" }}</td>
+                  <td class="staff-cell" data-fullname="{{ shift.staff.name }}">{{ shift.staff.name }}</td>
+                  <td class="client-cell" data-fullnames="{% for client in shift.clients.all %}{{ client.name }}{% if not forloop.last %}, {% endif %}{% endfor %}">
                       {% for client in shift.clients.all %}
                           {{ client.name }}{% if not forloop.last %}, {% endif %}
                       {% endfor %}
                   </td>
                   <td>{{ shift.start_time }}</td>
                   <td>{{ shift.end_time }}</td>
-                  <td><a href="{% url 'edit_shift' shift.id %}?from=log" aria-label="Edit Shift" class="edit-btn">
+                  <td><a href="{% url 'edit_shift' shift.id %}?from=log" aria-label="Edit Shift"class="edit-btn">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512">
                         <path d="M402.3 344.9l32-32c5-5 13.7-1.5 13.7 5.7V464c0 
                         26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V112c0-26.5 
@@ -65,26 +65,116 @@
           </tbody>
       </table>
   </div>
+  <div class="staff-chart-container">
+      <canvas id="staffChart"></canvas>
+    </div>
 </div>
 
 <div class="table-footer">
     <a href="{% url 'all_shifts' %}" class="btn view-all-btn">View All</a>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const ctx = document.getElementById('staffChart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: {{ chart_labels|safe }},
+      datasets: [{
+        label: 'Staff Worked',
+        data: {{ chart_data|safe }},
+        backgroundColor: 'gold'
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: { display: false }
+      },
+      scales: {
+        x: { title: { display: true, text: 'Days' } },
+        y: { title: { display: true, text: 'Staff Worked' }, beginAtZero: true, ticks: { stepSize: 1 }, max: 6 }
+      }
+    }
+  });
+</script>
+<script>
+document.querySelectorAll('.client-cell, .staff-cell').forEach(cell => {
+  cell.addEventListener('mousemove', e => {
+    cell.style.setProperty('--mouse-x', e.pageX + 10 + 'px');
+    cell.style.setProperty('--mouse-y', e.pageY + 20 + 'px');
+  });
+});
+</script>
+
 <style>
+.client-cell {
+  max-width: 180px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  cursor: default;   
+}
+.client-cell:hover::after {
+  content: attr(data-fullnames); 
+  position: fixed;
+  left: var(--mouse-x);
+  top: var(--mouse-y);
+  background: #333;
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 4px;
+  white-space: normal;
+  z-index: 1000;
+  font-size: 13px;
+  max-width: 300px;
+  pointer-events: none;
+}
+.staff-cell {
+  max-width: 160px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+  cursor: default;
+}
+.staff-cell:hover::after {
+  content: attr(data-fullname);
+  position: fixed;
+  left: var(--mouse-x);
+  top: var(--mouse-y);
+  background: #333;
+  color: #fff;
+  padding: 5px 8px;
+  border-radius: 4px;
+  white-space: normal;
+  z-index: 1000;
+  font-size: 13px;
+  max-width: 300px;
+  pointer-events: none;
+}
 .staff-dashboard {
     display: flex;
     justify-content: space-between; 
     align-items: flex-start;  
     margin: 20px;
+    gap: 20px;
+    margin-right: 300px;
 }
 
 .shift-table-container {
     flex: 0 0 50%;
     background: #fff;
-    padding: 15px;
+    padding: 12px;
     border-radius: 10px;
     box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    margin-right: 5px;
+    margin-top: -10px;
+    position: relative;  
+    padding-bottom: 50px;
 }
 
 .section-heading {
@@ -100,12 +190,30 @@
     font-size: 14px;
 }
 .shift-table th, .shift-table td {
-    padding: 10px;
+    padding: 8px;
     border: 1px solid #ccc;
     text-align: center;
 }
 .shift-table th {
     background: #f5f5f5;
+}
+.shift-table th:nth-child(1), 
+.shift-table td:nth-child(1) {
+    min-width: 100px;  
+}
+.shift-table th:nth-child(2),
+.shift-table td:nth-child(2) {
+    white-space: nowrap;
+    min-width: 120px;  
+    max-width: 160px;   
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+.shift-table th:nth-child(4),
+.shift-table td:nth-child(4),
+.shift-table th:nth-child(5),
+.shift-table td:nth-child(5) {
+    min-width: 80px;   
 }
 .no-data {
     text-align: center;
@@ -135,10 +243,20 @@
 .edit-btn:hover svg {
     fill: #003f8a;
 }
+.staff-chart-container {
+    flex: 1;
+    height: 380px;
+    min-width: 50%;
+}
+#staffChart {
+    width: 100% ;
+    height: 100% ;
+    background: transparent;
+}
 .table-footer {
     display: flex;
-    justify-content: center; 
-    margin: 10px 20px 0 20px; 
+    justify-content: center;
+    margin: 0 20px 0 0; 
 }
 .view-all-btn {
     background: #0056b3;
@@ -148,7 +266,8 @@
     text-decoration: none;
     font-size: 14px;
     transition: background 0.2s ease;
-    margin-right:20px;
+    margin-left:260px;
+    margin-top: -5px; 
 }
 .view-all-btn:hover {
     background: #003f8a;

@@ -31,7 +31,7 @@
             <tbody>
                 {% for shift in shifts %}
                 <tr>
-                    <td>{{ shift.date }}</td>
+                    <td>{{ shift.date|date:"d/m/Y" }}</td>
                     <td>{{ shift.staff.name }}</td>
                     <td>
                         {% for client in shift.clients.all %}

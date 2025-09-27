@@ -13,6 +13,9 @@ from .forms import ShiftForm
 from .models import Shift
 from django.utils import timezone
 from django.http import HttpResponseRedirect
+from django.db.models import Count
+from django.db.models.functions import TruncWeek
+from datetime import timedelta
 
 def signup(request):
     if request.method == "POST":
@@ -312,8 +315,24 @@ def shift_list(request):
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
 
+    today = timezone.now().date()
+    start_of_week = today - timedelta(days=today.weekday())  
+    end_of_week = start_of_week + timedelta(days=6)           
+
+    # Get all shifts in this week
+    weekly_shifts = Shift.objects.filter(date__range=[start_of_week, end_of_week])
+
+    # Prepare chart data
+    chart_labels = [(start_of_week + timedelta(days=i)).strftime("%d/%m/%y") for i in range(7)]
+    chart_data = []
+    for i in range(7):
+        day = start_of_week + timedelta(days=i)
+        staff_count = weekly_shifts.filter(date=day).values("staff").distinct().count()
+        chart_data.append(staff_count)
     shifts = Shift.objects.select_related("staff").prefetch_related("clients").filter(date__gte=timezone.now().date()).order_by("date","date", "start_time")[:6]
-    return render(request, "users/shift_list.html", {"shifts": shifts})
+
+    return render(request, "users/shift_list.html", {"shifts": shifts, "chart_labels": chart_labels,
+        "chart_data": chart_data,})
 
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
