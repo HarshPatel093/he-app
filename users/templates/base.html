@@ -83,10 +83,8 @@
     <a href="{% url 'clients_list' %}" 
        class="{% if request.resolver_match.url_name == 'clients_list' %}active{% endif %}">Clients</a>
     
-    {% if user.is_superuser %}
-        <a href="{% url 'manage_users' %}" 
-           class="{% if request.resolver_match.url_name == 'manage_users' %}active{% endif %}">Manage User</a>
-    {% endif %}
+    <a href="{% url 'manage_users' %}" 
+        class="{% if request.resolver_match.url_name == 'manage_users' %}active{% endif %}">Manage User</a>
     
     <a href="{% url 'admin_profile' %}" class="profile-link" aria-label="Profile">
 

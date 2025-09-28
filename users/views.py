@@ -107,7 +107,8 @@ def client_profile(request):
 
     })
 
-@user_passes_test(lambda u: u.is_superuser)
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == "admin")
 def create_user(request):
     if request.method == 'POST':
         form = CreateUser(request.POST)
@@ -147,7 +148,8 @@ def create_user(request):
 
     return render(request, 'users/create_user.html', {'form': form})
 
-@user_passes_test(lambda u: u.is_superuser)
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == "admin")
 def manage_users(request):
     query = request.GET.get("q")
     users = User.objects.all().select_related('userprofile').order_by("userprofile__name") 
@@ -157,7 +159,8 @@ def manage_users(request):
 
     return render(request, "users/manage_users.html", {"users": users, "query": query})
 
-@user_passes_test(lambda u: u.is_superuser)
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == "admin")
 def delete_user(request, user_id):
     try:
         user = User.objects.get(id=user_id)
@@ -168,7 +171,8 @@ def delete_user(request, user_id):
     
     return redirect('manage_users')
 
-@user_passes_test(lambda u: u.is_superuser)
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == "admin")
 def edit_user(request, user_id):
     user = get_object_or_404(User, id=user_id)
     profile = user.userprofile
@@ -310,7 +314,6 @@ def edit_goals(request, client_id):
 
             goal.save()
 
-        messages.success(request, f"Goals for {client.name} updated successfully.")
         return redirect("client_detail", client_id=client.id)
 
     return render(request, "users/edit_goals.html", {
