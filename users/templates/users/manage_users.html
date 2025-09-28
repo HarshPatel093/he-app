@@ -72,9 +72,46 @@
             border-radius: 6px; 
             text-decoration: none; 
         }
+
+        .messages {
+            position: absolute;
+            top: 100px; 
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            text-align: center;
+            width: auto;
+        }
+
+        .messages p {
+            display: inline-block;
+            background: transparent;
+            padding: 6px 12px;
+            font-size: 16px;
+            font-weight: 500;
+            margin: 0;
+            border-radius: 4px;
+            color: black;
+        }
+
+        .messages .success {
+            color: green;
+        }
+
+        .messages .error {
+            color: red;
+        }
     </style>
     <main>
         <div class="container">
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
         <h1>List Of Users</h1>
     
             <div class="top-bar">
@@ -117,6 +154,17 @@
                 </tbody>
             </table>
         </div>
+
+        <script>
+            setTimeout(function() {
+                const msg = document.querySelector('.messages');
+                if (msg) {
+                    msg.style.transition = "opacity 0.5s ease";
+                    msg.style.opacity = "0";
+                    setTimeout(() => msg.remove(), 500);
+                }
+            }, 2000);
+        </script>
     </main>
 
 <script>

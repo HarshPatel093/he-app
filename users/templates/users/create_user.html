@@ -1,191 +1,227 @@
+{% extends "base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Create User</title>
+{% block title %}Create User{% endblock %}
+{% block extra_css %}
 <style>
-    body {
-        margin: 0;
-        padding: 0;
-        font-family: 'Segoe UI', sans-serif;
-        display: flex;
-        justify-content: center;
-        align-items: flex-start;
-        height: 100vh;
-        background: #2148C0;
-        position: relative;
-        overflow: hidden;
-    }
+.createUser-page {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: calc(100vh - 80px);
+    background: #F0F4FF;
+    position: relative;
+    overflow: hidden;
+    padding: 10px;
+}
 
-    .vector {
-        position: absolute;
-        top: 0;
-        right: 0;
-        width: 100%;
-        height: 100%;
-        background: url('{% static "images/top-wave.svg" %}') no-repeat top right;
-        background-size: cover;
-        opacity: 1;
-        z-index: 0;
-    }
+.createUser-card {
+    background: #fff;
+    padding: 15px 20px;
+    border-radius: 12px;
+    max-width: 420px;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    position: relative;
+    text-align: center;
+    flex-direction: column;  
+    justify-content: space-between;
+}
 
-    .ellipse1, .ellipse2, .ellipse3 {
-        position: absolute;
-        border-radius: 50%;
-        z-index: 0;
-    }
-    .ellipse1 {
-        width: 438px; height: 438px;
-        left: -219px; top: 501px;
-        background: #274FC7;
-    }
-    .ellipse2 {
-        width: 572px; height: 572px;
-        left: -286px; top: 434px;
-        background: #244BC5;
-    }
-    .ellipse3 {
-        width: 724px; height: 724px;
-        left: -362px; top: 358px;
-        background: #264ECA;
-    }
+.createUser-card h1 {
+    color: #000;
+    font-family: 'Nunito', sans-serif;
+    margin-bottom: 30px;
+    margin-top: -5px;
+}
 
-    .createUser-container {
-        width: 90%;
-        max-width: 360px;
-        padding: 20px;
-        text-align: center;
-        position: relative;
-        z-index: 2;
-        margin-top: 40px; 
-    }
+.input-wrapper {
+    position: relative;
+    width: 100%;
+}
 
-    h1 {
-        color: white;
-        font-family: 'Times New Roman', serif;
-        font-size: 34px;
-        font-weight: bold;
-        margin-bottom: 25px;
-    }
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1.5px solid #bbb;
+    border-radius: 6px;
+    outline: none;
+    font-size: 14px;
+    background: #fafafa;
+    color: #000;
+    box-sizing: border-box;
+}
 
-    .input-wrapper {
-        position: relative;
-        width: 100%;
-    }
+select option {
+    color: black;
+}
 
-    input, select {
-        width: 100%;
-        padding: 12px;
-        margin-bottom: 15px;
-        border: 1px solid rgba(255,255,255,0.5);
-        border-radius: 6px;
-        outline: none;
-        font-size: 14px;
-        background: transparent;
-        color: white;
-        box-sizing: border-box;
-    }
+input::placeholder {
+    color: #000;
+}
 
-    select option {
-        color: black;
-    }
+input:focus, select:focus {
+    border-color: #2148C0;     
+    background: #fff;          
+}
 
-    input::placeholder {
-        color: rgba(255,255,255,0.8);
-    }
+.toggle-text {
+    position: absolute;
+    right: 5px;
+    top: 40%;
+    transform: translateY(-50%);
+    font-size: 12px;
+    color: #000;
+    cursor: pointer;
+    user-select: none;
+    border: none;
+    padding: none;
+    -webkit-tap-highlight-color: transparent;
+    background-color: transparent;
+}
 
-    .toggle-text {
-        position: absolute;
-        right: 10px;
-        top: 40%;
-        transform: translateY(-50%);
-        font-size: 12px;
-        color: white;
-        cursor: pointer;
-        user-select: none;
-        border: none;
-        padding: none;
-        -webkit-tap-highlight-color: transparent;
-        background-color: transparent;
-    }
+.toggle-text:focus{
+    outline: none;
+    text-decoration: underline;
+}
 
-    .toggle-text:focus{
-        outline: none;
-        text-decoration: underline;
-    }
+button.form-btn {
+    background: #2148C0;
+    color: #fff;
+    font-weight: bold;
+    border: none;
+    padding: 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    display: block;
+    margin: 0 auto;
+    width: 100%;
+    transition: 0.3s;
+}
 
-    button.form-btn {
-        background: white;
-        color: #2148C0;
-        font-weight: bold;
-        border: none;
-        padding: 12px;
-        font-size: 14px;
-        border-radius: 6px;
-        cursor: pointer;
-        text-transform: uppercase;
-        display: block;
-        margin: 0 auto;
-        width: 100%;
-        transition: 0.3s;
-    }
+button.form-btn:hover {
+    background: #1938A3;
+}
 
-    button.form-btn:hover {
-        background: #f2f2f2;
-    }
+.back-btn-container {
+    position: absolute;
+    top: 100px;   
+    left: 20px; 
+    z-index: 10;
+}
+
+.back-btn {
+    display: inline-block;
+    font-size: 14px;
+    padding: 6px 14px;
+    background: #2148C0;    
+    color: #fff;            
+    border: none;
+    border-radius: 4px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+
+.back-btn:hover {
+    background: #1938A3;
+}
+
+.messages {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: auto;
+    z-index: 1000;
+    margin-top: -27px;
+    margin-bottom: 15px;
+}
+
+.messages p {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.messages .success {
+    color: green;
+}
+
+.messages .error {
+    color: red;   
+}
 </style>
-</head>
-<body>
-    <div class="ellipse3"></div>
-    <div class="ellipse2"></div>
-    <div class="ellipse1"></div>
-    <main>
-        <div class="createUser-container">
-            <h1>Create User</h1>
-            <form method="POST">
-                {% csrf_token %}
-                <input type="text" name="name" aria-label="Name" placeholder="ENTER FULL NAME" required>  
-                
-                <input type="email" name="email" aria-label="Email" placeholder="ENTER EMAIL" required>
+{% endblock %}
 
-                <div class="input-wrapper">
-                    <input type="password" name="password" aria-label="Password" placeholder="ENTER PASSWORD" id="password" required>
-                    <button type="button" class="toggle-text" onclick="togglePassword('password', this)">SHOW</button>
-                </div>
+{% block content %}
+<div class="back-btn-container">
+    <a href="{% url 'manage_users' %}" class="back-btn">← Back</a>
+</div>
+<div class="createUser-page">
+    <div class="createUser-card">
+        <h1>Create User</h1>
+        {% if messages %}
+            <div class="messages">
+                {% for message in messages %}
+                    <p class="{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="name" aria-label="Name" placeholder="ENTER FULL NAME" required>  
+            
+            <input type="email" name="email" aria-label="Email" placeholder="ENTER EMAIL" required>
 
-                <div class="input-wrapper">
-                    <input type="password" name="confirm_password" aria-label="Confirm_Password" placeholder="RE-ENTER PASSWORD" id="confirm_password" required>
-                    <button type="button" class="toggle-text" onclick="togglePassword('confirm_password', this)">SHOW</button>
-                </div>
+            <div class="input-wrapper">
+                <input type="password" name="password" aria-label="Password" placeholder="ENTER PASSWORD" id="password" required>
+                <button type="button" class="toggle-text" onclick="togglePassword('password', this)">SHOW</button>
+            </div>
 
-                <input type="text" name="date_of_birth" placeholder="DATE OF BIRTH"
-                    onfocus="(this.type='date')" aria-label="Date_Of_Birth"
-                    onblur="if(this.value==''){this.type='text'}" required>
+            <div class="input-wrapper">
+                <input type="password" name="confirm_password" aria-label="Confirm_Password" placeholder="RE-ENTER PASSWORD" id="confirm_password" required>
+                <button type="button" class="toggle-text" onclick="togglePassword('confirm_password', this)">SHOW</button>
+            </div>
 
-                <select name="role" aria-label="Role" required>
-                    <option value="" disabled selected>SELECT ROLE</option>
-                    <option value="admin">Admin</option>
-                    <option value="staff">Staff</option>
-                    <option value="client">Client</option>
-                </select>
+            <input type="text" name="date_of_birth" placeholder="DATE OF BIRTH"
+                onfocus="(this.type='date')" aria-label="Date_Of_Birth"
+                onblur="if(this.value==''){this.type='text'}" required>
 
-                <button class="form-btn" type="submit">Create Account</button>
-            </form>
-        </div>
-    </main>
+            <select name="role" aria-label="Role" required>
+                <option value="" disabled selected>SELECT ROLE</option>
+                <option value="admin">Admin</option>
+                <option value="staff">Staff</option>
+                <option value="client">Client</option>
+            </select>
 
-    <script>
-        function togglePassword(id, el) {
-            const input = document.getElementById(id);
-            if (input.type === "password") {
-                input.type = "text";
-                el.textContent = "HIDE";
-            } else {
-                input.type = "password";
-                el.textContent = "SHOW";
-            }
+            <button class="form-btn" type="submit">Create Account</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    function togglePassword(id, el) {
+        const input = document.getElementById(id);
+        if (input.type === "password") {
+            input.type = "text";
+            el.textContent = "HIDE";
+        } else {
+            input.type = "password";
+            el.textContent = "SHOW";
         }
-    </script>
-</body>
-</html>
+    }
+</script>
+{% if redirect_after_success %}
+<script>
+    setTimeout(function() {
+        window.location.href = "{% url 'manage_users' %}";
+    }, 2000);
+</script>
+{% endif %}
+
+{% endblock %}

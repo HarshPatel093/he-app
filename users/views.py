@@ -116,6 +116,10 @@ def create_user(request):
             password = form.cleaned_data['password']
             name = form.cleaned_data['name']
 
+            if User.objects.filter(username=email).exists():
+                messages.error(request, "Email already exists!")
+                return render(request, 'users/create_user.html', {'form': form})
+            
             # Use email as username
             user = User.objects.create_user(
                 username=email, 
@@ -130,8 +134,14 @@ def create_user(request):
                 role=form.cleaned_data['role']
             )
 
-            return redirect('manage_users')
-        
+            messages.success(request, "User created successfully.")
+            return render(request, 'users/create_user.html', {'form': form, 'redirect_after_success': True})
+        else:
+            errors = form.errors.as_data()
+            for field, field_errors in errors.items():
+                for e in field_errors:
+                    messages.error(request, e.message)
+
     else:
         form = CreateUser()
 
@@ -191,7 +201,7 @@ def edit_user(request, user_id):
         profile.role = role
         profile.save()
 
-        messages.success(request, f"User {user.email} updated successfully.")
+        messages.success(request, f"{name} updated successfully.")
         if "from_client_detail" in request.GET:
             return redirect("client_detail", client_id=profile.id)
         return redirect("manage_users")
@@ -319,16 +329,15 @@ def shift_list(request):
     start_of_week = today - timedelta(days=today.weekday())  
     end_of_week = start_of_week + timedelta(days=6)           
 
-    # Get all shifts in this week
     weekly_shifts = Shift.objects.filter(date__range=[start_of_week, end_of_week])
 
-    # Prepare chart data
     chart_labels = [(start_of_week + timedelta(days=i)).strftime("%d/%m/%y") for i in range(7)]
     chart_data = []
     for i in range(7):
         day = start_of_week + timedelta(days=i)
         staff_count = weekly_shifts.filter(date=day).values("staff").distinct().count()
         chart_data.append(staff_count)
+
     shifts = Shift.objects.select_related("staff").prefetch_related("clients").filter(date__gte=timezone.now().date()).order_by("date","date", "start_time")[:6]
 
     return render(request, "users/shift_list.html", {"shifts": shifts, "chart_labels": chart_labels,

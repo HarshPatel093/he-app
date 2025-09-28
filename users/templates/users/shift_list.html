@@ -64,14 +64,13 @@
               {% endfor %}
           </tbody>
       </table>
+      <div class="table-footer">
+        <a href="{% url 'all_shifts' %}" class="btn view-all-btn">View All</a>
+      </div>
   </div>
   <div class="staff-chart-container">
       <canvas id="staffChart"></canvas>
     </div>
-</div>
-
-<div class="table-footer">
-    <a href="{% url 'all_shifts' %}" class="btn view-all-btn">View All</a>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -174,7 +173,7 @@ document.querySelectorAll('.client-cell, .staff-cell').forEach(cell => {
     margin-right: 5px;
     margin-top: -10px;
     position: relative;  
-    padding-bottom: 50px;
+    padding-bottom: 70px;
 }
 
 .section-heading {
@@ -256,7 +255,10 @@ document.querySelectorAll('.client-cell, .staff-cell').forEach(cell => {
 .table-footer {
     display: flex;
     justify-content: center;
-    margin: 0 20px 0 0; 
+    position: absolute;
+    bottom: 15px;   
+    right: 11px;   
+    margin: 0;
 }
 .view-all-btn {
     background: #0056b3;
@@ -266,8 +268,6 @@ document.querySelectorAll('.client-cell, .staff-cell').forEach(cell => {
     text-decoration: none;
     font-size: 14px;
     transition: background 0.2s ease;
-    margin-left:260px;
-    margin-top: -5px; 
 }
 .view-all-btn:hover {
     background: #003f8a;
