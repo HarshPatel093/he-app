@@ -331,6 +331,7 @@ def edit_goals(request, client_id):
     })
 
 @login_required
+
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def shift_list(request):
     if request.user.userprofile.role != "admin":
@@ -422,3 +423,16 @@ def all_shifts(request):
     )
 
     return render(request, "users/all_shifts.html", {"shifts": shifts})
+
+def staff_profile(request):
+    if request.user.userprofile.role != "staff":
+        return redirect("dashboard_redirect")
+    profile = request.user.userprofile
+    return render(request, "users/staff_profile.html", {
+        "user_obj": request.user,
+        "profile": profile,
+
+    })
+
+    
+

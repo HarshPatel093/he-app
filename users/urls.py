@@ -25,6 +25,7 @@ urlpatterns = [
     path("reset/done/", auth_views.PasswordResetCompleteView.as_view(template_name="registration/password_reset_complete.html"), name="password_reset_complete"),
 
     path("client/<int:client_id>/edit-goals/", views.edit_goals, name="edit_goals"),
+    path("dashboard/staff/profile", views.staff_profile, name="staff_profile")
 
     path("dashboard/admin/staff/", views.shift_list, name="shift_list"),
     path('dashboard/admin/staff/allocate-shift/', views.allocate_shift, name='allocate_shift'),path("shift/<int:shift_id>/edit/", views.edit_shift, name="edit_shift"),
