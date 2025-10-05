@@ -18,9 +18,10 @@ from django.db.models.functions import TruncWeek
 from datetime import timedelta
 from io import BytesIO
 from reportlab.lib.pagesizes import A4, landscape
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph, Spacer
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
+from django.http import HttpResponse
 
 def signup(request):
     if request.method == "POST":
@@ -90,7 +91,20 @@ def admin_dashboard(request):
 def staff_dashboard(request):
     if request.user.userprofile.role != "staff":
         return redirect("dashboard_redirect")
-    return render(request, 'users/staff_dashboard.html')
+    staff = request.user.userprofile
+    clients = (UserProfile.objects
+               .filter(role="client", assigned_staff=request.user)
+               .order_by ("name"))
+    if not clients.exists():
+        clients = (UserProfile.objects
+                   .filter(role="client",
+                           id__in=Shift.objects.filter(staff=staff)
+                           .values_list("clients", flat=True))
+                    .distinct()
+                    .order_by("name"))
+    
+    return render(request, 'users/staff_dashboard.html', {"clients": clients})
+
 
 @login_required
 def client_dashboard(request):
@@ -449,7 +463,9 @@ def export_shifts_pdf(request):
     buf =BytesIO()
     doc = SimpleDocTemplate(buf, pagesize = landscape(A4), leftMargin = 24, rightMargin = 24, topMargin = 24, bottomMargin = 24  )
     styles = getSampleStyleSheet()
-    story=[Paragraph("ShiftLog", styles["Title"], Spacer(1,8))]
+    story = []
+    story.append(Paragraph("ShiftLog", styles["Title"]))
+    story.append(Spacer(1,8))
     data=[["Date", "Staff", "Clients", "Start", "End", ]]
     if qs.exists():
         for s in qs:
@@ -465,7 +481,7 @@ def export_shifts_pdf(request):
     table = Table(data, colWidths =[90,140,380,90,90])
     table.setStyle(TableStyle([
         ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#eef2ff")),
-        ("GRIND", (0,0),(-1,-1),0.5, colors.HexColor("#d8dce7")),
+        ("GRID", (0,0),(-1,-1),0.5, colors.HexColor("#d8dce7")),
         ("FONTNAME", (0,0), (-1,-1), "Times-Roman"),
         ("FONTSIZE", (0,0),(-1,-1),10),
         ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
@@ -473,8 +489,9 @@ def export_shifts_pdf(request):
     ]))
     story.append(table)
     doc.build(story)
-    pdf = buf.getvalue(); buf.close()
-    resp = HttpResponseRedirect(pdf,content_type = "application/pdf")
+    pdf = buf.getvalue(); 
+    buf.close()
+    resp = HttpResponse(pdf,content_type = "application/pdf")
     resp["Content-Disposition"] = 'attachment; filename="shift_log.pdf"'
     return resp
         
