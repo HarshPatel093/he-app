@@ -14,6 +14,7 @@
       <h1 class="section-heading">Shift Log</h1>
       <div class="btn-container">
         <a href="{% url 'allocate_shift' %}" class="btn">Create Shift</a>
+        <a href="{% url 'export_shifts_pdf'%}" class="btn2"> Download Shift</a>
       </div>
       <table class="shift-table">
           <thead>
@@ -275,5 +276,20 @@ document.querySelectorAll('.client-cell, .staff-cell').forEach(cell => {
 .shift-alert {
     margin-left: 40px;   
 }
+.btn2 {
+    display: inline-block;
+    margin-bottom: 10px;
+    padding: 7px 14px;
+    background: #0056b3;
+    color: #fff;
+    border-radius: 6px;
+    font-size: 14px;
+    text-decoration: none;
+    transition: background 0.2s ease;
+}
+.btn2:hover {
+    background: #003f8a;
+}
+
 </style>
 {% endblock %}

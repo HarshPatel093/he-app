@@ -20,6 +20,7 @@ from io import BytesIO
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph, Spacer
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib import colors
 
 def signup(request):
     if request.method == "POST":
@@ -461,6 +462,21 @@ def export_shifts_pdf(request):
                 s.end_time.strftime("%H:%M") if s.end_time else "-",])
     else:
         data.append(["No shifts allocated yet.", "", "", "", ""])
+    table = Table(data, colWidths =[90,140,380,90,90])
+    table.setStyle(TableStyle([
+        ("BACKGROUND", (0,0), (-1,0), colors.HexColor("#eef2ff")),
+        ("GRIND", (0,0),(-1,-1),0.5, colors.HexColor("#d8dce7")),
+        ("FONTNAME", (0,0), (-1,-1), "Times-Roman"),
+        ("FONTSIZE", (0,0),(-1,-1),10),
+        ("VALIGN", (0,0), (-1,-1), "MIDDLE"),
+        ("ALIGN", (0,0),(-1,0),"CENTER"),
+    ]))
+    story.append(table)
+    doc.build(story)
+    pdf = buf.getvalue(); buf.close()
+    resp = HttpResponseRedirect(pdf,content_type = "application/pdf")
+    resp["Content-Disposition"] = 'attachment; filename="shift_log.pdf"'
+    return resp
         
 
 
