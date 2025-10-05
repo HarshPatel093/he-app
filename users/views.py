@@ -17,6 +17,9 @@ from django.db.models import Count
 from django.db.models.functions import TruncWeek
 from datetime import timedelta
 from io import BytesIO
+from reportlab.lib.pagesizes import A4, landscape
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle,Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
 
 def signup(request):
     if request.method == "POST":
@@ -443,6 +446,24 @@ def export_shifts_pdf(request):
           .prefetch_related("clients")
           .order_by("date", "start_time"))
     buf =BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize = landscape(A4), leftMargin = 24, rightMargin = 24, topMargin = 24, bottomMargin = 24  )
+    styles = getSampleStyleSheet()
+    story=[Paragraph("ShiftLog", styles["Title"], Spacer(1,8))]
+    data=[["Date", "Staff", "Clients", "Start", "End", ]]
+    if qs.exists():
+        for s in qs:
+            clients = ", ".join(c.name for c in s.clients.all()) or "-"
+            data.append([
+                s.date.strftime("%d/%m/%Y") if s.date else "-",
+                getattr(s.staff, "name", "-"),
+                clients,
+                s.start_time.strftime("%H:%M") if s.start_time else "-",
+                s.end_time.strftime("%H:%M") if s.end_time else "-",])
+    else:
+        data.append(["No shifts allocated yet.", "", "", "", ""])
+        
+
+
 
 
 
