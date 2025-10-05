@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang ="en">
 <head>
-<meta charset="UTTF-8">
-<meta name="viewport" content="width= device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Staff's Profile</title>
 <style>
     :root {
         --brand: #2148C0;
         --white: #fff;
         --muted: rgba(255,255,255,0.8);
-        --black: #000000;
+        --black: #000;
     }
     * {
         box-sizing: border-box;
@@ -32,7 +32,7 @@
 
     }
     h1{
-        color:var(--black)
+        color:var(--black);
         font-family:'Times New Roman', serif;
         font-size: clamp(28px,4.5vw,36px);
         font-weight: bold;
@@ -60,7 +60,7 @@
 
 
     }
-    button{
+    .button{
         display:inline-block;
         align-items:center;
         width:70px;
@@ -79,24 +79,24 @@
         text-decoration:none;
         margin:1.5rem 0;
     }
-    button:hover{
+    .button:hover{
         background:#16348a;
         color:var(--white);
     }
-    button2{
+    .button2{
         width:100%;
         text-align: center;
-        padding: 9rem 1rem;
+        padding: .9rem 1rem;
         margin-top: 2rem;
         border-radius: .7rem;
         color:var(--brand);
         background:#fff;
         border: 2px solid #d8dce7;
-        font-weight:700;
+        font-weight:bold;
         text-transform:uppercase;
 
     }
-    button2:hover{
+    .button2:hover{
         background: #16348a;
         color:var(--white);
 
@@ -111,15 +111,15 @@
         <h1>your profile</h1>
         <h2>your details</h2>
         <div>
-            <p>Name:{{profile.name}}</p>
-            <p>Date of Birth:{{profile.date_of_birth|date:"d/m/Y"}}</p>
-            <p>Gender:{{profile.get_gender_display}}</p>
-            <p>Email:{{user_obj.email}}</p>
-            <a href="{% url 'staff_dashboard' %}" class="button">go back</a>
+            <p>Name: {{profile.name}}</p>
+            <p>Date of Birth: {{profile.date_of_birth|date:"d/m/Y"}}</p>
+            <p>Gender: {{profile.get_gender_display}}</p>
+            <p>Email: {{user_obj.email}}</p>
+            <a href="{% url 'staff_dashboard' %}" class="button"> go back </a>
         </div>
         <form method="post" action="{% url 'logout' %}"> 
             {% csrf_token %}
-            <button class= "button2" type="submit"> sign out <button>
+            <button class= "button2" type="submit"> sign out </button>
         </form>
     </main>
 
@@ -128,6 +128,7 @@
     </div>
 
 </body>
+</html>
     
 
 
