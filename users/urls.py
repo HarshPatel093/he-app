@@ -31,5 +31,7 @@ urlpatterns = [
     path('dashboard/admin/staff/allocate-shift/', views.allocate_shift, name='allocate_shift'),path("shift/<int:shift_id>/edit/", views.edit_shift, name="edit_shift"),
     path("shift/<int:shift_id>/delete/", views.delete_shift, name="delete_shift"),
     path("shifts/all/", views.all_shifts, name="all_shifts"),
+    path("shifts/export-pdf/", views.export_shifts_pdf, name="export_shifts_pdf"),
+    
 
 ]

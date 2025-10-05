@@ -16,6 +16,7 @@ from django.http import HttpResponseRedirect
 from django.db.models import Count
 from django.db.models.functions import TruncWeek
 from datetime import timedelta
+from io import BytesIO
 
 def signup(request):
     if request.method == "POST":
@@ -423,7 +424,7 @@ def all_shifts(request):
     )
 
     return render(request, "users/all_shifts.html", {"shifts": shifts})
-
+@login_required
 def staff_profile(request):
     if request.user.userprofile.role != "staff":
         return redirect("dashboard_redirect")
@@ -433,6 +434,21 @@ def staff_profile(request):
         "profile": profile,
 
     })
+
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == "admin")
+def export_shifts_pdf(request):
+    qs = (Shift.objects
+          .select_related("staff")
+          .prefetch_related("clients")
+          .order_by("date", "start_time"))
+    buf =BytesIO()
+
+
+
+
+
+
 
     
 
