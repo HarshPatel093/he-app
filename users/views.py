@@ -93,10 +93,22 @@ def admin_dashboard(request):
 def staff_dashboard(request):
     if request.user.userprofile.role != "staff":
         return redirect("dashboard_redirect")
+    staff_id = request.user.userprofile
+    today = timezone.localdate()
+    
+    shifts = Shift.objects.filter(
+        staff=staff_id,
+        date = today
+    ).prefetch_related("clients")
+    clients=UserProfile.objects.filter(id__in = shifts.values_list("clients__id", flat=True)).distinct()
+
     
     
     
-    return render(request, 'users/staff_dashboard.html')
+    return render(request, 'users/staff_dashboard.html', {
+        "clients": clients,
+        "today": today
+    })
 
 
 @login_required
