@@ -23,6 +23,7 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from django.http import HttpResponse
 from django.utils import timezone
+from users.models import Shift, UserProfile
 
 def signup(request):
     if request.method == "POST":
@@ -92,17 +93,10 @@ def admin_dashboard(request):
 def staff_dashboard(request):
     if request.user.userprofile.role != "staff":
         return redirect("dashboard_redirect")
-    staff = request.user.userprofile
-    today = timezone.localdate()
-    clients = (UserProfile.objects
-                   .filter(role="client",
-                           assigned_staff =request.user,
-                           id__in=Shift.objects.filter(staff=staff, date = today)
-                           .values_list("clients__id", flat=True))
-                    .distinct()
-                    .order_by("name"))
     
-    return render(request, 'users/staff_dashboard.html', {"clients": clients, "today": today})
+    
+    
+    return render(request, 'users/staff_dashboard.html')
 
 
 @login_required
