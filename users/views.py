@@ -22,6 +22,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from django.http import HttpResponse
+from django.utils import timezone
 
 def signup(request):
     if request.method == "POST":
@@ -92,18 +93,10 @@ def staff_dashboard(request):
     if request.user.userprofile.role != "staff":
         return redirect("dashboard_redirect")
     staff = request.user.userprofile
-    clients = (UserProfile.objects
-               .filter(role="client", assigned_staff=request.user)
-               .order_by ("name"))
-    if not clients.exists():
-        clients = (UserProfile.objects
-                   .filter(role="client",
-                           id__in=Shift.objects.filter(staff=staff)
-                           .values_list("clients", flat=True))
-                    .distinct()
-                    .order_by("name"))
+    today = timezone.localdate()
+   
     
-    return render(request, 'users/staff_dashboard.html', {"clients": clients})
+    return render(request, 'users/staff_dashboard.html', {"clients": clients, "today": today})
 
 
 @login_required

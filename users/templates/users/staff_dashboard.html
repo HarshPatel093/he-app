@@ -52,11 +52,14 @@
         font-size:15px;
         font-weight: 600;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        width: 300px;
+        
     }
     .card-list{
         display: flex;
         flex-direction: column;
-        gap: 15px;
+        gap: 40px;
+        align-items:center;
     }
     .card:hover{
         transform: scale(1.02);
@@ -82,7 +85,7 @@
 </style>
 </head>
 <body>
-    <h1>Clients:</h1>
+    <h1>Clients: {{ today|date:"d/m/Y" }}</h1>
     <div class="card-list">
         {% for client in clients %}
         <a href="#" class="card" >
