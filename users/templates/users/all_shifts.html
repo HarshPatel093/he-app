@@ -16,7 +16,10 @@
 
 <div class="staff-dashboard">
     <div class="shift-table-container">
+        <div style="display: flex; justify-content: center; align-items:center; margin-bottom:10px; position: relative;">
         <h1 class="section-heading">All Shifts</h1>
+        <a href="{% url 'export_shifts_pdf' %}" class="download-btn"> Download </a>
+        </div>
         <table class="shift-table">
             <thead>
                 <tr>
@@ -153,6 +156,24 @@
     font-size: 14px;
     text-align: center;
 }
+.download-btn{
+    background: #0056b3;
+    color: white;
+    padding: 7px 14px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background 0.2s ease;
+    position: absolute;
+    right:0;
+
+
+}
+.download-btn: hover{
+    background: #003f8a;
+}
+
+
 </style>
 
 {% endblock %}
