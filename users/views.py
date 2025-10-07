@@ -479,8 +479,8 @@ def export_shifts_pdf(request):
                 s.date.strftime("%d/%m/%Y") if s.date else "-",
                 getattr(s.staff, "name", "-"),
                 clients,
-                s.start_time.strftime("%H:%M") if s.start_time else "-",
-                s.end_time.strftime("%H:%M") if s.end_time else "-",])
+                s.start_time.strftime("%I:%M %p").lower() if s.start_time else "-",
+                s.end_time.strftime("%I:%M %p").lower() if s.end_time else "-",])
     else:
         data.append(["No shifts allocated yet.", "", "", "", ""])
     table = Table(data, colWidths =[90,140,380,90,90])
