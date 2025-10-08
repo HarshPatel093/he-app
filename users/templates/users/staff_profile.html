@@ -107,29 +107,20 @@
 </head>
 <body>
     <div class="profile-container">
-    <main class="content">
-        <h1>your profile</h1>
-        <h2>your details</h2>
-        <div>
-            <p>Name: {{profile.name}}</p>
-            <p>Date of Birth: {{profile.date_of_birth|date:"d/m/Y"}}</p>
-            <p>Gender: {{profile.get_gender_display}}</p>
-            <p>Email: {{user_obj.email}}</p>
-            <a href="{% url 'staff_dashboard' %}" class="button"> go back </a>
-        </div>
-        <form method="post" action="{% url 'logout' %}"> 
-            {% csrf_token %}
-            <button class= "button2" type="submit"> sign out </button>
-        </form>
-    </main>
-
-
-
+        <main class="content">
+            <h1>your profile</h1>
+            <h2>your details</h2>
+            <div>
+                <p>Name: {{profile.name}}</p>
+                <p>Date of Birth: {{profile.date_of_birth|date:"d/m/Y"}}</p>
+                <p>Email: {{user_obj.email}}</p>
+                <a href="{% url 'staff_dashboard' %}" class="button"> go back </a>
+            </div>
+            <form method="post" action="{% url 'logout' %}"> 
+                {% csrf_token %}
+                <button class= "button2" type="submit"> sign out </button>
+            </form>
+        </main>
     </div>
-
 </body>
 </html>
-    
-
-
-

@@ -499,15 +499,3 @@ def export_shifts_pdf(request):
     resp = HttpResponse(pdf,content_type = "application/pdf")
     resp["Content-Disposition"] = 'attachment; filename="shift_log.pdf"'
     return resp
-        
-
-
-
-
-
-
-
-
-
-    
-
