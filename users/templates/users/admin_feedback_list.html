@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="feedback-container">
+  <h1>Client Feedback</h1>
+
+  <!-- 🔍 Filter Form -->
+  <form method="get" class="filter-form">
+    <div class="filter-row">
+      <div>
+        <label for="start_date">Start Date:</label>
+        <input type="date" name="start_date" id="start_date" value="{{ start_date }}">
+      </div>
+      <div>
+        <label for="end_date">End Date:</label>
+        <input type="date" name="end_date" id="end_date" value="{{ end_date }}">
+      </div>
+      <div>
+        <label for="mood">Mood:</label>
+        <select name="mood" id="mood">
+          <option value="all" {% if selected_mood == 'all' %}selected{% endif %}>All</option>
+          <option value="1" {% if selected_mood == '1' %}selected{% endif %}>Very Unhappy</option>
+          <option value="2" {% if selected_mood == '2' %}selected{% endif %}>Unhappy</option>
+          <option value="3" {% if selected_mood == '3' %}selected{% endif %}>Neutral</option>
+          <option value="4" {% if selected_mood == '4' %}selected{% endif %}>Happy</option>
+          <option value="5" {% if selected_mood == '5' %}selected{% endif %}>Very Happy</option>
+        </select>
+      </div>
+      <button type="submit" class="filter-btn">Apply Filters</button>
+      <a href="{% url 'feedback' %}" class="reset-btn">Reset</a>
+    </div>
+  </form>
+
+  <!-- 📋 Feedback Table -->
+  <table class="feedback-table">
+    <thead>
+      <tr>
+        <th>Client Name</th>
+        <th>Mood</th>
+        <th>Feedback</th>
+        <th>Date</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% if feedbacks %}
+        {% for fb in feedbacks %}
+          <tr>
+            <td>{{ fb.user.get_full_name|default:fb.user.username }}</td>
+
+            <!-- 🧠 Mood Column -->
+            <td>
+              {% if fb.mood == 1 %}
+                Very Unhappy
+              {% elif fb.mood == 2 %}
+                Unhappy
+              {% elif fb.mood == 3 %}
+                Neutral
+              {% elif fb.mood == 4 %}
+                Happy
+              {% elif fb.mood == 5 %}
+                Very Happy
+              {% else %}
+                N/A
+              {% endif %}
+            </td>
+
+            <td>
+              {% if fb.comment %}
+                {{ fb.comment }}
+              {% else %}
+                <em>No comment provided</em>
+              {% endif %}
+            </td>
+
+            <td>{{ fb.created_at|date:"M d, Y" }}</td>
+
+            <td><a href="{% url 'feedback_detail' fb.id %}" class="view-btn">View</a></td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr><td colspan="5" style="text-align:center;">No feedback found.</td></tr>
+      {% endif %}
+    </tbody>
+  </table>
+</div>
+
+<style>
+.feedback-container {
+  padding: 2rem;
+  background: #f8faff;
+  border-radius: 12px;
+  max-width: 1100px; /* slightly wider to fit new column */
+  margin: 2rem auto;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+/* Filter Bar */
+.filter-form {
+  margin-bottom: 1.5rem;
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+.filter-row label {
+  font-weight: 600;
+  margin-right: 0.4rem;
+}
+
+.filter-row input, .filter-row select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.filter-btn {
+  background-color: #0077b6;
+  color: white;
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.filter-btn:hover {
+  background-color: #023e8a;
+}
+
+.reset-btn {
+  background-color: #adb5bd;
+  color: white;
+  padding: 6px 14px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.reset-btn:hover {
+  background-color: #6c757d;
+}
+
+/* Original Table Styling */
+.feedback-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.feedback-table th {
+  background-color: #0077b6;
+  color: white;
+  padding: 12px 10px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.feedback-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  vertical-align: middle;
+}
+
+.feedback-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* View Button */
+.view-btn {
+  background-color: #28a745;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 500;
+  display: inline-block;
+  text-align: center;
+}
+
+.view-btn:hover {
+  background-color: #218838;
+}
+</style>
+{% endblock %}

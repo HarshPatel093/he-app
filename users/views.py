@@ -15,7 +15,7 @@ from django.utils import timezone
 from django.http import HttpResponseRedirect
 from django.db.models import Count
 from django.db.models.functions import TruncWeek
-from datetime import timedelta
+from datetime import timedelta, datetime
 from io import BytesIO
 from reportlab.lib.pagesizes import A4, landscape
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
@@ -24,6 +24,7 @@ from reportlab.lib import colors
 from django.http import HttpResponse
 from django.utils import timezone
 from users.models import Shift, UserProfile
+
 
 def signup(request):
     if request.method == "POST":
@@ -309,6 +310,43 @@ def client_feedback(request):
         return redirect("client_dashboard")
     return render(request, 'users/client_feedback.html')
 
+def admin_feedback_list(request):
+    feedbacks = Feedback.objects.all().order_by('-created_at')
+
+    mood = request.GET.get('mood')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    if mood and mood != 'all':
+        feedbacks = feedbacks.filter(mood = mood)
+
+    if start_date:
+        try:
+            start = datetime.strptime(start_date, "%Y-%m-%d")
+            feedbacks = feedbacks.filter(created_at__date__gte=start.date())
+        except ValueError:
+            pass
+
+    if end_date:
+        try:
+            end = datetime.strptime(end_date, "%Y-%m-%d")
+            feedbacks = feedbacks.filter(created_at__date__lte=end.date())
+        except ValueError:
+            pass
+
+    context = {
+        'feedbacks' : feedbacks,
+        'selected_mood' : mood or 'all',
+        'start_date' : start_date or '',
+        'end_date' : end_date or '',
+    }
+
+    return render(request, 'users/admin_feedback_list.html', context)
+
+def feedback_detail(request, pk):
+    feedback = get_object_or_404(Feedback, pk=pk)
+    return render(request, 'users/feedback_detail.html', {'feedback':feedback})
+
 @login_required
 def admin_profile(request):
     profile=getattr(request.user, "userprofile", None)
@@ -500,6 +538,7 @@ def export_shifts_pdf(request):
     resp["Content-Disposition"] = 'attachment; filename="shift_log.pdf"'
     return resp
         
+
 
 
 

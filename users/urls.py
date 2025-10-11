@@ -1,5 +1,7 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
+from django.conf import settings
+from django.conf.urls.static import static
 from . import views
 
 urlpatterns = [
@@ -32,6 +34,9 @@ urlpatterns = [
     path("shift/<int:shift_id>/delete/", views.delete_shift, name="delete_shift"),
     path("shifts/all/", views.all_shifts, name="all_shifts"),
     path("shifts/export-pdf/", views.export_shifts_pdf, name="export_shifts_pdf"),
+    path('feedback/', views.admin_feedback_list, name='feedback'),
+    path('feedback/<int:pk>/', views.feedback_detail, name='feedback_detail'),
     
+
 
 ]

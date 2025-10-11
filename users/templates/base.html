@@ -85,6 +85,9 @@
     
     <a href="{% url 'manage_users' %}" 
         class="{% if request.resolver_match.url_name == 'manage_users' %}active{% endif %}">Manage User</a>
+
+    <a href="{% url 'feedback' %}" 
+        class="{% if request.resolver_match.url_name == 'feedback' %}active{% endif %}">Feedback</a>
     
     <a href="{% url 'admin_profile' %}" class="profile-link" aria-label="Profile">
 
