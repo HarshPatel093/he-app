@@ -3,7 +3,7 @@
 
 {% block content %}
 <div class="feedback-container">
-  <h1>Client Feedback</h1>
+  <h1 class="h1">Client Feedback</h1>
 
   <!-- 🔍 Filter Form -->
   <form method="get" class="filter-form">
@@ -76,7 +76,7 @@
 
             <td>{{ fb.created_at|date:"M d, Y" }}</td>
 
-            <td><a href="{% url 'feedback_detail' fb.id %}" class="view-btn">View</a></td>
+            <td class="action-cell"><a href="{% url 'feedback_detail' fb.id %}" class="view-btn">View</a></td>
           </tr>
         {% endfor %}
       {% else %}
@@ -143,11 +143,18 @@
   padding: 6px 14px;
   border-radius: 6px;
   text-decoration: none;
+  cursor: pointer;
   font-weight: 500;
 }
 
 .reset-btn:hover {
   background-color: #6c757d;
+}
+
+.reset-btn, .filter-btn {
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.2;
 }
 
 /* Original Table Styling */
@@ -157,6 +164,10 @@
   background: white;
   border-radius: 8px;
   overflow: hidden;
+}
+
+.h1 {
+  text-align: center;
 }
 
 .feedback-table th {
@@ -173,6 +184,10 @@
   vertical-align: middle;
 }
 
+td.action-cell {
+  text-align: center;
+}
+
 .feedback-table tr:nth-child(even) {
   background-color: #f2f2f2;
 }
@@ -187,6 +202,7 @@
   font-weight: 500;
   display: inline-block;
   text-align: center;
+  margin: 0 auto; 
 }
 
 .view-btn:hover {

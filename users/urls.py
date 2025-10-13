@@ -36,7 +36,4 @@ urlpatterns = [
     path("shifts/export-pdf/", views.export_shifts_pdf, name="export_shifts_pdf"),
     path('feedback/', views.admin_feedback_list, name='feedback'),
     path('feedback/<int:pk>/', views.feedback_detail, name='feedback_detail'),
-    path('feedback/<int:feedback_id>/download/', views.feedback_pdf_download, name='feedback_pdf_download'),
-
-
 ]

@@ -25,9 +25,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from users.models import Shift, UserProfile
 from django.template.loader import get_template 
-from xhtml2pdf import pisa
 from io import BytesIO
-
 
 def signup(request):
     if request.method == "POST":
@@ -540,27 +538,3 @@ def export_shifts_pdf(request):
     resp = HttpResponse(pdf,content_type = "application/pdf")
     resp["Content-Disposition"] = 'attachment; filename="shift_log.pdf"'
     return resp
-        
-def feedback_pdf_download(request, feedback_id):
-    from .models import Feedback
-    feedback = Feedback.objects.get(id=feedback_id)
-
-    template_path = 'users/client_feedback_pdf.html' 
-    context = {'feedback': feedback}
-
-    template = get_template(template_path)
-    html = template.render(context)
-
-    response = HttpResponse(content_type='application/pdf')
-    response['Content-Disposition'] = f'attachment; filename="feedback_{feedback_id}.pdf"'
-
-    pisa_status = pisa.CreatePDF(
-        html.encode('utf-8'),
-        dest=response,
-        encoding='utf-8'
-    )
-
-    if pisa_status.err:
-        return HttpResponse('Error creating PDF:<pre>' + html + '</pre>')
-    return response
-
