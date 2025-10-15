@@ -20,21 +20,28 @@
     <canvas id="monthlyGoalsPie"></canvas>
   </div>
   
+  <div style="width: 350px; height: 350px;">
+    <canvas id="weeklyFeedbackPie"></canvas>
+  </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+const goalData = {{ goal_data|safe }};
 const ctx = document.getElementById('monthlyGoalsPie');
 
 new Chart(ctx, {
     type: 'pie',
     data: {
-        labels: {{ labels|safe }},
+        labels: goalData.every(v => v === 0) ? ['No Data'] : {{ goal_labels|safe }},
         datasets: [{
             label: 'Goals Added',
-            data: {{ data|safe }},
-            backgroundColor: ['#60a5fa', '#34d399', '#fbbf24', '#f87171'],
+            data: goalData.every(v => v === 0) ? [1] : goalData,
+            backgroundColor: goalData.every(v => v === 0)
+                ? ['#e5e7eb']  // neutral gray for no data
+                : ['#60a5fa', '#34d399', '#fbbf24', '#f87171'],
             hoverOffset: 10
         }]
     },
@@ -54,11 +61,60 @@ new Chart(ctx, {
             tooltip: {
                 callbacks: {
                     label: function(context) {
+                        if (goalData.every(v => v === 0)) {
+                            return 'No data available';
+                        }
                         const label = context.label || '';
                         const value = context.raw;
                         const total = context.chart._metasets[0].total;
                         const percentage = ((value / total) * 100).toFixed(1);
                         return `${label}: ${value} goals (${percentage}%)`;
+                    }
+                }
+            }
+        }
+    }
+});
+
+const feedbackData = {{ feedback_data|safe }};
+const feedbackCtx = document.getElementById('weeklyFeedbackPie');
+new Chart(feedbackCtx, {
+    type: 'pie',
+    data: {
+        labels: feedbackData.every(v => v === 0) ? ['No Data'] : {{ feedback_labels|safe }},
+        datasets: [{
+            label: 'Client Feedback',
+            data: feedbackData.every(v => v === 0) ? [1] : feedbackData,
+            backgroundColor: feedbackData.every(v => v === 0)
+                ? ['#e5e7eb']
+                : ['#a78bfa', '#fb7185', '#fbbf24', '#4ade80'],
+            hoverOffset: 10
+        }]
+    },
+    options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            title: {
+                display: true,
+                text: 'Weekly Client Feedbacks ({{ month_name }})',
+                font: { size: 16 }
+            },
+            legend: {
+                position: 'bottom',
+                labels: { boxWidth: 12, font: { size: 12 } }
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context) {
+                        if (feedbackData.every(v => v === 0)) {
+                            return 'No data available';
+                        }
+                        const label = context.label || '';
+                        const value = context.raw;
+                        const total = context.chart._metasets[0].total;
+                        const percentage = ((value / total) * 100).toFixed(1);
+                        return `${label}: ${value} feedbacks (${percentage}%)`;
                     }
                 }
             }
