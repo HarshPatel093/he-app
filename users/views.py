@@ -26,6 +26,7 @@ from django.utils import timezone
 from users.models import Shift, UserProfile
 from django.template.loader import get_template 
 from io import BytesIO
+from django.utils.timezone import localtime
 
 def signup(request):
     if request.method == "POST":
@@ -89,7 +90,34 @@ def dashboard_redirect(request):
 def admin_dashboard(request):
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
-    return render(request, 'users/admin_dashboard.html')
+    today = timezone.now()
+    start_of_month = today.replace(day=1)
+    next_month = (start_of_month + timedelta(days=32)).replace(day=1)
+
+    monthly_goals = Goal.objects.filter(
+        created_at__gte=start_of_month, created_at__lt=next_month
+    )
+
+    week_data = {f"Week {i+1}": 0 for i in range(4)}
+
+    for goal in monthly_goals:
+        local_date = localtime(goal.created_at).date()
+        day_of_month = local_date.day
+
+        week_number = ((day_of_month - 1) // 7) + 1
+        if 1 <= week_number <= 4:
+            week_data[f"Week {week_number}"] += 1
+
+    labels = list(week_data.keys())
+    data = list(week_data.values())
+    month_name = today.strftime("%B %Y")
+
+    context = {
+        'labels': labels,
+        'data': data,
+        'month_name': month_name,
+    }
+    return render(request, 'users/admin_dashboard.html', context)
 
 @login_required
 def staff_dashboard(request):
