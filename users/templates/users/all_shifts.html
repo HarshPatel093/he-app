@@ -18,7 +18,11 @@
     <div class="shift-table-container">
         <div style="display: flex; justify-content: center; align-items:center; margin-bottom:10px; position: relative;">
         <h1 class="section-heading">All Shifts</h1>
-        <a href="{% url 'export_shifts_pdf' %}" class="download-btn"> Download </a>
+        <a href="{% url 'export_shifts_pdf' %}" class="download-btn">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7 7-7z"/>
+            </svg> 
+            Download </a>
         </div>
         <table class="shift-table">
             <thead>
@@ -156,23 +160,34 @@
     font-size: 14px;
     text-align: center;
 }
-.download-btn{
+.download-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     background: #0056b3;
-    color: white;
+    color: #fff;
     padding: 7px 14px;
     border-radius: 6px;
     text-decoration: none;
     font-size: 14px;
-    transition: background 0.2s ease;
+    font-weight: 500;
+    transition: background 0.2s ease, transform 0.1s ease;
     position: absolute;
-    right:0;
-
-
+    right: 0;
+    top: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
-.download-btn: hover{
+
+.download-btn:hover {
     background: #003f8a;
+    transform: translateY(-1px);
 }
 
+.download-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: #fff;
+}
 
 </style>
 

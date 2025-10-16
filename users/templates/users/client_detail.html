@@ -3,7 +3,11 @@
 
 <div class="top-actions">
   <a href="{% url 'clients_list' %}" class="back-btn">← Back</a>
-  <button id="downloadPdf" class="download-btn">Download PDF</button>
+  <button id="downloadPdf" class="download-btn" title="Download page as pdf">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7 7-7z"/>
+    </svg> 
+    Download</button>
 </div>
 
 <div class="client-detail-container">
@@ -140,19 +144,31 @@
     }
 
     .download-btn {
-        font-size: 14px;
-        padding: 6px 14px;
-        background: #218838;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        background: #0056b3;
         color: #fff;
-        border-radius: 4px;
+        padding: 7px 14px;
+        border-radius: 6px;
         border: none;
-        font-weight: 600;
+        font-size: 14px;
+        font-weight: 500;
+        text-decoration: none;
         cursor: pointer;
-        transition: background 0.2s ease;
+        transition: background 0.2s ease, transform 0.1s ease;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.15);
     }
 
     .download-btn:hover {
-        background: #218838;
+        background: #003f8a;
+        transform: translateY(-1px);
+    }
+
+    .download-btn svg {
+        width: 18px;
+        height: 18px;
+        fill: #fff;
     }
 
     .client-detail-container {

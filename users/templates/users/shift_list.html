@@ -8,6 +8,15 @@
     }, 2000);
   </script>
 {% endif %}
+<div class="pdf-download-container">
+  <button id="downloadImgBtn" class="pdf-btn" title="Download chart as image">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7 7-7z"/>
+    </svg>
+    Download
+  </button>
+</div>
+
 
 <div class="staff-dashboard">
     <div class="shift-table-container">
@@ -106,6 +115,26 @@ document.querySelectorAll('.client-cell, .staff-cell').forEach(cell => {
     cell.style.setProperty('--mouse-x', e.pageX + 10 + 'px');
     cell.style.setProperty('--mouse-y', e.pageY + 20 + 'px');
   });
+});
+</script>
+<script>
+document.getElementById("downloadImgBtn").addEventListener("click", () => {
+  const chartCanvas = document.getElementById("staffChart");
+
+  const tempCanvas = document.createElement("canvas");
+  const ctx = tempCanvas.getContext("2d");
+  tempCanvas.width = chartCanvas.width;
+  tempCanvas.height = chartCanvas.height;
+
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+
+  ctx.drawImage(chartCanvas, 0, 0);
+
+  const link = document.createElement("a");
+  link.download = "Staff_Chart.png";
+  link.href = tempCanvas.toDataURL("image/png");
+  link.click();
 });
 </script>
 
@@ -281,6 +310,39 @@ document.querySelectorAll('.client-cell, .staff-cell').forEach(cell => {
   display:flex;
   gap:300px;
   flex-wrap:wrap;
+}
+
+.pdf-download-container {
+  position: absolute;
+  top: 100px;
+  right: 20px;
+  z-index: 100;
+}
+
+.pdf-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #0056b3;
+  color: #fff;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+}
+
+.pdf-btn:hover {
+  background: #003f8a;
+}
+
+.pdf-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: #fff;
 }
 
 </style>
