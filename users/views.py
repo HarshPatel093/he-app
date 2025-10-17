@@ -167,17 +167,26 @@ def client_dashboard(request):
 
     client = request.user.userprofile
     goals = client.goals.all()
+
+    latest_shift = (
+        Shift.objects.filter(clients=client)
+        .order_by("-date", "-end_time")
+        .first()
+    )
+
+    session_ended = False
+    if latest_shift:
+        shift_end = datetime.combine(latest_shift.date, latest_shift.end_time)
+        shift_end = timezone.make_aware(shift_end)
+
+        if timezone.localtime(timezone.now()) > shift_end:
+            session_ended = True
+
     return render(request, 'users/client_dashboard.html', {
         "client": client,
         "goals": goals,
+        "session_ended": session_ended,
     })
-
-    clients = UserProfile.objects.filter(
-        role = "client",
-        assigned_staff=request.user).order_by("name")
-
-    return render(request, 'users/client_dashboard.html', {"clients": clients})
-
 
 @login_required
 def client_profile(request):

@@ -63,6 +63,42 @@
         left: 0;
     }
 
+    .session-message {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #f9f9f9;
+        border-left: 5px solid #f1c40f;
+        color: #000;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        font-weight: 500;
+        z-index: 9999;
+        min-width: 300px;
+        max-width: 600px;
+        animation: fadeIn 0.4s ease-in;
+    }
+
+    .close-btn {
+        background: none;
+        border: none;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        color: #000;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translate(-50%, -15px); }
+        to { opacity: 1; transform: translate(-50%, 0); }
+    }
+
     /* Phones */
     @media (max-width: 600px) {
         .content h1 { font-size: 35px; }
@@ -87,6 +123,12 @@
 </style>
 </head>
 <body>
+{% if session_ended %}
+<div id="session-message" class="session-message">
+  <span>Session is ended, please fill feedback form!</span>
+  <button id="close-session-message" class="close-btn">×</button>
+</div>
+{% endif %}
 
 <main  class="content">
     <h1>Dashboard</h1>
@@ -183,5 +225,60 @@
         plugins: [ChartDataLabels]
     });
 </script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const closeBtn = document.getElementById("close-session-message");
+  const msgBox = document.getElementById("session-message");
+
+  if (closeBtn && msgBox) {
+    closeBtn.addEventListener("click", function() {
+      msgBox.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+      msgBox.style.opacity = "0";
+      msgBox.style.transform = "translateY(-10px)";
+      setTimeout(() => msgBox.remove(), 400); 
+    });
+  }
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const message = document.getElementById("session-message");
+  const closeBtn = document.getElementById("close-session-message");
+  const now = Date.now();
+  const saved = JSON.parse(localStorage.getItem("sessionMsg") || "{}");
+
+  if (saved.dismissed && now - saved.time < 24 * 60 * 60 * 1000) {
+    if (message) message.remove();
+    return;
+  }
+
+  if (closeBtn && message) {
+    closeBtn.addEventListener("click", () => dismissBanner());
+  }
+
+  const form = document.getElementById("feedback-form");
+  if (form && message) {
+    form.addEventListener("submit", () => dismissBanner());
+  }
+
+  function dismissBanner() {
+    message.style.transition = "opacity 0.4s ease, transform 0.4s ease";
+    message.style.opacity = "0";
+    message.style.transform = "translateY(-10px)";
+    setTimeout(() => {
+      message.remove();
+      localStorage.setItem("sessionMsg", JSON.stringify({ dismissed: true, time: now }));
+    }, 400);
+  }
+
+  setTimeout(() => {
+    if (message) {
+      message.remove();
+      localStorage.setItem("sessionMsg", JSON.stringify({ dismissed: true, time: Date.now() }));
+    }
+  }, 24 * 60 * 60 * 1000);
+});
+</script>
+
 </body>
 </html>
