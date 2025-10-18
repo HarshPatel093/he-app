@@ -23,8 +23,62 @@
         padding: 2.5rem .75rem;
 
     }
+    .details{
+        background:var(--muted);
+        width:100%;
+        max-width:420px;
+        border-radius:10px;
+        padding: 1.5rem 1.25rem 2rem;
+
+
+    }
+    h1{
+        color:var(--black);
+        font-family:'Times New Roman', serif;
+        font-size:clamp(28px, 4.5vw,36px);
+        font-weight:bold;
+        margin-bottom:35px;
+        text-align:center;
+        text-transform:uppercase;
+
+    }
+    p{
+        font-family:'Times New Roman', serif;
+        font-size: 1.2rem;
+        margin: 1.5rem 0;
+        margin-bottom: 0rem;
+    }
+    button1{
+        width:100%;
+        text-align:center;
+        padding: .9rem 1rem;
+        margin-top: 2rem;
+        border-radius: .7rem;
+        color:var(--brand);
+        background:#fff;
+        border: 2px solid #d8dce7;
+        font-weight:bold;
+        text-transform:uppercase;
+    }
+    button1:hover{
+        background: #16348a;
+        color: var(--white);
+    }
+    
 </style>
 </head>
 <body>
+    <div class="details-container">
+        <main class="details">
+            <h1>Client Info</h1>
+            <p>Name:</p>
+            <p>Date of Birth:</p>
+            <form method="POST">
+                <textarea name="summary" placeholder="Summary" required></textarea>
+                <button type="submit" class = "button1">Submit</button>
+
+            </form>
+        </main>
+    </div>
 </body>
 </html>
