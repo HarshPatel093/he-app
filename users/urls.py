@@ -34,6 +34,12 @@ urlpatterns = [
     path("shift/<int:shift_id>/delete/", views.delete_shift, name="delete_shift"),
     path("shifts/all/", views.all_shifts, name="all_shifts"),
     path("shifts/export-pdf/", views.export_shifts_pdf, name="export_shifts_pdf"),
+
     path('feedback/', views.admin_feedback_list, name='feedback'),
     path('feedback/<int:pk>/', views.feedback_detail, name='feedback_detail'),
+
+    path("dahboard/staff/client/<int:client_id>/", views.client_info, name="client_info"),
+    
+
+
 ]

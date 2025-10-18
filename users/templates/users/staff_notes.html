@@ -71,8 +71,8 @@
     <div class="details-container">
         <main class="details">
             <h1>Client Info</h1>
-            <p>Name:</p>
-            <p>Date of Birth:</p>
+            <p>Name:{{ client.name }}</p>
+            <p>Date of Birth:{{ client.date_of_birth }}</p>
             <form method="POST">
                 <textarea name="summary" placeholder="Summary" required></textarea>
                 <button type="submit" class = "button1">Submit</button>

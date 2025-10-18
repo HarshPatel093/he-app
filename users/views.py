@@ -594,3 +594,21 @@ def export_shifts_pdf(request):
     resp = HttpResponse(pdf,content_type = "application/pdf")
     resp["Content-Disposition"] = 'attachment; filename="shift_log.pdf"'
     return resp
+
+@login_required
+def client_info(request, client_id):
+    if request.user.userprofile.role != "staff":
+        return redirect("dashboard_redirect")
+    client = get_object_or_404(UserProfile, id=client_id, role="client")
+    if request.method == "POST":
+        summary = request.POST.get("summary")
+        if summary:
+            Feedback.objects.create(
+                client=client,
+                staff = request.user.userprofile,
+                summary=summary,
+            )
+            messages.success(request,"Notes Sent!")
+            return redirect("staff_dashboard")
+    return render(request, "users/staff_notes.html", {"client":client})
+
