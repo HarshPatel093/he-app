@@ -23,10 +23,14 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from django.http import HttpResponse
 from django.utils import timezone
+
 from users.models import Shift, UserProfile
 from django.template.loader import get_template 
 from io import BytesIO
 from django.utils.timezone import localtime
+
+from users.models import Shift, UserProfile, StaffNote 
+
 
 def signup(request):
     if request.method == "POST":
@@ -601,14 +605,15 @@ def client_info(request, client_id):
         return redirect("dashboard_redirect")
     client = get_object_or_404(UserProfile, id=client_id, role="client")
     if request.method == "POST":
-        summary = request.POST.get("summary")
+        summary = request.POST.get("summary" or "").strip()
         if summary:
-            Feedback.objects.create(
+            StaffNote.objects.create(
                 client=client,
                 staff = request.user.userprofile,
                 summary=summary,
             )
             messages.success(request,"Notes Sent!")
             return redirect("staff_dashboard")
+        messages.error(request, "Please type a note before submitting.")
     return render(request, "users/staff_notes.html", {"client":client})
 
