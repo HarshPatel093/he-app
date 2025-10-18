@@ -605,7 +605,7 @@ def client_info(request, client_id):
         return redirect("dashboard_redirect")
     client = get_object_or_404(UserProfile, id=client_id, role="client")
     if request.method == "POST":
-        summary = request.POST.get("summary" or "").strip()
+        summary = request.POST.get("SUMMARY", "").strip()
         if summary:
             StaffNote.objects.create(
                 client=client,
