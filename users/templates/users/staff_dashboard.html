@@ -88,7 +88,7 @@
     <h1>Clients: {{ today|date:"d/m/Y" }}</h1>
     <div class="card-list">
         {% for client in clients %}
-        <a href="#" class="card" >
+        <a href="{% url 'client_info' client.id %}" class="card" >
             <p>Name:{{client.name}}</p>
             <p>Date of Birth:{{client.date_of_birth|date:"d/m/Y"}}</p>
             

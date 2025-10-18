@@ -48,7 +48,7 @@
         margin: 1.5rem 0;
         margin-bottom: 0rem;
     }
-    button1{
+    .btn{
         width:100%;
         text-align:center;
         padding: .9rem 1rem;
@@ -60,9 +60,23 @@
         font-weight:bold;
         text-transform:uppercase;
     }
-    button1:hover{
+    .btn:hover{
         background: #16348a;
         color: var(--white);
+    }
+    textarea{
+        width:100%;
+        min-height:200px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: .8rem;
+        resize: vertical;
+        font-family:inherit;
+        font-size:1rem;
+        box-shadow: inset 0 0 4px rgba(0,0,0,0.5);
+        margin-top: 5rem;
+
+
     }
     
 </style>
@@ -74,8 +88,9 @@
             <p>Name:{{ client.name }}</p>
             <p>Date of Birth:{{ client.date_of_birth }}</p>
             <form method="POST">
-                <textarea name="summary" placeholder="Summary" required></textarea>
-                <button type="submit" class = "button1">Submit</button>
+                {% csrf_token %}
+                <textarea name="summary" placeholder="SUMMARY" required></textarea>
+                <button class= "btn" type="submit">Submit</button>
 
             </form>
         </main>

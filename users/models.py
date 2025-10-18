@@ -68,3 +68,18 @@ class Shift(models.Model):
         if self.clients.count() > 3:
             client_names += "..."
         return f"Shift: {self.staff.name} with {client_names} on {self.date}"
+    
+class StaffNote(models.Model):
+    staff = models.ForeignKey(
+        UserProfile, on_delete=models.CASCADE,
+        related_name="notes", limit_choices_to={'role': 'staff'}
+
+    ) 
+    clients = models.ForeignKey(
+        UserProfile, on_delete=models.CASCADE,
+        related_name="staff_notes", limit_choices_to={'role': 'client'}
+        )
+    summary= models.TextField()
+    created_at= models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return f"{self.staff.name} → {self.client.name} ({self.created_at:%Y-%m-%d})"
