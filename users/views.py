@@ -114,7 +114,7 @@ def admin_dashboard(request):
 
     goal_labels = list(goal_week_data.keys())
     goal_data = list(goal_week_data.values())
-
+    
     monthly_feedback = Feedback.objects.filter(
         created_at__gte=start_of_month, created_at__lt=next_month
     )
@@ -131,6 +131,15 @@ def admin_dashboard(request):
     feedback_labels = list(feedback_week_data.keys())
     feedback_data = list(feedback_week_data.values())
 
+    goal_type_summary = (
+        Goal.objects.filter(created_at__gte=start_of_month, created_at__lt=next_month)
+        .values('goal_type__name')
+        .annotate(total=Count('id'))
+        .order_by('-total')
+    )
+
+    goal_type_labels = [item['goal_type__name'] if item['goal_type__name'] else 'Uncategorized' for item in goal_type_summary]
+    goal_type_data = [item['total'] for item in goal_type_summary]
     month_name = today.strftime("%B %Y")
 
     context = {
@@ -138,6 +147,8 @@ def admin_dashboard(request):
         'goal_data': goal_data,
         "feedback_labels": feedback_labels,
         "feedback_data": feedback_data,
+        'goal_type_labels': goal_type_labels,
+        'goal_type_data': goal_type_data,
         'month_name': month_name,
     }
     return render(request, 'users/admin_dashboard.html', context)
