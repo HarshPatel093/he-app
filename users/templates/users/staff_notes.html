@@ -20,18 +20,17 @@
         display:flex;
         align-itemns: flex-start;
         justify-content: center;
-        padding: 2.5rem .75rem;
-
+        padding: 1rem .75rem;
     }
+    
     .details{
         background:var(--muted);
         width:100%;
         max-width:420px;
         border-radius:10px;
         padding: 1.5rem 1.25rem 2rem;
-
-
     }
+
     h1{
         color:var(--black);
         font-family:'Times New Roman', serif;
@@ -74,7 +73,7 @@
         font-family:inherit;
         font-size:1rem;
         box-shadow: inset 0 0 4px rgba(0,0,0,0.5);
-        margin-top: 5rem;
+        margin-top: 2rem;
 
 
     }
@@ -85,13 +84,12 @@
     <div class="details-container">
         <main class="details">
             <h1>Client Info</h1>
-            <p>Name:{{ client.name }}</p>
-            <p>Date of Birth:{{ client.date_of_birth }}</p>
+            <p>Name : {{ client.name }}</p>
+            <p>Date of Birth : {{ client.date_of_birth }}</p>
             <form method="POST">
                 {% csrf_token %}
                 <textarea name="summary" placeholder="SUMMARY" required></textarea>
                 <button class= "btn" type="submit">Submit</button>
-
             </form>
         </main>
     </div>

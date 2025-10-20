@@ -75,7 +75,7 @@ class StaffNote(models.Model):
         related_name="notes", limit_choices_to={'role': 'staff'}
 
     ) 
-    clients = models.ForeignKey(
+    client = models.ForeignKey(
         UserProfile, on_delete=models.CASCADE,
         related_name="staff_notes", limit_choices_to={'role': 'client'}
         )

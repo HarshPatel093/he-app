@@ -32,41 +32,47 @@
         transform: scale(1.05);
     }
     h1{
-        font-size: 42px;
+        font-size: 38px;
         font-weight: bold;
-        margin:0 0 15px 0;
+        margin:0 0 15px 15px;
         text-align: left;
         text-transform: uppercase;
-        font-family: Georgia, 'Times New Roman', Times, serif;
+        font-family: 'Georgia', serif;
     }
     .card{
         display: block;
         text-decoration: none;
-        color: inherit;
         background: #dcdde1;
         border-radius: 18px;
         padding:22px;
         box-shadow:0 2px 6px rgba(0,0,0,.08);
         text-decoration: none;
         color: black;
-        font-size:15px;
+        font-size:20px;
         font-weight: 600;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         width: 300px;
+        margin-top: 20px;
+        line-height: 1.4;
         
     }
+
     .card-list{
         display: flex;
         flex-direction: column;
         gap: 40px;
         align-items:center;
     }
+
     .card:hover{
         transform: scale(1.02);
         box-shadow: 0 6px 15px rgba(0,0,0,0.12);
-
-
     }
+
+    .card p {
+        margin: 8px 0;
+    }
+
     .no-clients{
         text-align: center;
         margin-top:200px;
@@ -87,19 +93,19 @@
 <body>
     <h1>Clients: {{ today|date:"d/m/Y" }}</h1>
     <div class="card-list">
-        {% for client in clients %}
-        <a href="{% url 'client_info' client.id %}" class="card" >
-            <p>Name:{{client.name}}</p>
-            <p>Date of Birth:{{client.date_of_birth|date:"d/m/Y"}}</p>
-            
-        </a>
-        {% empty %}
-        <div class="no-clients">
-            No Clients Assigned.
-        </div>
-            
-        {% endfor %}
+        {% for item in clients %}
+            <a href="{% url 'client_info' item.client.id %}" class="card">
+                <p><strong>Name:</strong> {{ item.client.name }}</p>
+                <p><strong>Date of Birth:</strong> {{ item.client.date_of_birth|date:"d/m/Y" }}</p>
 
+
+                {% if item.shift %}
+                    <p><strong>Shift Time:</strong> {{ item.shift.start_time|time:"h:i A" }} – {{ item.shift.end_time|time:"h:i A" }}</p>
+                {% else %}
+                    <p><strong>Shift Time:</strong> Not Assigned</p>
+                {% endif %}
+            </a>
+        {% endfor %}
 
     
     <div class="bottom-nav">

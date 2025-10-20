@@ -153,13 +153,17 @@ def staff_dashboard(request):
         staff=staff_id,
         date = today
     ).prefetch_related("clients")
-    clients=UserProfile.objects.filter(id__in = shifts.values_list("clients__id", flat=True)).distinct()
-
     
-    
+    client_shift_data = []
+    for shift in shifts:
+        for client in shift.clients.all():
+            client_shift_data.append({
+                'client': client,
+                'shift': shift
+            })
     
     return render(request, 'users/staff_dashboard.html', {
-        "clients": clients,
+        "clients": client_shift_data,
         "today": today
     })
 
@@ -605,7 +609,7 @@ def client_info(request, client_id):
         return redirect("dashboard_redirect")
     client = get_object_or_404(UserProfile, id=client_id, role="client")
     if request.method == "POST":
-        summary = request.POST.get("SUMMARY", "").strip()
+        summary = request.POST.get("summary", "").strip()
         if summary:
             StaffNote.objects.create(
                 client=client,
@@ -616,4 +620,3 @@ def client_info(request, client_id):
             return redirect("staff_dashboard")
         messages.error(request, "Please type a note before submitting.")
     return render(request, "users/staff_notes.html", {"client":client})
-
