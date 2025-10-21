@@ -3,6 +3,10 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
+<div class="page-actions">
+  <a class="btn1" href="#">Sort</a>
+  <a class="btn2" href="#">Reset</a>
+</div>
 <div style="
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -234,5 +238,29 @@ new Chart(staffCtx, {
   }
 });
 </script>
+<style>
+  .page-actions{
+    position: absloute;
+    top: 16px;
+    right:24px;
+    display:flex;
+    gap:10px;
+    z-index:5;
+  }
+  .btn1{
+    display: inline-block;
+    padding:6px 14px;
+    background:#ffffff;
+    color:#111;
+    border-radius:999px;
+    text-decoration:none;
+    font-weight:none;
+    box-shadow:0 2px 8px rgba(0,0,0,.08);
+    transition:transform .15s ease, box-shadow .15s ease;
+
+  }
+
+  
+</style>
 
 {% endblock %}
