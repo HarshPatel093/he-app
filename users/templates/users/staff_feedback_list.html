@@ -4,7 +4,7 @@
 {% block content %}
 
 <div class="feedback-header">
-  <a href="{% url 'feedback' %}" class="back-btn">Go Back</a>
+  <a href="{% url 'feedback' %}" class="back-btn">← Back</a>
 </div>
 
 <div class="feedback-container">
@@ -161,14 +161,14 @@
 
 /* Feedback Text Styling */
 .feedback-text {
-  white-space: normal;       /* ✅ allow text wrapping */
-  word-wrap: break-word;     /* ✅ break long words properly */
-  max-width: 700px;          /* ✅ adjust width if needed */
+  white-space: normal;    
+  word-wrap: break-word;    
+  max-width: 700px;         
 }
 
 /* Go Back button */
 .back-btn {
-  background-color: #28a745;
+  background: #0056b3;              
   color: white;
   padding: 6px 16px;
   border-radius: 6px;
@@ -177,10 +177,12 @@
   display: inline-block;
   text-align: center;
   transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+  margin-top: -10px;
 }
 
 .back-btn:hover {
-  background-color: #218838;
+  background-color: #004494;
   text-decoration: none;
   color: white;
 }
