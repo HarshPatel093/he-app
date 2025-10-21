@@ -387,37 +387,22 @@ def client_feedback(request):
     return render(request, 'users/client_feedback.html')
 
 def admin_feedback_list(request):
-    feedbacks = Feedback.objects.all().order_by('-created_at')
+    feedbacks = Feedback.objects.filter(is_staff_feedback=False).order_by('-created_at')
 
-    mood = request.GET.get('mood')
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
-
-    if mood and mood != 'all':
-        feedbacks = feedbacks.filter(mood = mood)
+    mood = request.GET.get('mood')
 
     if start_date:
-        try:
-            start = datetime.strptime(start_date, "%Y-%m-%d")
-            feedbacks = feedbacks.filter(created_at__date__gte=start.date())
-        except ValueError:
-            pass
-
+        feedbacks = feedbacks.filter(created_at__date__gte=start_date)
     if end_date:
-        try:
-            end = datetime.strptime(end_date, "%Y-%m-%d")
-            feedbacks = feedbacks.filter(created_at__date__lte=end.date())
-        except ValueError:
-            pass
+        feedbacks = feedbacks.filter(created_at__date__lte=end_date)
+    if mood and mood != "all":
+        feedbacks = feedbacks.filter(mood=mood)
 
-    context = {
-        'feedbacks' : feedbacks,
-        'selected_mood' : mood or 'all',
-        'start_date' : start_date or '',
-        'end_date' : end_date or '',
-    }
-
-    return render(request, 'users/admin_feedback_list.html', context)
+    return render(request, 'users/admin_feedback_list.html', {
+        'feedbacks': feedbacks
+    })
 
 def feedback_detail(request, pk):
     feedback = get_object_or_404(Feedback, pk=pk)
@@ -615,19 +600,44 @@ def export_shifts_pdf(request):
     return resp
 
 @login_required
+@login_required
 def client_info(request, client_id):
+    # Restrict to staff users only
     if request.user.userprofile.role != "staff":
         return redirect("dashboard_redirect")
+
+    # Get the target client profile
     client = get_object_or_404(UserProfile, id=client_id, role="client")
+
     if request.method == "POST":
         summary = request.POST.get("summary", "").strip()
         if summary:
-            StaffNote.objects.create(
-                client=client,
-                staff = request.user.userprofile,
-                summary=summary,
+            # ✅ Use Feedback instead of StaffNote
+            Feedback.objects.create(
+                user=request.user,           # staff who wrote it
+                comment=summary,             # their note
+                is_staff_feedback=True       # identifies it as staff feedback
             )
-            messages.success(request,"Notes Sent!")
+
+            messages.success(request, "Feedback submitted successfully.")
             return redirect("staff_dashboard")
-        messages.error(request, "Please type a note before submitting.")
-    return render(request, "users/staff_notes.html", {"client":client})
+
+        messages.error(request, "Please type feedback before submitting.")
+
+    return render(request, "users/staff_notes.html", {"client": client})
+
+
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == "admin")
+def staff_feedback_list(request):
+    feedbacks = Feedback.objects.filter(is_staff_feedback=True).order_by('-created_at')
+
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+
+    if start_date:
+        feedbacks = feedbacks.filter(created_at__date__gte=start_date)
+    if end_date:
+        feedbacks = feedbacks.filter(created_at__date__lte=end_date)
+
+    return render(request, "users/staff_feedback_list.html", {"feedbacks": feedbacks})

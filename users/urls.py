@@ -38,8 +38,7 @@ urlpatterns = [
     path('feedback/', views.admin_feedback_list, name='feedback'),
     path('feedback/<int:pk>/', views.feedback_detail, name='feedback_detail'),
 
-    path("dahboard/staff/client/<int:client_id>/", views.client_info, name="client_info"),
-    
-
+    path("dashboard/staff/client/<int:client_id>/", views.client_info, name="client_info"),
+    path('staff-feedback/', views.staff_feedback_list, name='staff_feedback_list'),
 
 ]

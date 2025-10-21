@@ -4,13 +4,11 @@
 {% block content %}
 
 <div class="feedback-header">
-  <a href="{%url 'staff_feedback_list' %}" class="staff-btn">
-    Staff
-  </a>
+  <a href="{% url 'feedback' %}" class="back-btn">Go Back</a>
 </div>
 
 <div class="feedback-container">
-  <h1 class="h1">Client Feedback</h1>
+  <h1 class="h1">Staff Feedback</h1>
 
   <!-- 🔍 Filter Form -->
   <form method="get" class="filter-form">
@@ -23,19 +21,8 @@
         <label for="end_date">End Date:</label>
         <input type="date" name="end_date" id="end_date" value="{{ end_date }}">
       </div>
-      <div>
-        <label for="mood">Mood:</label>
-        <select name="mood" id="mood">
-          <option value="all" {% if selected_mood == 'all' %}selected{% endif %}>All</option>
-          <option value="1" {% if selected_mood == '1' %}selected{% endif %}>Very Unhappy</option>
-          <option value="2" {% if selected_mood == '2' %}selected{% endif %}>Unhappy</option>
-          <option value="3" {% if selected_mood == '3' %}selected{% endif %}>Neutral</option>
-          <option value="4" {% if selected_mood == '4' %}selected{% endif %}>Happy</option>
-          <option value="5" {% if selected_mood == '5' %}selected{% endif %}>Very Happy</option>
-        </select>
-      </div>
       <button type="submit" class="filter-btn">Apply Filters</button>
-      <a href="{% url 'feedback' %}" class="reset-btn">Reset</a>
+      <a href="{% url 'staff_feedback_list' %}" class="reset-btn">Reset</a>
     </div>
   </form>
 
@@ -43,11 +30,9 @@
   <table class="feedback-table">
     <thead>
       <tr>
-        <th>Client Name</th>
-        <th>Mood</th>
+        <th>Staff Name</th>
         <th>Feedback</th>
         <th>Date</th>
-        <th>Action</th>
       </tr>
     </thead>
     <tbody>
@@ -55,54 +40,35 @@
         {% for fb in feedbacks %}
           <tr>
             <td>{{ fb.user.get_full_name|default:fb.user.username }}</td>
-
-            <!-- 🧠 Mood Column -->
-            <td>
-              {% if fb.mood == 1 %}
-                Very Unhappy
-              {% elif fb.mood == 2 %}
-                Unhappy
-              {% elif fb.mood == 3 %}
-                Neutral
-              {% elif fb.mood == 4 %}
-                Happy
-              {% elif fb.mood == 5 %}
-                Very Happy
-              {% else %}
-                N/A
-              {% endif %}
-            </td>
-
-            <td>
+            <td class="feedback-text">
               {% if fb.comment %}
                 {{ fb.comment }}
               {% else %}
-                <em>No comment provided</em>
+                <em>No feedback provided</em>
               {% endif %}
             </td>
-
             <td>{{ fb.created_at|date:"M d, Y" }}</td>
-
-            <td class="action-cell"><a href="{% url 'feedback_detail' fb.id %}" class="view-btn">View</a></td>
           </tr>
         {% endfor %}
       {% else %}
-        <tr><td colspan="5" style="text-align:center;">No feedback found.</td></tr>
+        <tr>
+          <td colspan="3" style="text-align:center;">No feedback found.</td>
+        </tr>
       {% endif %}
     </tbody>
   </table>
 </div>
 
+<!-- ✅ Styles -->
 <style>
 .feedback-container {
   padding: 2rem;
   background: #f8faff;
   border-radius: 12px;
-  max-width: 1100px; /* slightly wider to fit new column */
+  max-width: 1100px;
   margin: 2rem auto;
   box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  margin: 1rem auto;
-  margin-top:10px;
+  margin-top: 10px;
 }
 
 /* Filter Bar */
@@ -126,7 +92,7 @@
   margin-right: 0.4rem;
 }
 
-.filter-row input, .filter-row select {
+.filter-row input {
   padding: 6px 10px;
   border-radius: 6px;
   border: 1px solid #ccc;
@@ -160,13 +126,7 @@
   background-color: #6c757d;
 }
 
-.reset-btn, .filter-btn {
-  font-family: inherit;
-  font-size: 0.95rem;
-  line-height: 1.2;
-}
-
-/* Original Table Styling */
+/* Table Styling */
 .feedback-table {
   width: 100%;
   border-collapse: collapse;
@@ -178,7 +138,7 @@
 .h1 {
   text-align: center;
   margin-top: -5px;
-  margin-bottom: 1.2rem
+  margin-bottom: 1.2rem;
 }
 
 .feedback-table th {
@@ -192,50 +152,38 @@
 .feedback-table td {
   padding: 10px;
   border: 1px solid #ddd;
-  vertical-align: middle;
-}
-
-td.action-cell {
-  text-align: center;
+  vertical-align: top;
 }
 
 .feedback-table tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 
-/* View Button */
-.view-btn {
+/* Feedback Text Styling */
+.feedback-text {
+  white-space: normal;       /* ✅ allow text wrapping */
+  word-wrap: break-word;     /* ✅ break long words properly */
+  max-width: 700px;          /* ✅ adjust width if needed */
+}
+
+/* Go Back button */
+.back-btn {
   background-color: #28a745;
   color: white;
-  padding: 6px 12px;
+  padding: 6px 16px;
   border-radius: 6px;
   text-decoration: none;
   font-weight: 500;
   display: inline-block;
   text-align: center;
-  margin: 0 auto; 
+  transition: background-color 0.3s ease;
 }
 
-.view-btn:hover {
+.back-btn:hover {
   background-color: #218838;
-}
-
-.staff-btn {
-    background-color: #28a745;  /* same green as view-btn */
-    color: white;
-    padding: 6px 16px;
-    border-radius: 6px;
-    text-decoration: none;
-    font-weight: 500;
-    display: inline-block;
-    text-align: center;
-    transition: background-color 0.3s ease;
-}
-
-.staff-btn:hover {
-    background-color: #218838; /* slightly darker on hover */
-    text-decoration: none;
-    color: white;
+  text-decoration: none;
+  color: white;
 }
 </style>
+
 {% endblock %}
