@@ -7,13 +7,14 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 25px;
+  row-gap: 60px;
+  column-gap: 40px; 
   width: 100%;
-  height: calc(100vh - 120px);
+  min-height: 100vh;
   padding: 20px;
   box-sizing: border-box;
   justify-items: center;
-  align-items: center;
+  align-items: start;
 ">
 
   <div style="width: 350px; height: 350px;">
@@ -26,6 +27,10 @@
 
   <div style="width: 350px; height: 350px;">
     <canvas id="goalsByTypePie"></canvas>
+  </div>
+
+  <div style="width: 350px; height: 350px;">
+      <canvas id="staffEngagementBar"></canvas>
   </div>
 
 </div>
@@ -169,6 +174,59 @@ new Chart(typeCtx, {
             const total = context.chart._metasets[0].total;
             const percentage = ((value / total) * 100).toFixed(1);
             return `${label}: ${value} goals (${percentage}%)`;
+          }
+        }
+      }
+    }
+  }
+});
+
+const staffData = {{ staff_data|safe }};
+const staffCtx = document.getElementById('staffEngagementBar');
+new Chart(staffCtx, {
+  type: 'bar',
+  data: {
+    labels: staffData.every(v => v === 0) ? ['No Data'] : {{ staff_labels|safe }},
+    datasets: [{
+      label: 'Staff Responses',
+      data: staffData.every(v => v === 0) ? [0] : staffData,
+      backgroundColor: staffData.every(v => v === 0)
+        ? ['#e5e7eb']
+        : ['#60a5fa', '#34d399', '#fbbf24', '#f87171'],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
+        },
+        grid: {
+          color: '#f3f4f6'
+        }
+      },
+      x: {
+        grid: {
+          color: '#f9fafb'
+        }
+      }
+    },
+    plugins: {
+      title: {
+        display: true,
+        text: 'Weekly Staff Engagement ({{ month_name }})',
+        font: { size: 16 }
+      },
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            if (staffData.every(v => v === 0)) return 'No data available';
+            return `${context.label}: ${context.raw} responses`;
           }
         }
       }

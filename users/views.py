@@ -23,14 +23,12 @@ from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib import colors
 from django.http import HttpResponse
 from django.utils import timezone
-
 from users.models import Shift, UserProfile
 from django.template.loader import get_template 
 from io import BytesIO
 from django.utils.timezone import localtime
-
 from users.models import Shift, UserProfile, StaffNote 
-
+from collections import defaultdict
 
 def signup(request):
     if request.method == "POST":
@@ -140,6 +138,26 @@ def admin_dashboard(request):
 
     goal_type_labels = [item['goal_type__name'] if item['goal_type__name'] else 'Uncategorized' for item in goal_type_summary]
     goal_type_data = [item['total'] for item in goal_type_summary]
+
+    staff_feedbacks = Feedback.objects.filter(
+    is_staff_feedback=True,
+    created_at__gte=start_of_month,
+    created_at__lt=next_month)
+
+    staff_per_week = defaultdict(set)
+
+    for fb in staff_feedbacks:
+        local_date = localtime(fb.created_at).date()
+        day_of_month = local_date.day
+        week_number = ((day_of_month - 1) // 7) + 1
+        if 1 <= week_number <= 4:
+            staff_per_week[f"Week {week_number}"].add(fb.user.id)
+
+    staff_week_data = {f"Week {i+1}": len(staff_per_week.get(f"Week {i+1}", set())) for i in range(4)}
+
+    staff_labels = list(staff_week_data.keys())
+    staff_data = list(staff_week_data.values())
+
     month_name = today.strftime("%B %Y")
 
     context = {
@@ -149,6 +167,8 @@ def admin_dashboard(request):
         "feedback_data": feedback_data,
         'goal_type_labels': goal_type_labels,
         'goal_type_data': goal_type_data,
+        'staff_labels': staff_labels,
+        'staff_data': staff_data,
         'month_name': month_name,
     }
     return render(request, 'users/admin_dashboard.html', context)
