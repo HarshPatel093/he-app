@@ -4,8 +4,14 @@
 
 {% block content %}
 <div class="page-actions">
-  <a class="btn1" href="#">Sort</a>
-  <a class="btn2" href="{% url 'admin_dashboard' %}">Reset</a>
+  <form id ="month-form" method ="get" action="{% url 'admin_dashboard' %}"
+  <select name="month" id="month_select" class="btn1">
+    {% for value, label in month_options %}
+    <option value="{{ "value" }}" {% if value == month_value %} selected{%endif%%}>
+      {{ label }}
+    </option>
+    {% endfor %}
+    <a class="btn2" href="{% url 'admin_dashboard' %}">Reset</a>
 </div>
 <div style="
   display: grid;
