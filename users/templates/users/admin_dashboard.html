@@ -4,14 +4,16 @@
 
 {% block content %}
 <div class="page-actions">
-  <form id ="month-form" method ="get" action="{% url 'admin_dashboard' %}"
-  <select name="month" id="month_select" class="btn1">
+  <form id ="month-form" method ="get" action="{% url 'admin_dashboard' %}">
+  <select name="month" id="month-select" class="btn1">
     {% for value, label in month_options %}
-    <option value="{{ "value" }}" {% if value == month_value %} selected{%endif%%}>
+    <option value="{{ value }}" {% if value == month_value %} selected{% endif %}>
       {{ label }}
     </option>
     {% endfor %}
-    <a class="btn2" href="{% url 'admin_dashboard' %}">Reset</a>
+  </select>
+</form>
+<a class="btn2" href="{% url 'admin_dashboard' %}">Reset</a>
 </div>
 <div style="
   display: grid;
@@ -48,6 +50,9 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
+  document.getElementById('month-select').addEventListener('change', function() {
+    document.getElementById('month-form').submit();
+  })
 const goalData = {{ goal_data|safe }};
 const ctx = document.getElementById('monthlyGoalsPie');
 
@@ -268,7 +273,7 @@ new Chart(staffCtx, {
   }
   .btn1:hover{
     transform: translateY(-1px);
-    box-shadow:0 6px 18 px rgba(0,0,0,.12);
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
   }
   .btn2{
     display: inline-block;
@@ -285,6 +290,12 @@ new Chart(staffCtx, {
   .btn2:hover{
     transform: translateY(-1px);
     box-shadow:0 6px 18 px rgba(0,0,0,.12);
+  }
+  select.btn1{
+    cursor: pointer;
+    border: none;
+    outline: none;
+    appearance: none;
   }
 
   
