@@ -195,7 +195,7 @@ def admin_dashboard(request):
         value=f"{y:04d}-{m:02d}"
         label=f"{calendar.month_name[m]} {y}"
         options.append((value, label))
-        month_name=f"{calendar.month_name[m]} {year}"
+        month_name=f"{calendar.month_name[month]} {year}"
 
 
 
@@ -211,6 +211,7 @@ def admin_dashboard(request):
         'staff_data': staff_data,
         'month_name': month_name,
         'month_value': f"{year:04d}-{month:02d}",
+        'month_options': options,
         
     }
     return render(request, 'users/admin_dashboard.html', context)

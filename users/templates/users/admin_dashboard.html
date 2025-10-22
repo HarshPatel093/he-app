@@ -50,7 +50,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script>
-  document.getElementById('month-select').addEventListener('change', function() {
+  document.getElementById('month-select').addEventListener('change' , function() {
     document.getElementById('month-form').submit();
   })
 const goalData = {{ goal_data|safe }};
@@ -289,7 +289,7 @@ new Chart(staffCtx, {
   }
   .btn2:hover{
     transform: translateY(-1px);
-    box-shadow:0 6px 18 px rgba(0,0,0,.12);
+    box-shadow:0 6px 18px rgba(0,0,0,.12);
   }
   select.btn1{
     cursor: pointer;
