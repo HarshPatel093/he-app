@@ -562,7 +562,7 @@ def all_shifts(request):
         Shift.objects
         .select_related("staff")
         .prefetch_related("clients")
-        .order_by("date", "start_time")
+        .order_by("-date", "-start_time")
     )
 
     return render(request, "users/all_shifts.html", {"shifts": shifts})
