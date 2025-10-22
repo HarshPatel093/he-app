@@ -33,6 +33,7 @@ from collections import defaultdict
 
 from datetime import datetime
 from django.utils import timezone
+import calendar
 
 
 def signup(request):
@@ -104,9 +105,18 @@ def admin_dashboard(request):
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
     
-    today = timezone.now()
-    start_of_month = today.replace(day=1)
-    next_month = (start_of_month + timedelta(days=32)).replace(day=1)
+    now = timezone.now()
+    param = request.GET.get("month")
+    if param:
+        try:
+            year, month = map(int, param.split("-"))
+        except Exception:
+            year, month = now.year, now.month
+    else:
+        year, month = now.year, now.month
+    start_of_month, next_month= month_bounds(year, month) 
+
+    
 
     monthly_goals = Goal.objects.filter(
         created_at__gte=start_of_month, created_at__lt=next_month
@@ -151,6 +161,7 @@ def admin_dashboard(request):
     goal_type_labels = [item['goal_type__name'] if item['goal_type__name'] else 'Uncategorized' for item in goal_type_summary]
     goal_type_data = [item['total'] for item in goal_type_summary]
 
+
     staff_feedbacks = Feedback.objects.filter(
     is_staff_feedback=True,
     created_at__gte=start_of_month,
@@ -171,6 +182,20 @@ def admin_dashboard(request):
     staff_data = list(staff_week_data.values())
 
     month_name = today.strftime("%B %Y")
+
+    
+    options=[]
+    cur_y, cur_m = now.year, now.month
+    for k in range(12):
+        m = cur_m -k
+        y = cur_y
+        while m<= 0:
+            m += 12
+            y -= 1
+        value=f"{y:04d}-{m:02d}"
+        label=f"{calendar.month_name[m]} {y}"
+        
+
 
     context = {
         'goal_labels': goal_labels,
