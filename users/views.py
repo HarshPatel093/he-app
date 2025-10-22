@@ -28,7 +28,12 @@ from django.template.loader import get_template
 from io import BytesIO
 from django.utils.timezone import localtime
 from users.models import Shift, UserProfile, StaffNote 
+
 from collections import defaultdict
+
+from datetime import datetime
+from django.utils import timezone
+
 
 def signup(request):
     if request.method == "POST":
@@ -87,11 +92,18 @@ def dashboard_redirect(request):
         return redirect('staff_dashboard')
     else:
         return redirect('client_dashboard')
-
+def month_bounds(year:int, month:int):
+    start = datetime(year, month, 1, tzinfo=timezone.get_current_timezone())
+    if month == 12: 
+        nxt = datetime(year +1, 1,1, tzinfo=timezone.get_current_timezone())
+    else:
+        nxt = datetime(year, month+1, 1, tzinfo=timezone.get_current_timezone())
+    return start, nxt
 @login_required
 def admin_dashboard(request):
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
+    
     today = timezone.now()
     start_of_month = today.replace(day=1)
     next_month = (start_of_month + timedelta(days=32)).replace(day=1)
