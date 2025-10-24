@@ -134,20 +134,28 @@ def admin_dashboard(request):
     goal_data = list(goal_week_data.values())
     
     monthly_feedback = Feedback.objects.filter(
-        created_at__gte=start_of_month, created_at__lt=next_month
+        is_staff_feedback=False,
+        created_at__gte=start_of_month,
+        created_at__lt=next_month
     )
 
-    feedback_week_data = {f"Week {i+1}": 0 for i in range(4)}
+    mood_map = {
+        1: "😡 Very Unhappy",
+        2: "☹️ Unhappy",
+        3: "😐 Neutral",
+        4: "🙂 Happy",
+        5: "😄 Very Happy"
+    }
+
+    feedback_mood_data = {label: 0 for label in mood_map.values()}
 
     for fb in monthly_feedback:
-        local_date = localtime(fb.created_at).date()
-        day_of_month = local_date.day
-        week_number = ((day_of_month - 1) // 7) + 1
-        if 1 <= week_number <= 4:
-            feedback_week_data[f"Week {week_number}"] += 1
+        label = mood_map.get(fb.mood)
+        if label:
+            feedback_mood_data[label] += 1
 
-    feedback_labels = list(feedback_week_data.keys())
-    feedback_data = list(feedback_week_data.values())
+    feedback_labels = list(feedback_mood_data.keys())
+    feedback_data = list(feedback_mood_data.values())
 
     goal_type_summary = (
         Goal.objects.filter(created_at__gte=start_of_month, created_at__lt=next_month)
