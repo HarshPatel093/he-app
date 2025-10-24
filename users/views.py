@@ -28,13 +28,10 @@ from django.template.loader import get_template
 from io import BytesIO
 from django.utils.timezone import localtime
 from users.models import Shift, UserProfile, StaffNote 
-
 from collections import defaultdict
-
 from datetime import datetime
 from django.utils import timezone
 import calendar
-
 
 def signup(request):
     if request.method == "POST":
@@ -100,6 +97,7 @@ def month_bounds(year:int, month:int):
     else:
         nxt = datetime(year, month+1, 1, tzinfo=timezone.get_current_timezone())
     return start, nxt
+
 @login_required
 def admin_dashboard(request):
     if request.user.userprofile.role != "admin":
@@ -181,7 +179,7 @@ def admin_dashboard(request):
     staff_labels = list(staff_week_data.keys())
     staff_data = list(staff_week_data.values())
 
-    month_name = today.strftime("%B %Y")
+    month_name = now.strftime("%B %Y")
 
     
     options=[]
@@ -196,9 +194,6 @@ def admin_dashboard(request):
         label=f"{calendar.month_name[m]} {y}"
         options.append((value, label))
         month_name=f"{calendar.month_name[month]} {year}"
-
-
-
 
     context = {
         'goal_labels': goal_labels,
