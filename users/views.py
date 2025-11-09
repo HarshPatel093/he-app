@@ -253,18 +253,26 @@ def client_dashboard(request):
     client = request.user.userprofile
     goals = client.goals.all()
 
-    latest_shift = (
-        Shift.objects.filter(clients=client)
-        .order_by("-date", "-end_time")
-        .first()
-    )
+    tz = timezone.get_current_timezone()
+    now = timezone.now().astimezone(tz)
 
+    past_shifts = Shift.objects.filter(clients=client, date__lte=now.date())
+
+    latest_shift = None
     session_ended = False
-    if latest_shift:
-        shift_end = datetime.combine(latest_shift.date, latest_shift.end_time)
-        shift_end = timezone.make_aware(shift_end)
 
-        if timezone.localtime(timezone.now()) > shift_end:
+    if past_shifts.exists():
+        latest_shift = max(
+            past_shifts,
+            key=lambda s: timezone.make_aware(datetime.combine(s.date, s.end_time), tz)
+        )
+
+        shift_end = timezone.make_aware(datetime.combine(latest_shift.date, latest_shift.end_time), tz)
+
+        print("Now:", now)
+        print("Shift end:", shift_end)
+
+        if now > shift_end:
             session_ended = True
 
     return render(request, 'users/client_dashboard.html', {
