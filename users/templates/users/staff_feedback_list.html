@@ -36,18 +36,18 @@
       </tr>
     </thead>
     <tbody>
-      {% if feedbacks %}
-        {% for fb in feedbacks %}
+      {% if notes %}
+        {% for note in notes %}
           <tr>
-            <td>{{ fb.user.get_full_name|default:fb.user.username }}</td>
+            <td>{{ note.staff.name }}</td>
             <td class="feedback-text">
-              {% if fb.comment %}
-                {{ fb.comment }}
+              {% if note.summary %}
+                {{ note.summary }}
               {% else %}
-                <em>No feedback provided</em>
+                <em>No note provided</em>
               {% endif %}
             </td>
-            <td>{{ fb.created_at|date:"M d, Y" }}</td>
+            <td>{{ note.created_at|date:"M d, Y" }}</td>
           </tr>
         {% endfor %}
       {% else %}
@@ -55,6 +55,7 @@
           <td colspan="3" style="text-align:center;">No feedback found.</td>
         </tr>
       {% endif %}
+
     </tbody>
   </table>
 </div>

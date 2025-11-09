@@ -168,19 +168,19 @@ def admin_dashboard(request):
     goal_type_data = [item['total'] for item in goal_type_summary]
 
 
-    staff_feedbacks = Feedback.objects.filter(
-    is_staff_feedback=True,
-    created_at__gte=start_of_month,
-    created_at__lt=next_month)
+    staff_notes = StaffNote.objects.filter(
+        created_at__gte=start_of_month,
+        created_at__lt=next_month
+    )
 
     staff_per_week = defaultdict(set)
 
-    for fb in staff_feedbacks:
+    for fb in staff_notes:
         local_date = localtime(fb.created_at).date()
         day_of_month = local_date.day
         week_number = ((day_of_month - 1) // 7) + 1
         if 1 <= week_number <= 4:
-            staff_per_week[f"Week {week_number}"].add(fb.user.id)
+            staff_per_week[f"Week {week_number}"].add(fb.staff.id)
 
     staff_week_data = {f"Week {i+1}": len(staff_per_week.get(f"Week {i+1}", set())) for i in range(4)}
 
@@ -666,7 +666,6 @@ def export_shifts_pdf(request):
     return resp
 
 @login_required
-@login_required
 def client_info(request, client_id):
     # Restrict to staff users only
     if request.user.userprofile.role != "staff":
@@ -679,13 +678,13 @@ def client_info(request, client_id):
         summary = request.POST.get("summary", "").strip()
         if summary:
             # ✅ Use Feedback instead of StaffNote
-            Feedback.objects.create(
-                user=request.user,           # staff who wrote it
-                comment=summary,             # their note
-                is_staff_feedback=True       # identifies it as staff feedback
+            StaffNote.objects.create(
+                staff=request.user.userprofile,
+                client=client,
+                summary=summary
             )
 
-            messages.success(request, "Feedback submitted successfully.")
+            messages.success(request, "Note submitted successfully.")
             return redirect("staff_dashboard")
 
         messages.error(request, "Please type feedback before submitting.")
@@ -696,14 +695,14 @@ def client_info(request, client_id):
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def staff_feedback_list(request):
-    feedbacks = Feedback.objects.filter(is_staff_feedback=True).order_by('-created_at')
+    notes = StaffNote.objects.all().order_by('-created_at')
 
     start_date = request.GET.get('start_date')
     end_date = request.GET.get('end_date')
 
     if start_date:
-        feedbacks = feedbacks.filter(created_at__date__gte=start_date)
+        notes = notes.filter(created_at__date__gte=start_date)
     if end_date:
-        feedbacks = feedbacks.filter(created_at__date__lte=end_date)
+        notes = notes.filter(created_at__date__lte=end_date)
 
-    return render(request, "users/staff_feedback_list.html", {"feedbacks": feedbacks})
+    return render(request, "users/staff_feedback_list.html", {"notes": notes})
