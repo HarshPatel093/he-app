@@ -3,6 +3,7 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block content %}
+<!-- Month Filter + Reset Button -->
 <div class="page-actions">
   <form id ="month-form" method ="get" action="{% url 'admin_dashboard' %}">
   <select name="month" id="month-select" class="btn1">
@@ -15,6 +16,7 @@
 </form>
 <a class="btn2" href="{% url 'admin_dashboard' %}">Reset</a>
 </div>
+<!-- Chart Grid Layout (4 Charts) -->
 <div style="
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -29,18 +31,22 @@
   align-items: start;
 ">
 
+ <!-- Goals Added (Weekly) -->
   <div style="width: 350px; height: 350px;">
     <canvas id="monthlyGoalsPie"></canvas>
   </div>
   
+  <!-- Client Feedback Distribution -->
   <div style="width: 350px; height: 350px;">
     <canvas id="weeklyFeedbackPie"></canvas>
   </div>
 
+  <!-- Goals by Type -->
   <div style="width: 350px; height: 350px;">
     <canvas id="goalsByTypePie"></canvas>
   </div>
 
+  <!-- Staff Engagement (Bar Chart) -->
   <div style="width: 350px; height: 350px;">
       <canvas id="staffEngagementBar"></canvas>
   </div>
@@ -54,6 +60,8 @@
   document.getElementById('month-select').addEventListener('change' , function() {
     document.getElementById('month-form').submit();
   })
+
+   /* Chart 1: Monthly Goals (Pie Chart) */
 const goalData = {{ goal_data|safe }};
 const ctx = document.getElementById('monthlyGoalsPie');
 
@@ -113,6 +121,8 @@ new Chart(ctx, {
     plugins: [ChartDataLabels]
 });
 
+   /* Chart 2: Weekly Feedback (Pie Chart) */
+
 const feedbackData = {{ feedback_data|safe }};
 const feedbackCtx = document.getElementById('weeklyFeedbackPie');
 new Chart(feedbackCtx, {
@@ -169,6 +179,8 @@ new Chart(feedbackCtx, {
     },
     plugins: [ChartDataLabels]
 });
+
+   /* Chart 3: Goals by Type (Doughnut Pie)) */
 
 const typeData = {{ goal_type_data|safe }};
 const typeCtx = document.getElementById('goalsByTypePie');
@@ -231,6 +243,8 @@ new Chart(typeCtx, {
   plugins: [ChartDataLabels]
 });
 
+   /* Chart 4: Staff Engagement (Bar Chart) */
+
 const staffData = {{ staff_data|safe }};
 const staffCtx = document.getElementById('staffEngagementBar');
 new Chart(staffCtx, {
@@ -255,11 +269,23 @@ new Chart(staffCtx, {
         ticks: {
           stepSize: 1
         },
+        title: {
+          display: true,
+          text: 'Notes submitted by staff',
+          font: { size: 14, weight: 'bold' },
+          color: '#333'
+        },
         grid: {
           color: '#f3f4f6'
         }
       },
       x: {
+        title: {
+          display: true,
+          text: 'Weeks',
+          font: { size: 14, weight: 'bold' },
+          color: '#333'
+        },
         grid: {
           color: '#f9fafb'
         }

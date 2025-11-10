@@ -33,6 +33,9 @@ from datetime import datetime
 from django.utils import timezone
 import calendar
 
+#  AUTHENTICATION & SIGNUP FLOW
+# Handles new user registration, authentication, and dashboard redirection.
+# Uses email as username and links each user to a UserProfile (role-based).
 def signup(request):
     if request.method == "POST":
         name = request.POST.get('name')
@@ -98,6 +101,14 @@ def month_bounds(year:int, month:int):
         nxt = datetime(year, month+1, 1, tzinfo=timezone.get_current_timezone())
     return start, nxt
 
+#  ADMIN DASHBOARD ANALYTICS
+# Generates all statistical data for the admin dashboard charts.
+# Includes:
+#   - Goals added per week
+#   - Feedback distribution by mood
+#   - Goals by type
+#   - Weekly staff engagement
+# Uses month-based filtering and timezone-aware date handling.
 @login_required
 def admin_dashboard(request):
     if request.user.userprofile.role != "admin":
@@ -219,6 +230,10 @@ def admin_dashboard(request):
     }
     return render(request, 'users/admin_dashboard.html', context)
 
+#  STAFF & CLIENT DASHBOARD
+# Displays relevant information based on logged-in role:
+#   - Staff: daily assigned shifts with client list
+#   - Client: personal goals and session completion tracking
 @login_required
 def staff_dashboard(request):
     if request.user.userprofile.role != "staff":
@@ -244,7 +259,8 @@ def staff_dashboard(request):
         "today": today
     })
 
-
+#  PROFILE MANAGEMENT
+# Provides access to view or edit personal details based on role.
 @login_required
 def client_dashboard(request):
     if request.user.userprofile.role != "client":
@@ -290,6 +306,9 @@ def client_profile(request):
 
     })
 
+#  USER ADMINISTRATION
+# Allows admin to create, edit, delete, and manage user accounts.
+# Also supports searching and sorting by user profile fields.
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def create_user(request):
@@ -408,6 +427,9 @@ def edit_user(request, user_id):
     "role": profile.role,
     })
 
+#  CLIENT MANAGEMENT
+# Displays all clients and their assigned goals.
+# Admin can edit goals or view individual client details.
 @login_required
 def clients_list(request):
     if request.user.userprofile.role != "admin":
@@ -444,6 +466,9 @@ def client_detail(request, client_id):
         "goals": goals,
     })
 
+#  FEEDBACK SYSTEM
+# Manages both client feedback (mood, comment, photo) and staff notes.
+# Admin can filter, view, and analyze feedbacks.
 @login_required
 def client_feedback(request):
     if request.method == "POST":
@@ -527,15 +552,30 @@ def edit_goals(request, client_id):
         "goal_choices": [(g.name, g.name) for g in goal_choices],
     })
 
+#  SHIFT MANAGEMENT
+# Admin-only functionality for managing staff shifts.
+# Includes:
+#   - Shift allocation
+#   - Editing or deleting shifts
+#   - Viewing all shifts
+#   - Exporting shift data to PDF
 @login_required
-
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def shift_list(request):
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
 
     today = timezone.now().date()
-    start_of_week = today - timedelta(days=today.weekday())  
+    week_param = request.GET.get("week")
+    if week_param:
+        try:
+            year, week_num = map(int, week_param.split("-W"))
+            start_of_week = datetime.strptime(f"{year}-W{week_num}-1", "%G-W%V-%u").date()
+        except ValueError:
+            start_of_week = today - timedelta(days=today.weekday())
+    else:
+        start_of_week = today - timedelta(days=today.weekday())
+
     end_of_week = start_of_week + timedelta(days=6)           
 
     weekly_shifts = Shift.objects.filter(date__range=[start_of_week, end_of_week])
@@ -549,8 +589,20 @@ def shift_list(request):
 
     shifts = Shift.objects.select_related("staff").prefetch_related("clients").filter(date__gte=timezone.now().date()).order_by("date","date", "start_time")[:6]
 
+    now = timezone.now().date()
+    week_options = []
+    for i in range(4):  # show only last 4 weeks (current + previous 3)
+        ref_date = now - timedelta(weeks=i)
+        y, w, _ = ref_date.isocalendar()
+        value = f"{y}-W{w:02d}"
+        label = f"Week {w}, {y} ({(ref_date - timedelta(days=ref_date.weekday())).strftime('%d %b')})"
+        week_options.append((value, label))
+
+    # Determine current selected week
+    current_week_value = f"{start_of_week.isocalendar()[0]}-W{start_of_week.isocalendar()[1]:02d}"
+
     return render(request, "users/shift_list.html", {"shifts": shifts, "chart_labels": chart_labels,
-        "chart_data": chart_data,})
+        "chart_data": chart_data, "week_options": week_options, "week_value": current_week_value,})
 
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")

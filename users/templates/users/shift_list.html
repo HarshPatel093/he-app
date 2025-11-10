@@ -8,15 +8,26 @@
     }, 2000);
   </script>
 {% endif %}
-<div class="pdf-download-container">
-  <button id="downloadImgBtn" class="pdf-btn" title="Download chart as image">
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7 7-7z"/>
-    </svg>
-    Download
-  </button>
+<div class="chart-actions">
+  <div class="chart-actions-right">
+    <form id="week-form" method="get" action="{% url 'shift_list' %}">
+      <select name="week" id="week-select" class="btn1">
+        {% for value, label in week_options %}
+          <option value="{{ value }}" {% if value == week_value %}selected{% endif %}>
+            {{ label }}
+          </option>
+        {% endfor %}
+      </select>
+    </form>
+    <a class="btn2" href="{% url 'shift_list' %}">Reset</a>
+    <button id="downloadImgBtn" class="pdf-btn" title="Download chart as image">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+        <path d="M5 20h14v-2H5m14-9h-4V3H9v6H5l7 7 7-7z"/>
+      </svg>
+      Download
+    </button>
+  </div>
 </div>
-
 
 <div class="staff-dashboard">
     <div class="shift-table-container">
@@ -138,8 +149,45 @@ document.getElementById("downloadImgBtn").addEventListener("click", () => {
   link.click();
 });
 </script>
+<script>
+  document.getElementById('week-select').addEventListener('change', function() {
+    document.getElementById('week-form').submit();
+  });
+</script>
 
 <style>
+  .btn1, .btn2 {
+      display: inline-block;
+      padding: 8px 25px;
+      background: #fff;
+      color: #111;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 500;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      height: 40px;
+      line-height: 22px;
+      box-sizing: border-box;
+  }
+
+  select.btn1 {
+      cursor: pointer;
+      border: none;
+      outline: none;
+      appearance: none;
+      text-align: center;
+      text-align-last: center;
+      padding: 8px 25px;
+  }
+
+  .btn1:hover, .btn2:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  }  
 .client-cell {
   max-width: 180px;
   white-space: nowrap;
@@ -321,37 +369,61 @@ document.getElementById("downloadImgBtn").addEventListener("click", () => {
   flex-wrap:wrap;
 }
 
-.pdf-download-container {
-  position: absolute;
-  top: 100px;
-  right: 20px;
-  z-index: 100;
+.chart-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin: 10px 35px 0 0;
+}
+
+.chart-actions-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn1, .btn2, .pdf-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px;
+  background: #fff;
+  color: #111;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  height: 40px;
+}
+
+select.btn1 {
+  border: none;
+  outline: none;
+  appearance: none;
+  text-align: center;
+  text-align-last: center;
+  cursor: pointer;
+}
+
+.btn1:hover, .btn2:hover, .pdf-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
 }
 
 .pdf-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
   background: #0056b3;
-  color: #fff;
-  padding: 8px 14px;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: background 0.3s ease;
+  color: white;
   box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-}
-
-.pdf-btn:hover {
-  background: #003f8a;
 }
 
 .pdf-btn svg {
   width: 18px;
   height: 18px;
   fill: #fff;
+  margin-right: 5px;
 }
 
 </style>
