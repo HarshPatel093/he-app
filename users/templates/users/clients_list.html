@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1 class="sr-only">Client List</h1>
+<h1 class="page-heading">Client List</h1>
 <div class="top-bar">
     <input type="text"
     id="searchInput"
@@ -29,6 +29,17 @@
 </div>
 
 <style>
+    .page-heading {
+        text-align: center;
+        font-size: 28px;
+        font-weight: 700;
+        color: #003f8a;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+    }
+
     .client-grid {
         display: grid;
         grid-template-columns: repeat(4, minmax(max-content, 1fr));

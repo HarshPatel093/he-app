@@ -120,6 +120,15 @@
         .messages .error {
             color: red;
         }
+
+        .sort-dropdown {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
     </style>
     <main>
         <div class="container">
@@ -134,7 +143,21 @@
         <h1>List Of Users</h1>
     
             <div class="top-bar">
-                <input type="text" id="searchInput" aria-label="SearchBox" class="search-box" placeholder="Search by name, email or role...">
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <input type="text" id="searchInput" aria-label="SearchBox" class="search-box" placeholder="Search by name, email or role...">
+                    <select id="sortSelect" class="sort-dropdown">
+                        <option value="">Sort / Filter By</option>
+                        <option value="name-asc">Name (A–Z)</option>
+                        <option value="name-desc">Name (Z–A)</option>
+                        <option value="joined-new">Date Joined (Newest First)</option>
+                        <option value="joined-old">Date Joined (Oldest First)</option>
+                        <option value="dob-new">Date of Birth (Newest)</option>
+                        <option value="dob-old">Date of Birth (Oldest)</option>
+                        <option value="admin">Admins Only</option>
+                        <option value="staff">Staff Only</option>
+                        <option value="client">Clients Only</option>
+                    </select>
+                </div>
                 <a href="{% url 'create_user' %}" class="create-btn">Create User</a>
             </div>
 
@@ -203,4 +226,45 @@
         });
     });
 </script>
+<script>
+document.getElementById("sortSelect").addEventListener("change", function() {
+    const value = this.value;
+    const table = document.getElementById("userTable");
+    const rows = Array.from(table.querySelectorAll("tbody tr"));
+    const tbody = table.querySelector("tbody");
+
+    // helper
+    let getValue = (row, index) => row.children[index].textContent.trim().toLowerCase();
+
+    // If filtering by role (admin/staff/client)
+    if (["admin", "staff", "client"].includes(value)) {
+        rows.forEach(row => {
+            const role = getValue(row, 3);
+            row.style.display = role === value ? "" : "none";
+        });
+        return;
+    } else {
+        // show all if not filtering by role
+        rows.forEach(r => (r.style.display = ""));
+    }
+
+    // Sorting logic
+    rows.sort((a, b) => {
+        if (value === "name-asc") return getValue(a,0).localeCompare(getValue(b,0));
+        if (value === "name-desc") return getValue(b,0).localeCompare(getValue(a,0));
+
+        if (value === "joined-new") return new Date(getValue(b,2)) - new Date(getValue(a,2));
+        if (value === "joined-old") return new Date(getValue(a,2)) - new Date(getValue(b,2));
+
+        if (value === "dob-new") return new Date(getValue(b,4)) - new Date(getValue(a,4));
+        if (value === "dob-old") return new Date(getValue(a,4)) - new Date(getValue(b,4));
+
+        return 0;
+    });
+
+    tbody.innerHTML = "";
+    rows.forEach(r => tbody.appendChild(r));
+});
+</script>
+
 {% endblock %}

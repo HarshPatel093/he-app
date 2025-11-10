@@ -54,7 +54,7 @@
       {% if feedbacks %}
         {% for fb in feedbacks %}
           <tr>
-            <td>{{ fb.user.get_full_name|default:fb.user.username }}</td>
+            <td>{{ fb.user.userprofile.name|default:"N/A" }}</td>
 
             <!-- 🧠 Mood Column -->
             <td>

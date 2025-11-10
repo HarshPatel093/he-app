@@ -48,6 +48,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
 
 <script>
   document.getElementById('month-select').addEventListener('change' , function() {
@@ -95,9 +96,21 @@ new Chart(ctx, {
                         return `${label}: ${value} goals (${percentage}%)`;
                     }
                 }
+            },
+            datalabels: { 
+                color: '#fff',
+                font: { weight: 'bold', size: 12 },
+                formatter: function(value, ctx) {
+                  const total = ctx.chart._metasets[0].total;
+                  if (!total || value === 0) return '';  
+                  const percentage = (value / total) * 100;
+                  return percentage < 1 ? '' : percentage.toFixed(1) + '%';
+              }
+
             }
         }
-    }
+    },
+    plugins: [ChartDataLabels]
 });
 
 const feedbackData = {{ feedback_data|safe }};
@@ -141,9 +154,20 @@ new Chart(feedbackCtx, {
                         return `${label}: ${value} feedbacks (${percentage}%)`;
                     }
                 }
+            },
+            datalabels: {
+              color: '#fff',
+              font: { weight: 'bold', size: 12 },
+              formatter: function(value, ctx) {
+                const total = ctx.chart._metasets[0].total;
+                if (!total || value === 0) return '';
+                const percentage = (value / total) * 100;
+                return percentage < 1 ? '' : percentage.toFixed(1) + '%';
+              }
             }
-        }
-    }
+          }
+    },
+    plugins: [ChartDataLabels]
 });
 
 const typeData = {{ goal_type_data|safe }};
@@ -191,9 +215,20 @@ new Chart(typeCtx, {
             return `${label}: ${value} goals (${percentage}%)`;
           }
         }
+      },
+      datalabels: {
+        color: '#fff',
+        font: { weight: 'bold', size: 12 },
+        formatter: function(value, ctx) {
+          const total = ctx.chart._metasets[0].total;
+          if (!total || value === 0) return '';
+          const percentage = (value / total) * 100;
+          return percentage < 1 ? '' : percentage.toFixed(1) + '%';
+        }
       }
     }
-  }
+  },
+  plugins: [ChartDataLabels]
 });
 
 const staffData = {{ staff_data|safe }};
@@ -245,8 +280,27 @@ new Chart(staffCtx, {
           }
         }
       }
+      ,
+      datalabels: {
+        color: function(context) {
+          const bg = context.dataset.backgroundColor[context.dataIndex];
+          if (!bg) return '#fff';
+          const rgb = bg.replace(/[^\d,]/g, '').split(',');
+          const brightness = (0.299 * rgb[0]) + (0.587 * rgb[1]) + (0.114 * rgb[2]);
+          return brightness > 160 ? '#111' : '#fff'; // auto white/black for contrast
+        },
+        anchor: 'center',      // stays inside the bar
+        align: 'center',       // vertically centered in the bar
+        font: { weight: 'bold', size: 13 },
+        clip: false,
+        formatter: function(value) {
+          if (value === 0) return ''; // hide empty bars
+          return value.toString() + "%";
+        }
+      }
     }
-  }
+  },
+  plugins: [ChartDataLabels]
 });
 </script>
 <style>
