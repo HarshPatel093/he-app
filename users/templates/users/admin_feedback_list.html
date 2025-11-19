@@ -73,13 +73,26 @@
               {% endif %}
             </td>
 
-            <td>
-              {% if fb.comment %}
-                {{ fb.comment }}
-              {% else %}
-                <em>No comment provided</em>
-              {% endif %}
-            </td>
+            <td class="feedback-text">
+                <div class="feedback-box" id="summary-{{ forloop.counter }}">
+                  {% if fb.comment %}
+                    <span class="short-text">
+                      {{ fb.comment|truncatechars:250 }}
+                      {% if fb.comment|length > 250 %}
+                        ...<a href="#" class="read-more" data-target="summary-{{ forloop.counter }}">Read more</a>
+                      {% endif %}
+                    </span>
+                    {% if fb.comment|length > 250 %}
+                      <span class="full-text" style="display:none;">
+                        {{ fb.comment }}
+                        <a href="#" class="read-more" data-target="summary-{{ forloop.counter }}">Show less</a>
+                      </span>
+                    {% endif %}
+                  {% else %}
+                    <em>No comment provided</em>
+                  {% endif %}
+                </div>
+              </td>
 
             <td>{{ fb.created_at|date:"M d, Y" }}</td>
 
@@ -195,6 +208,28 @@
   vertical-align: middle;
 }
 
+/* Keep all columns except feedback in one line */
+.feedback-table th,
+.feedback-table td {
+  white-space: nowrap;
+}
+
+.feedback-table th:nth-child(3),
+.feedback-table td:nth-child(3) {
+  white-space: normal;
+  word-wrap: break-word;
+  vertical-align: top;
+}
+
+/* Center-align Date and Action columns */
+.feedback-table th:nth-child(4),
+.feedback-table td:nth-child(4),
+.feedback-table th:nth-child(5),
+.feedback-table td:nth-child(5) {
+  text-align: center;
+  vertical-align: middle;
+}
+
 td.action-cell {
   text-align: center;
 }
@@ -248,5 +283,54 @@ td.action-cell {
   margin-bottom: 0px;  
   margin-right: 53px;
 }
+
+.feedback-box {
+  display: block;
+  max-width: 700px;
+  overflow-wrap: break-word;
+  vertical-align: top;
+}
+
+.feedback-text {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 700px;
+  vertical-align: top;
+}
+
+.read-more {
+  color: #0077b6;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
 </style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll(".read-more").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+      e.preventDefault();
+      const target = document.getElementById(this.dataset.target);
+      const shortText = target.querySelector(".short-text");
+      const fullText = target.querySelector(".full-text");
+
+      // if full-text is hidden (or not yet shown)
+      if (fullText.style.display === "" || fullText.style.display === "none") {
+        shortText.style.display = "none";
+        fullText.style.display = "inline";
+      } else {
+        fullText.style.display = "none";
+        shortText.style.display = "inline";
+      }
+    });
+  });
+});
+</script>
 {% endblock %}

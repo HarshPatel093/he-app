@@ -41,11 +41,24 @@
           <tr>
             <td>{{ note.staff.name }}</td>
             <td class="feedback-text">
-              {% if note.summary %}
-                {{ note.summary }}
-              {% else %}
-                <em>No note provided</em>
-              {% endif %}
+                <div class="feedback-box" id="summary-{{ forloop.counter }}">
+                  {% if note.summary %}
+                    <span class="short-text">
+                    {{ note.summary|truncatechars:300 }}
+                    {% if note.summary|length > 300 %}
+                      ...<a href="#" class="read-more" data-target="summary-{{ forloop.counter }}">Read more</a>
+                    {% endif %}
+                  </span>
+                  {% if note.summary|length > 300 %}
+                    <span class="full-text" style="display:none;">
+                      {{ note.summary }}
+                      <a href="#" class="read-more" data-target="summary-{{ forloop.counter }}">Show less</a>
+                    </span>
+                  {% endif %}
+                  {% else %}
+                    <em>No note provided</em>
+                  {% endif %}
+                </div>
             </td>
             <td>{{ note.created_at|date:"M d, Y" }}</td>
           </tr>
@@ -60,7 +73,7 @@
   </table>
 </div>
 
-<!-- ✅ Styles -->
+<!-- Styles -->
 <style>
 .feedback-container {
   padding: 2rem;
@@ -187,6 +200,46 @@
   text-decoration: none;
   color: white;
 }
+
+.feedback-box {
+  margin: 0;            
+  padding: 0;           
+  display: inline-block; 
+  vertical-align: top; 
+}
+
+.read-more {
+  color: #0077b6;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.read-more:hover {
+  text-decoration: underline;
+}
 </style>
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  document.querySelectorAll(".read-more").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+      e.preventDefault();
+      const target = document.getElementById(this.dataset.target);
+      const shortText = target.querySelector(".short-text");
+      const fullText = target.querySelector(".full-text");
+
+      if (fullText.style.display === "none") {
+        shortText.style.display = "none";
+        fullText.style.display = "inline";
+      } else {
+        shortText.style.display = "inline";
+        fullText.style.display = "none";
+      }
+    });
+  });
+});
+</script>
 {% endblock %}
