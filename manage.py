@@ -3,8 +3,10 @@
 import os
 import sys
 
-
+ 
+# Load Django settings and execute a management command
 def main():
+     
     """Run administrative tasks."""
     os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
     try:

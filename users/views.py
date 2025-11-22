@@ -1,3 +1,17 @@
+""" Views for Holiday Explorers  System.
+
+This module executes all role-based operations in the system, including:
+    - authentication and user onboarding
+    - Dashboard rendering for administrative, staff, and client users
+    - User management (Admin only)
+    - Goal-setting and client profiles
+    - Collect feedback from clients and notes from staff sessions
+    - Schedule shifts, edit, delete, and analyze weekly data
+    - PDF export for shift records and Client Profiles
+
+ The views use Django's authentication mechanism, ORM models, and templates.
+ """
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -33,10 +47,22 @@ from datetime import datetime
 from django.utils import timezone
 import calendar
 
-#  AUTHENTICATION & SIGNUP FLOW
-# Handles new user registration, authentication, and dashboard redirection.
-# Uses email as username and links each user to a UserProfile (role-based).
+#  AUTHENTICATION
 def signup(request):
+    """
+    Handle new user registrations.
+
+    POST:
+        - Creates a User and associated UserProfile.
+        - Validates password confirmation.
+        - Redirects to dashboard after auto-login.
+
+    GET:
+        - Renders signup page.
+
+    Returns:
+        HttpResponse: Signup form or redirect to dashboard.
+    """
     if request.method == "POST":
         name = request.POST.get('name')
         email = request.POST.get('email')
@@ -70,6 +96,19 @@ def signup(request):
 
 
 def login_view(request):
+    """
+    Authenticate users using email and password.
+
+    POST:
+        - Validates credentials.
+        - Redirects based on user role.
+
+    GET:
+        - Renders login page.
+
+    Returns:
+        HttpResponse
+    """
     if request.method == "POST":
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -86,6 +125,12 @@ def login_view(request):
 
 @login_required
 def dashboard_redirect(request):
+    """
+    Redirect the logged-in user to the specific dashboard based on role.
+
+    Returns:
+        HttpResponseRedirect: admin_dashboard, staff_dashboard, or client_dashboard
+    """
     profile = request.user.userprofile
     if profile.role == 'admin':
         return redirect('admin_dashboard')
@@ -93,7 +138,20 @@ def dashboard_redirect(request):
         return redirect('staff_dashboard')
     else:
         return redirect('client_dashboard')
+    
+#  ADMIN DASHBOARD ANALYTICS
+
 def month_bounds(year:int, month:int):
+    """
+    Calculate the timezone-aware first day of the month and the beginning of the following month.
+
+    Args:
+        year (int)
+        month (int)
+
+    Returns:
+        tuple(datetime, datetime): (start_of_month, start_of_next_month)
+    """
     start = datetime(year, month, 1, tzinfo=timezone.get_current_timezone())
     if month == 12: 
         nxt = datetime(year +1, 1,1, tzinfo=timezone.get_current_timezone())
@@ -101,16 +159,22 @@ def month_bounds(year:int, month:int):
         nxt = datetime(year, month+1, 1, tzinfo=timezone.get_current_timezone())
     return start, nxt
 
-#  ADMIN DASHBOARD ANALYTICS
-# Generates all statistical data for the admin dashboard charts.
-# Includes:
-#   - Goals added per week
-#   - Feedback distribution by mood
-#   - Goals by type
-#   - Weekly staff engagement
-# Uses month-based filtering and timezone-aware date handling.
 @login_required
 def admin_dashboard(request):
+    """
+    Generate all analytical data displayed on the Admin Dashboard.
+
+    Includes:
+        - Weekly goals added
+        - Feedback mood distribution
+        - Goals grouped by type
+        - Weekly staff engagement
+
+    Supports month-based filtering via ?month=YYYY-MM.
+
+    Returns:
+        HttpResponse: Rendered admin dashboard with analytics context.
+    """
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
     
@@ -124,9 +188,8 @@ def admin_dashboard(request):
     else:
         year, month = now.year, now.month
     start_of_month, next_month= month_bounds(year, month) 
-
     
-
+    # Goals Added Weekly
     monthly_goals = Goal.objects.filter(
         created_at__gte=start_of_month, created_at__lt=next_month
     )
@@ -144,6 +207,7 @@ def admin_dashboard(request):
     goal_labels = list(goal_week_data.keys())
     goal_data = list(goal_week_data.values())
     
+    # Client Feedback (Emoji Based, throughout the month)
     monthly_feedback = Feedback.objects.filter(
         is_staff_feedback=False,
         created_at__gte=start_of_month,
@@ -168,6 +232,7 @@ def admin_dashboard(request):
     feedback_labels = list(feedback_mood_data.keys())
     feedback_data = list(feedback_mood_data.values())
 
+    # Goals by type
     goal_type_summary = (
         Goal.objects.filter(created_at__gte=start_of_month, created_at__lt=next_month)
         .values('goal_type__name')
@@ -178,7 +243,7 @@ def admin_dashboard(request):
     goal_type_labels = [item['goal_type__name'] if item['goal_type__name'] else 'Uncategorized' for item in goal_type_summary]
     goal_type_data = [item['total'] for item in goal_type_summary]
 
-
+    # Weekly Staff Engagement
     staff_notes = StaffNote.objects.filter(
         created_at__gte=start_of_month,
         created_at__lt=next_month
@@ -230,12 +295,16 @@ def admin_dashboard(request):
     }
     return render(request, 'users/admin_dashboard.html', context)
 
-#  STAFF & CLIENT DASHBOARD
-# Displays relevant information based on logged-in role:
-#   - Staff: daily assigned shifts with client list
-#   - Client: personal goals and session completion tracking
+#  Staff Dashboard
+
 @login_required
 def staff_dashboard(request):
+    """
+    Display daily shifts and assigned clients for logged-in staff.
+
+    Returns:
+        HttpResponse: Staff dashboard with today’s shift information.
+    """
     if request.user.userprofile.role != "staff":
         return redirect("dashboard_redirect")
     staff_id = request.user.userprofile
@@ -259,10 +328,16 @@ def staff_dashboard(request):
         "today": today
     })
 
-#  PROFILE MANAGEMENT
-# Provides access to view or edit personal details based on role.
+#  Client Dashboard
+
 @login_required
 def client_dashboard(request):
+    """
+    Display client goals and determine whether today's session has ended.
+
+    Returns:
+        HttpResponse: Client dashboard.
+    """
     if request.user.userprofile.role != "client":
         return redirect("dashboard_redirect")
 
@@ -297,6 +372,7 @@ def client_dashboard(request):
         "session_ended": session_ended,
     })
 
+# Client Profile
 @login_required
 def client_profile(request):
     profile=request.user.userprofile
@@ -306,12 +382,25 @@ def client_profile(request):
 
     })
 
-#  USER ADMINISTRATION
-# Allows admin to create, edit, delete, and manage user accounts.
-# Also supports searching and sorting by user profile fields.
+# User Administration
+
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def create_user(request):
+    """
+    Allow Admin to create a new user and profile.
+
+    POST:
+        - Validates form
+        - Creates User and UserProfile
+        - Displays errors if invalid
+
+    GET:
+        - Displays empty form
+
+    Returns:
+        HttpResponse
+    """
     if request.method == 'POST':
         form = CreateUser(request.POST)
         if form.is_valid():
@@ -353,6 +442,15 @@ def create_user(request):
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def manage_users(request):
+    """
+    List and search all users for admins.
+
+    Query params:
+        q (str): Search term for name/email.
+
+    Returns:
+        HttpResponse: User list page.
+    """
     query = request.GET.get("q")
     users = User.objects.all().select_related('userprofile').order_by("userprofile__name") 
 
@@ -364,6 +462,15 @@ def manage_users(request):
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def delete_user(request, user_id):
+    """
+    Delete a user by its ID.
+
+    Args:
+        user_id (int)
+
+    Returns:
+        HttpResponseRedirect -> manage_users
+    """
     try:
         user = User.objects.get(id=user_id)
         user.delete()
@@ -376,6 +483,22 @@ def delete_user(request, user_id):
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def edit_user(request, user_id):
+    """
+    Edit an existing user and their UserProfile.
+
+    POST:
+        - Applies updates to User and UserProfile.
+        - Handles password change with confirmation.
+
+    GET:
+        - Returns form with existing user data.
+
+    Args:
+        user_id (int)
+
+    Returns:
+        HttpResponse
+    """
     user = get_object_or_404(User, id=user_id)
     profile = user.userprofile
 
@@ -428,10 +551,18 @@ def edit_user(request, user_id):
     })
 
 #  CLIENT MANAGEMENT
-# Displays all clients and their assigned goals.
-# Admin can edit goals or view individual client details.
+
 @login_required
 def clients_list(request):
+    """
+    Display all clients for admin review, with search support.
+
+    Query params:
+        q (str): Search name.
+
+    Returns:
+        HttpResponse
+    """
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
     query = request.GET.get("q", "")
@@ -442,6 +573,17 @@ def clients_list(request):
 
 @login_required
 def client_detail(request, client_id):
+    """
+    Display detailed information about a client, including name, dob, email and goals.
+
+    Args:
+        client_id (int)
+
+    Adds 3 default goals if the client has none.
+
+    Returns:
+        HttpResponse
+    """
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
 
@@ -466,11 +608,22 @@ def client_detail(request, client_id):
         "goals": goals,
     })
 
-#  FEEDBACK SYSTEM
-# Manages both client feedback (mood, comment, photo) and staff notes.
-# Admin can filter, view, and analyze feedbacks.
+#  Feedback (Clients)
+
 @login_required
 def client_feedback(request):
+    """
+    Allow clients to submit mood, optional comment, and optional photo.
+
+    POST:
+        - Saves feedback entry linked to user.
+
+    GET:
+        - Displays feedback form.
+
+    Returns:
+        HttpResponse
+    """
     if request.method == "POST":
         mood = request.POST.get("mood")
         comment = request.POST.get("comment")
@@ -486,6 +639,17 @@ def client_feedback(request):
     return render(request, 'users/client_feedback.html')
 
 def admin_feedback_list(request):
+    """
+    Display all client feedback with optional filters.
+
+    Query params:
+        - start_date (YYYY-MM-DD)
+        - end_date (YYYY-MM-DD)
+        - mood (emoji (names))
+
+    Returns:
+        HttpResponse
+    """
     feedbacks = Feedback.objects.filter(is_staff_feedback=False).order_by('-created_at')
 
     start_date = request.GET.get('start_date')
@@ -504,11 +668,26 @@ def admin_feedback_list(request):
     })
 
 def feedback_detail(request, pk):
+    """
+    Display details of a single feedback entry.
+
+    Args:
+        pk (int)
+
+    Returns:
+        HttpResponse
+    """
     feedback = get_object_or_404(Feedback, pk=pk)
     return render(request, 'users/feedback_detail.html', {'feedback':feedback})
 
 @login_required
 def admin_profile(request):
+    """
+    Render the Admin's profile page.
+
+    Returns:
+        HttpResponse
+    """
     profile=getattr(request.user, "userprofile", None)
     return render(request, "users/admin_profile.html",{
         "user_obj": request.user,
@@ -519,6 +698,21 @@ def admin_profile(request):
 
 @login_required
 def edit_goals(request, client_id):
+    """
+    Allow Admin to edit a client's goals and progress.
+
+    Args:
+        client_id (int)
+
+    POST:
+        - Updates goal type and progress.
+
+    GET:
+        - Displays editable goal list.
+
+    Returns:
+        HttpResponse
+    """
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
 
@@ -552,16 +746,19 @@ def edit_goals(request, client_id):
         "goal_choices": [(g.name, g.name) for g in goal_choices],
     })
 
-#  SHIFT MANAGEMENT
-# Admin-only functionality for managing staff shifts.
-# Includes:
-#   - Shift allocation
-#   - Editing or deleting shifts
-#   - Viewing all shifts
-#   - Exporting shift data to PDF
+#  Shift management
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def shift_list(request):
+    """
+    Display weekly staff worked analytics and upcoming shifts.
+
+    Query params:
+        week (e.g., 2025-W44)
+
+    Returns:
+        HttpResponse
+    """
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
 
@@ -607,6 +804,19 @@ def shift_list(request):
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def allocate_shift(request):
+    """
+    Allocate a new staff shift.
+
+    POST:
+        - Saves shift if valid.
+        - Displays success message.
+
+    GET:
+        - Returns empty ShiftForm.
+
+    Returns:
+        HttpResponse
+    """
     if request.method == "POST":
         form = ShiftForm(request.POST)
         if form.is_valid():
@@ -623,6 +833,21 @@ def allocate_shift(request):
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def edit_shift(request, shift_id):
+    """
+    Edit an existing shift.
+
+    Args:
+        shift_id (int)
+
+    POST:
+        - Applies changes if any fields changed.
+
+    GET:
+        - Displays populated ShiftForm.
+
+    Returns:
+        HttpResponse
+    """
     shift = get_object_or_404(Shift, id=shift_id)
     from_param = request.GET.get("from", "")
     if request.method == "POST":
@@ -644,6 +869,15 @@ def edit_shift(request, shift_id):
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def delete_shift(request, shift_id):
+    """
+    Delete a shift and redirect to shift listing.
+
+    Args:
+        shift_id (int)
+
+    Returns:
+        HttpResponseRedirect
+    """
     shift = get_object_or_404(Shift, id=shift_id)
     if request.method == "POST":
         shift.delete()
@@ -661,6 +895,12 @@ def delete_shift(request, shift_id):
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def all_shifts(request):
+    """
+    List all shifts in specific order (most recent upcoming first).
+
+    Returns:
+        HttpResponse
+    """
     if request.user.userprofile.role != "admin":
         return redirect("dashboard_redirect")
 
@@ -672,8 +912,16 @@ def all_shifts(request):
     )
 
     return render(request, "users/all_shifts.html", {"shifts": shifts})
+
+# Staff Profile
 @login_required
 def staff_profile(request):
+    """
+    Render the Staff's profile page.
+
+    Returns:
+        HttpResponse
+    """
     if request.user.userprofile.role != "staff":
         return redirect("dashboard_redirect")
     profile = request.user.userprofile
@@ -686,6 +934,12 @@ def staff_profile(request):
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def export_shifts_pdf(request):
+    """
+    Generate and return a downloadable PDF containing all shifts.
+
+    Returns:
+        HttpResponse: PDF file attachment.
+    """
     qs = (Shift.objects
           .select_related("staff")
           .prefetch_related("clients")
@@ -727,6 +981,22 @@ def export_shifts_pdf(request):
 
 @login_required
 def client_info(request, client_id):
+    """
+    Enable staff to view a client and submit notes for that session.
+
+    Args:
+        client_id (int)
+
+    POST:
+        - Saves staff note.
+
+    GET:
+        - Displays note form.
+
+    Returns:
+        HttpResponse
+    """
+     
     # Restrict to staff users only
     if request.user.userprofile.role != "staff":
         return redirect("dashboard_redirect")
@@ -737,7 +1007,7 @@ def client_info(request, client_id):
     if request.method == "POST":
         summary = request.POST.get("summary", "").strip()
         if summary:
-            # ✅ Use Feedback instead of StaffNote
+            # Use Feedback instead of StaffNote
             StaffNote.objects.create(
                 staff=request.user.userprofile,
                 client=client,
@@ -755,6 +1025,16 @@ def client_info(request, client_id):
 @login_required
 @user_passes_test(lambda u: u.userprofile.role == "admin")
 def staff_feedback_list(request):
+    """
+    Display all staff notes with optional date filtering.
+
+    Query params:
+        start_date (YYYY-MM-DD)
+        end_date (YYYY-MM-DD)
+
+    Returns:
+        HttpResponse
+    """
     notes = StaffNote.objects.all().order_by('-created_at')
 
     start_date = request.GET.get('start_date')
