@@ -31,6 +31,7 @@
     <thead>
       <tr>
         <th>Staff Name</th>
+        <th>Client Name</th> 
         <th>Feedback</th>
         <th>Date</th>
       </tr>
@@ -40,25 +41,12 @@
         {% for note in notes %}
           <tr>
             <td>{{ note.staff.name }}</td>
+            <td>{{ note.client.name }}</td>
             <td class="feedback-text">
-                <div class="feedback-box" id="summary-{{ forloop.counter }}">
-                  {% if note.summary %}
-                    <span class="short-text">
-                    {{ note.summary|truncatechars:300 }}
-                    {% if note.summary|length > 300 %}
-                      ...<a href="#" class="read-more" data-target="summary-{{ forloop.counter }}">Read more</a>
-                    {% endif %}
-                  </span>
-                  {% if note.summary|length > 300 %}
-                    <span class="full-text" style="display:none;">
-                      {{ note.summary }}
-                      <a href="#" class="read-more" data-target="summary-{{ forloop.counter }}">Show less</a>
-                    </span>
-                  {% endif %}
-                  {% else %}
-                    <em>No note provided</em>
-                  {% endif %}
-                </div>
+                {{ note.summary|truncatechars:80 }}
+                {% if note.summary|length > 80 %}
+                  <a href="#" class="read-more" data-full="{{ note.summary }}">Read more</a>
+                {% endif %}
             </td>
             <td>{{ note.created_at|date:"M d, Y" }}</td>
           </tr>
@@ -140,6 +128,12 @@
   background-color: #6c757d;
 }
 
+.reset-btn, .filter-btn {
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.2;
+}
+
 /* Table Styling */
 .feedback-table {
   width: 100%;
@@ -153,6 +147,7 @@
   text-align: center;
   margin-top: -5px;
   margin-bottom: 1.2rem;
+  color: #003f8a;
 }
 
 .feedback-table th {
@@ -220,26 +215,70 @@
 .read-more:hover {
   text-decoration: underline;
 }
+
+/* Modal Styling */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 600px;
+  margin: 5% auto;
+  position: relative;
+  max-height: 80vh;     
+  overflow-y: auto;  
+  scroll-behavior: smooth;
+}
+
+.close {
+  position: absolute;
+  right: 15px;
+  top: 10px;
+  cursor: pointer;
+  font-size: 22px;
+  font-weight: bold;
+}
 </style>
 
 <script>
 document.addEventListener("DOMContentLoaded", function() {
+  const modal = document.getElementById("noteModal");
+  const closeBtn = document.querySelector(".close");
+  const modalText = document.getElementById("modal-text");
+
   document.querySelectorAll(".read-more").forEach(btn => {
     btn.addEventListener("click", function(e) {
       e.preventDefault();
-      const target = document.getElementById(this.dataset.target);
-      const shortText = target.querySelector(".short-text");
-      const fullText = target.querySelector(".full-text");
-
-      if (fullText.style.display === "none") {
-        shortText.style.display = "none";
-        fullText.style.display = "inline";
-      } else {
-        shortText.style.display = "inline";
-        fullText.style.display = "none";
-      }
+      modalText.innerText = this.dataset.full;  
+      modal.style.display = "block";           
     });
   });
+
+  closeBtn.onclick = () => modal.style.display = "none";
+
+  window.onclick = (e) => {
+    if (e.target === modal) modal.style.display = "none";
+  };
 });
 </script>
+
+<!-- Modal -->
+<div id="noteModal" class="modal">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h2>Staff Note</h2>
+    <p id="modal-text"></p>
+  </div>
+</div>
+
 {% endblock %}

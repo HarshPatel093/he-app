@@ -664,7 +664,10 @@ def admin_feedback_list(request):
         feedbacks = feedbacks.filter(mood=mood)
 
     return render(request, 'users/admin_feedback_list.html', {
-        'feedbacks': feedbacks
+        'feedbacks': feedbacks,
+        "start_date": start_date,
+        "end_date": end_date,
+        "selected_mood": mood,
     })
 
 def feedback_detail(request, pk):
@@ -1045,4 +1048,6 @@ def staff_feedback_list(request):
     if end_date:
         notes = notes.filter(created_at__date__lte=end_date)
 
-    return render(request, "users/staff_feedback_list.html", {"notes": notes})
+    return render(request, "users/staff_feedback_list.html", {"notes": notes,
+        "start_date": start_date,
+        "end_date": end_date,})

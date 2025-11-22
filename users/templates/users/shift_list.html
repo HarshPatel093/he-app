@@ -96,6 +96,7 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
 <script>
   const ctx = document.getElementById('staffChart').getContext('2d');
   new Chart(ctx, {
@@ -108,11 +109,24 @@
         backgroundColor: 'gold'
       }]
     },
+    plugins: [ChartDataLabels],
     options: {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        legend: { display: false }
+        legend: { display: false },
+        datalabels: {
+          color: '#000',
+          anchor: 'center',
+          align: 'center',
+          font: {
+            weight: 'bold',
+            size: 12
+          },
+          formatter: function(value) {
+            return value > 0 ? value : '';
+          }
+        }  
       },
       scales: {
         x: { title: { display: true, text: 'Days' } },
